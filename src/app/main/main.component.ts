@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+interface IRouteItem {
+  title: string;
+  route: string;
+  icon: string;
+}
 
 @Component({
   selector: 'qs-main',
@@ -8,26 +13,15 @@ import { Router } from '@angular/router';
 })
 export class MainComponent {
 
-  routes: Object[] = [{
+  routes: IRouteItem[] = [
+    {
       title: 'Dashboard',
       route: '/',
       icon: 'dashboard',
-    }, {
-      title: 'Product Dashboard',
-      route: '/product',
-      icon: 'view_quilt',
-    }, {
-      title: 'Product Logs',
-      route: '/logs',
-      icon: 'receipt',
-    }, {
-      title: 'Manage Users',
-      route: '/users',
-      icon: 'people',
     },
   ];
 
-  constructor(private _router: Router) {}
+  constructor(private _router: Router) { }
 
   logout(): void {
     this._router.navigate(['/login']);

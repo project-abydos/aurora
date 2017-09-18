@@ -9,7 +9,7 @@
       true,
       "array" 
     ],
-    "arrow-parens": true,
+    "arrow-parens": false,
     "ban": [
       true,
       []
@@ -145,7 +145,6 @@
       true,
       "call-signature",
       "parameter",
-      "arrow-parameter",
       "property-declaration",
       "variable-declaration",
       "member-variable-declaration"

@@ -2,36 +2,46 @@
   <div td-toolbar-content layout="row" layout-align="center center" flex>
     <span>Quickstart</span>
     <span flex></span>
-    <a md-icon-button mdTooltip="Docs" href="https://teradata.github.io/covalent/" target="_blank"><md-icon>chrome_reader_mode</md-icon></a>
-    <a md-icon-button mdTooltip="Github" href="https://github.com/teradata/covalent" target="_blank"><md-icon svgIcon="assets:github"></md-icon></a>
+    <a md-icon-button mdTooltip="Docs" href="https://teradata.github.io/covalent/" target="_blank">
+      <md-icon>chrome_reader_mode</md-icon>
+    </a>
+    <a md-icon-button mdTooltip="Github" href="https://github.com/teradata/covalent" target="_blank">
+      <md-icon svgIcon="assets:github"></md-icon>
+    </a>
   </div>
   <div layout-gt-sm="row" tdMediaToggle="gt-xs" [mediaClasses]="['push-sm']">
-    <div flex-gt-sm="60">
-      <md-card>
-        <md-card-title>Products Sales</md-card-title>
-        <md-card-subtitle>usage stats for our products</md-card-subtitle>
-        <md-divider></md-divider>
-        <div class="chart-height push-top push-right-sm">
-          <ngx-charts-area-chart-stacked
-            [scheme]="colorScheme"
-            [results]="multi"
-            [gradient]="gradient"
-            [xAxis]="showXAxis"
-            [yAxis]="showYAxis"
-            [legend]="showLegend"
-            [showXAxisLabel]="showXAxisLabel"
-            [showYAxisLabel]="showYAxisLabel"
-            [xAxisLabel]="xAxisLabel"
-            [yAxisLabel]="yAxisLabel"
-            [yAxisTickFormatting]="axisDigits">
-          </ngx-charts-area-chart-stacked>
+    <div flex-gt-sm="100">
+      <md-card *ngIf="mdc">
+
+        <div layout="row" layout-align="start center" class="pad-left-sm pad-right-sm">
+          <span *ngIf="!searchBox.searchVisible" class="push-left-sm">
+              <span class="md-title">
+                  <button md-button md-primary>Button 1</button>
+                  <button md-button>Button 2</button>
+                  <button md-button>Button 3</button>
+              </span>
+          </span>
+          <td-search-box #searchBox backIcon="arrow_back" class="push-right-sm" placeholder="Search here" (searchDebounce)="search($event)"
+            flex>
+          </td-search-box>
         </div>
+        <md-divider></md-divider>
+        <td-data-table #dataTable [data]="filteredData" [columns]="columns" [clickable]="clickable">
+          
+        </td-data-table>
+        <div class="md-padding" *ngIf="!dataTable.hasData" layout="row" layout-align="center center">
+          <h3>No results to display.</h3>
+        </div>
+
       </md-card>
+
       <div layout="row">
         <div flex="33" layout="column">
           <md-card class="md-card-colored" flex>
             <md-card-content class="text-center">
-              <div class="md-headline">{{ '2341'| digits }} <md-icon class="tc-green-500 text-sm">arrow_upward</md-icon></div>
+              <div class="md-headline">{{ '2341'| digits }}
+                <md-icon class="tc-green-500 text-sm">arrow_upward</md-icon>
+              </div>
               <md-icon class="icon tc-indigo-700">perm_contact_calendar</md-icon>
               <div layout="column">
                 <div class="md-subhead">Active Users</div>
@@ -43,7 +53,9 @@
         <div flex="33" layout="column">
           <md-card class="md-card-colored" flex>
             <md-card-content class="text-center">
-              <div class="md-headline">{{ '72452903343' | bytes }} <md-icon class="tc-red-500 text-sm">arrow_downward</md-icon></div>
+              <div class="md-headline">{{ '72452903343' | bytes }}
+                <md-icon class="tc-red-500 text-sm">arrow_downward</md-icon>
+              </div>
               <md-icon class="icon tc-light-blue-700">sd_storage</md-icon>
               <div layout="column">
                 <div class="md-subhead">User Disk Usage</div>
@@ -55,7 +67,9 @@
         <div flex="33" layout="column">
           <md-card class="md-card-colored" flex>
             <md-card-content class="text-center">
-              <div class="md-headline">{{ '324523' | digits}} <md-icon class="tc-green-500 text-sm">arrow_upward</md-icon></div>
+              <div class="md-headline">{{ '324523' | digits}}
+                <md-icon class="tc-green-500 text-sm">arrow_upward</md-icon>
+              </div>
               <md-icon class="icon tc-cyan-700">receipt</md-icon>
               <div layout="column">
                 <div class="md-subhead">Pages Viewed</div>
@@ -83,54 +97,6 @@
             </ng-template>
           </ng-template>
         </md-nav-list>
-      </md-card>
-    </div>
-    <div flex-gt-sm="40">
-      <md-card>
-        <md-card-title>Alerts</md-card-title>
-        <md-card-subtitle>Items requiring attention</md-card-subtitle>
-        <md-divider></md-divider>
-        <md-list class="will-load alert-list">
-          <ng-template tdLoading="alerts.load">
-            <ng-template let-item let-last="last" ngFor [ngForOf]="alerts">
-              <md-list-item layout-align="row">
-                <md-icon md-list-avatar class="bgc-amber-800">{{item.icon}}</md-icon>
-                <h3 md-line> {{item.description}} </h3>
-                <p md-line> {{item.name}} </p>
-              </md-list-item>
-              <md-divider *ngIf="!last" md-inset></md-divider>
-            </ng-template>
-          </ng-template>
-        </md-list>
-        <md-divider></md-divider>
-        <md-card-actions>
-          <a md-button color="accent" class="text-upper" [routerLink]="['/logs']">
-            <span>View More</span>
-          </a>
-        </md-card-actions>
-      </md-card>
-      <md-card id="dashboard-favorites-card" class="push-top">
-        <md-card-title>Favorites</md-card-title>
-        <md-card-subtitle>Your favorite products</md-card-subtitle>
-        <md-divider></md-divider>
-        <md-nav-list class="will-load favorite-list">
-          <ng-template tdLoading="favorites.load">
-            <ng-template let-item let-last="last" ngFor [ngForOf]="products">
-              <md-list-item layout-align="row" [routerLink]="['/product']">
-                <md-icon md-list-avatar>{{item.icon}}</md-icon>
-                <h3 md-line> {{item.name}} </h3>
-                <p md-line> {{item.description}} </p>
-              </md-list-item>
-              <md-divider *ngIf="!last" md-inset></md-divider>
-            </ng-template>
-          </ng-template>
-        </md-nav-list>
-        <md-divider></md-divider>
-        <md-card-actions>
-          <a md-button color="accent" class="text-upper" [routerLink]="['/product']">
-            <span>View More</span>
-          </a>
-        </md-card-actions>
       </md-card>
     </div>
   </div>

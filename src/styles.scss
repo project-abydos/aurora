@@ -16,3 +16,8 @@ a[md-icon-button] {
 td-layout-manage-list .mat-toolbar {
     font-weight: 400;
 }
+
+.mat-table-container {
+    height: calc(100vh - 195px)!important;
+    overflow-y: auto;
+}
