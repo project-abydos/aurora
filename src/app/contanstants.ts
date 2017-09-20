@@ -1,3 +1,3 @@
-const APP_TITLE: string = 'Maintenance Documentation Reporting Platform - MDRP';
+const APP_TITLE: string = 'Maintenance Documentation Reporting Platform';
 
 export { APP_TITLE };

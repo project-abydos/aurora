@@ -9,3 +9,39 @@
 .chart-height {
     height: 300px;
 }
+
+.JCN,
+.ApprovalStatus {
+    flex: 2 0 0;
+    font-weight: 600!important;
+}
+
+.Discrepancy {
+    flex: 6 0 0;
+    font-weight: 500!important;
+}
+
+.CFPComments {
+    flex: 4 0 0;
+    font-style: italic;
+}
+
+.JCN button {
+    padding: 0;
+    margin-left: -10px;
+}
+
+.expanded-row {
+    display: flex;
+    padding: 1em;
+    padding-top: 2em;
+    md-card {
+        background: #eee;
+        &.job-info {
+            flex: 1;
+        }
+        &.job-history {
+            flex: 3;
+        }
+    }
+}

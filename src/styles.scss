@@ -1,7 +1,11 @@
+@import '~@angular/material/theming';
+$expand-bg-color:#444;
+$frost :#eee;
 // Custom style for loading elements without height
 .will-load {
     min-height: 80px;
 }
+
 // Href line height wasn't right for md-icon-button
 a[md-icon-button] {
     line-height: 36px;
@@ -9,7 +13,7 @@ a[md-icon-button] {
 
 // Capitalize
 .text-capital {
-  text-transform: capitalize;
+    text-transform: capitalize;
 }
 
 // Lighter font weight in sub-toolbars
@@ -17,7 +21,87 @@ td-layout-manage-list .mat-toolbar {
     font-weight: 400;
 }
 
-.mat-table-container {
-    height: calc(100vh - 195px)!important;
-    overflow-y: auto;
+.table--fixed {
+    display: flex;
+    width: 50%;
+    flex-flow: column;
+    .td-expansion-panel {
+        cursor: pointer; // transition: all ease 200ms;
+        border-left: 10px solid transparent;
+        &.Red {
+            border-left-color: #c60000;
+        }
+        &.Amber {
+            border-left-color: #ff9339;
+        }
+    }
+    th,
+    td {
+        padding-top: 1em;
+        padding-bottom: 1em;
+        overflow: hidden;
+    }
+    td {
+        .td-data-table-cell-content-wrapper {
+            height: 20px!important;
+        }
+    }
+    thead {
+        display: flex;
+        margin-left: 10px;
+        th {
+            flex: 1;
+        }
+    }
+    tbody {
+        height: calc(100vh - 225px)!important;
+        overflow-y: auto;
+        width: 100%;
+        display: block;
+        tr {
+            display: flex; //
+            flex-wrap: nowrap;
+            td {
+                flex: 1; // display:flex;
+                justify-content: flex-start;
+            }
+        }
+        .ellipses {
+            width: 100%;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        .expanded-row {
+            background: $expand-bg-color;
+            margin-top: -1em;
+            color: $frost;
+        }
+        .td-expansion-panel.td-expanded .td-data-table-row {
+            background: $expand-bg-color;
+            border-bottom: none;
+            color: $frost;
+            height: auto;
+            td {
+                span {
+                    text-overflow: initial;
+                    white-space: normal;
+                }
+                .td-data-table-cell-content-wrapper {
+                    height: auto!important;
+                }
+                button {
+                    margin-top: -10px;
+                    color: $frost;
+                    // border: 1px solid $frost;
+                    box-shadow: 0 3px 1px -2px rgba(240, 240, 240, .2), 0 2px 2px 0 rgba(240, 240, 240, .14), 0 1px 5px 0 rgba(240, 240, 240, .12);
+                    background-color: rgba(240, 240, 240, .2);
+                    &:hover {
+                        color: #333;
+                        background-color: rgba(240, 240, 240, .7);
+                    }
+                }
+            }
+        }
+    }
 }

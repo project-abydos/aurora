@@ -1,0 +1,3 @@
+Business Rules to Highlight / Behavior to Control
+
+- IF A JOB HAS NOT BEEN STARTED && NOT DEFERRED THEN IDENTIFY AS "BLUE" 
