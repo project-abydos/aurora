@@ -104,9 +104,11 @@
   dependencies:
     tslib "^1.7.1"
 
-"@angular/flex-layout@2.0.0-beta.8":
-  version "2.0.0-beta.8"
-  resolved "https://registry.yarnpkg.com/@angular/flex-layout/-/flex-layout-2.0.0-beta.8.tgz#b9cf57865a93ca158fe56d850952423f248d103b"
+"@angular/flex-layout@2.0.0-beta.9":
+  version "2.0.0-beta.9"
+  resolved "https://registry.yarnpkg.com/@angular/flex-layout/-/flex-layout-2.0.0-beta.9.tgz#3e54f898e805d0b1426d15e6139db415d04ee75f"
+  dependencies:
+    tslib "^1.7.1"
 
 "@angular/forms@^4.2.0":
   version "4.3.1"
@@ -157,6 +159,10 @@
   resolved "https://registry.yarnpkg.com/@angular/tsc-wrapped/-/tsc-wrapped-4.3.1.tgz#f6616a4d2a3bbec1cded664fd1f526edce99ef41"
   dependencies:
     tsickle "^0.21.0"
+
+"@angularclass/hmr@^2.1.3":
+  version "2.1.3"
+  resolved "https://registry.yarnpkg.com/@angularclass/hmr/-/hmr-2.1.3.tgz#34e658ed3da37f23b0a200e2da5a89be92bb209f"
 
 "@covalent/core@1.0.0-beta.7":
   version "1.0.0-beta.7"
@@ -279,6 +285,10 @@ alphanum-sort@^1.0.1, alphanum-sort@^1.0.2:
 amdefine@>=0.0.4, amdefine@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
+
+animate.css@^3.5.2:
+  version "3.5.2"
+  resolved "https://registry.yarnpkg.com/animate.css/-/animate.css-3.5.2.tgz#91e668dc069a808e5e499514867b97aae0166c36"
 
 ansi-escapes@^1.1.0:
   version "1.4.0"

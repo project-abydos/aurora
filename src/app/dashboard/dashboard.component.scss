@@ -10,19 +10,51 @@
     height: 300px;
 }
 
+@mixin flex($values) {
+    flex: $values 0 0;
+}
+
+.JCN {
+    @include flex(2);
+}
+
+.WorkCenter {
+    @include flex(2);
+}
+
+.EquipID {
+    @include flex(2);
+}
+
+.Discrepancy {
+    @include flex(10);
+}
+
+.CFPComments {
+    @include flex(8);
+}
+
+.ETIC {
+    @include flex(4);
+    md-datepicker-toggle {
+        margin-left: -4em;
+    }
+}
+
+.ApprovalStatus {
+    @include flex(4);
+}
+
 .JCN,
 .ApprovalStatus {
-    flex: 2 0 0;
     font-weight: 600!important;
 }
 
 .Discrepancy {
-    flex: 6 0 0;
     font-weight: 500!important;
 }
 
 .CFPComments {
-    flex: 4 0 0;
     font-style: italic;
 }
 
@@ -35,13 +67,16 @@
     display: flex;
     padding: 1em;
     padding-top: 2em;
-    md-card {
-        background: #eee;
-        &.job-info {
-            flex: 1;
-        }
-        &.job-history {
-            flex: 3;
+    td {
+        display: flex;
+        md-card {
+            background: #eee;
+            &.job-info {
+                flex: 1;
+            }
+            &.job-history {
+                flex: 3;
+            }
         }
     }
 }

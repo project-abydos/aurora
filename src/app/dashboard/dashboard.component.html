@@ -1,100 +1,123 @@
 <td-layout-nav>
-  <div td-toolbar-content layout="row" layout-align="center center" flex>
+  <div td-toolbar-content layout="row" layout-align="center center" flex class="animated slideInDown">
     <span>{{appTitle}}</span>
     <span flex></span>
     <span class="julian-date">Julian Date: {{julianDate}}</span>
   </div>
   <div layout-gt-sm="row" tdMediaToggle="gt-xs" [mediaClasses]="['push-sm']">
     <div flex-gt-sm="100">
-      <md-card *ngIf="mdc">
+      <md-card *ngIf="mdc" class="animated zoomIn">
 
         <div layout="row" layout-align="start center" class="pad-left-sm pad-right-sm">
-          <span *ngIf="!searchBox.searchVisible" class="push-left-sm">
+          <span class="push-left-sm" flex=2>
               <span class="md-title">
-                  <button md-button>Button 1</button>
-                  <button md-button>Button 2</button>
-                  <button md-button>Button 3</button>
-              </span>
+                  <button md-icon-button [mdMenuTriggerFor]="menu">
+                      <md-icon>more_vert</md-icon>
+                    </button>
+                    <md-menu #menu="mdMenu">
+                      <button md-menu-item>
+                        <md-icon>dialpad</md-icon>
+                        <span>Redial</span>
+          </button>
+          <button md-menu-item disabled>
+                        <md-icon>voicemail</md-icon>
+                        <span>Check voicemail</span>
+                      </button>
+          <button md-menu-item>
+                        <md-icon>notifications_off</md-icon>
+                        <span>Disable alerts</span>
+                      </button>
+          </md-menu>
+          </span>
           </span>
           <td-search-box #searchBox backIcon="arrow_back" class="push-right-sm" placeholder="Search here" (searchDebounce)="search($event)"
-            flex>
+            flex=1>
           </td-search-box>
         </div>
         <md-divider></md-divider>
         <table td-data-table class="table--fixed">
           <thead>
-            <th td-data-table-column *ngFor="let column of columns" [numeric]="column.numeric" [ngClass]="column.name">
-              {{column.label}}
-            </th>
+            <th td-data-table-column class="JCN">JCN</th>
+            <th td-data-table-column class="WorkCenter">Shop</th>
+            <th td-data-table-column class="EquipID">S/N</th>
+            <th td-data-table-column class="Discrepancy">Discrepancy</th>
+            <th td-data-table-column class="CFPComments">CFP Notes</th>
+            <th td-data-table-column class="ETIC">ETIC</th>
+            <th td-data-table-column class="ApprovalStatus">Status</th>
           </thead>
           <tbody>
-            <td-expansion-panel *ngFor="let row of filteredData" [ngClass]="row.CC" disableRipple>
-              <ng-template td-expansion-panel-header>
-                <tr td-data-table-row>
-                  <td td-data-table-cell *ngFor="let column of columns" [numeric]="column.numeric" [ngClass]="column.name">
-                    <button md-button md-raised color="primary" *ngIf="column.name === 'JCN'" (click)="$event.stopPropagation()">{{row[column.name]}}</button>
-                    <span *ngIf="column.name !== 'JCN'" [ngClass]="column.styles"> {{column.format ? column.format(row[column.name]) : row[column.name]}}</span>
-                  </td>
-                </tr>
-              </ng-template>
-              <div class="expanded-row">
+            <ng-container *ngFor="let row of filteredData">
+              <tr td-data-table-row [ngClass]="[row.CC, row.isExpanded ? 'expanded' : 'collapsed']" (click)="toggleExpanded(row)">
 
-                <md-card class="job-info">
-                  <md-card-title>Job Info</md-card-title>
-                  <md-card-content>
-                    <form class="example-form">
-                      <md-form-field class="example-full-width">
-                        <input mdInput placeholder="Company (disabled)" disabled value="Google">
-                      </md-form-field>
+                <td td-data-table-cell [numeric]="true" class="JCN">
+                  <button md-button md-raised color="primary" (click)="$event.stopPropagation()">{{row.JCN}}</button>
+                </td>
 
-                      <p>
-                        <md-form-field class="example-full-width">
-                          <textarea mdInput placeholder="Address">1600 Amphitheatre Pkwy</textarea>
+                <td td-data-table-cell class="WorkCenter">
+                  <span>{{row.WorkCenter}}</span>
+                </td>
+
+                <td td-data-table-cell class="EquipID">
+                  <span>{{row.EquipID}}</span>
+                </td>
+
+                <td td-data-table-cell class="Discrepancy ellipses">
+                  <span>{{row.Discrepancy}}</span>
+                </td>
+
+                <td td-data-table-cell class="CFPComments ellipses">
+                  <span>{{row.CFPComments}}</span>
+                </td>
+
+                <td td-data-table-cell class="ETIC" *ngIf="!row.isExpanded">
+                  <span>{{row.ETIC}}</span>
+                </td>
+
+                <td td-data-table-cell class="ETIC" *ngIf="row.isExpanded">
+                  <input mdInput [mdDatepicker]="picker" placeholder="Choose a date" [(ngModel)]="row.eticDate">
+                  <md-datepicker-toggle mdSuffix [for]="picker"></md-datepicker-toggle>
+                  <md-datepicker #picker></md-datepicker>
+                </td>
+
+                <td td-data-table-cell class="ApprovalStatus">
+                  <md-select placeholder="" [(ngModel)]="row.ApprovalStatus" name="status" (click)="$event.stopPropagation()">
+                    <md-option *ngFor="let status of approvalOptions" [value]="status.value">
+                      {{status.label}}
+                    </md-option>
+                  </md-select>
+                </td>
+
+              </tr>
+
+              <tr class="expanded-row {{row.CC}}" [@slideToggle] *ngIf="row.isExpanded">
+                <td colspan="7">
+                  <md-card class="job-info">
+                    <md-card-title>Job Info</md-card-title>
+                    <md-card-content>
+                      <form>
+                        <md-form-field class="wide">
+                          <input mdInput placeholder="When Discovered" disabled [value]="row.WhenDiscText">
                         </md-form-field>
-                        <md-form-field class="example-full-width">
-                          <textarea mdInput placeholder="Address 2"></textarea>
+                        <md-form-field class="wide">
+                          <input mdInput placeholder="Delay Code" disabled [value]="row.DelayCodeText">
                         </md-form-field>
-                      </p>
+                        <md-form-field class="wide">
+                          <input mdInput placeholder="Down Time" disabled [value]="row.DownTimeCodeText">
+                        </md-form-field>
+                      </form>
+                    </md-card-content>
+                  </md-card>
 
-                    </form>
-                  </md-card-content>
-                </md-card>
+                  <md-card class="job-history">
+                    <md-card-title>History</md-card-title>
+                    <md-card-content>
 
-                <md-card class="job-history">
-                  <md-card-title>History</md-card-title>
-                  <md-card-content>
-                    
-                  </md-card-content>
-                </md-card>
+                    </md-card-content>
+                  </md-card>
+                </td>
 
-
-                <!--   "EquipID": "CL341",
-  "JCN": "17236A039",
-  "StartDate": "17256",
-  "StartTime": "1000",
-  "StopDate": "17256",
-  "StopTime": "1005",
-  "DownTimeCode": "E",
-  "WUC": "03156",
-  "CC": "Red",
-  "WhenDISC": "P",
-  "NameUserID": "TURNEYM1",
-  "DelayCode": "V",
-  "WorkCenter": "51NT",
-  "Discrepancy": "56 Day PMI",
-  "LastUpdate": "13-SEP-17 NO CHANGE MICHAEL.TURNEY 51NT",
-  "ETIC": "09/29/2017",
-  "Location": "Home",
-  "ApprovalStatus": "Reviewed",
-  "CFPComments": null,
-  "LastModifier": "Connor Henner<br/>09/13/2017 19:15",
-  "CS": "2",
-  "Id": 13504,
-  "Modified": "/Date(1505330149000)/",
-  "ModifiedById": 20,
-  "dateRange": "9/13/2017, 1000 - 9/13/2017, 1005" -->
-              </div>
-            </td-expansion-panel>
+              </tr>
+            </ng-container>
           </tbody>
         </table>
 

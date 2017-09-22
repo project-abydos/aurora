@@ -1,9 +1,14 @@
 @import '~@angular/material/theming';
-$expand-bg-color:#444;
+@import '~animate.css/animate';
+$expand-bg-color:#555;
 $frost :#eee;
 // Custom style for loading elements without height
 .will-load {
     min-height: 80px;
+}
+
+.wide {
+    width: 100%!important;
 }
 
 // Href line height wasn't right for md-icon-button
@@ -25,8 +30,7 @@ td-layout-manage-list .mat-toolbar {
     display: flex;
     width: 50%;
     flex-flow: column;
-    .td-expansion-panel {
-        cursor: pointer; // transition: all ease 200ms;
+    tr {
         border-left: 10px solid transparent;
         &.Red {
             border-left-color: #c60000;
@@ -59,10 +63,11 @@ td-layout-manage-list .mat-toolbar {
         width: 100%;
         display: block;
         tr {
-            display: flex; //
+            cursor: pointer;
+            display: flex;
             flex-wrap: nowrap;
             td {
-                flex: 1; // display:flex;
+                flex: 1;
                 justify-content: flex-start;
             }
         }
@@ -77,10 +82,19 @@ td-layout-manage-list .mat-toolbar {
             margin-top: -1em;
             color: $frost;
         }
-        .td-expansion-panel.td-expanded .td-data-table-row {
-            background: $expand-bg-color;
+        .td-data-table-cell-content-wrapper {
+            float: left;
+        }
+        tr.td-data-table-row {
+            transition: all 0;
+            transition-delay: 200ms;
+            background-color: white;
+        }
+        tr.td-data-table-row.expanded {
+            transition: none;
+            background-color: $expand-bg-color;
             border-bottom: none;
-            color: $frost;
+            color: $frost!important;
             height: auto;
             td {
                 span {
@@ -93,13 +107,23 @@ td-layout-manage-list .mat-toolbar {
                 button {
                     margin-top: -10px;
                     color: $frost;
-                    // border: 1px solid $frost;
                     box-shadow: 0 3px 1px -2px rgba(240, 240, 240, .2), 0 2px 2px 0 rgba(240, 240, 240, .14), 0 1px 5px 0 rgba(240, 240, 240, .12);
                     background-color: rgba(240, 240, 240, .2);
                     &:hover {
                         color: #333;
                         background-color: rgba(240, 240, 240, .7);
                     }
+                }
+                .mat-select-value-text {
+                    color: $frost;
+                }
+            }
+        }
+        tr.td-data-table-row .ApprovalStatus {
+            md-select {
+                padding-top: 0;
+                .mat-select-arrow {
+                    display: none;
                 }
             }
         }

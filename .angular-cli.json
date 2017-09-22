@@ -31,6 +31,7 @@
       "environmentSource": "environments/environment.ts",
       "environments": {
         "dev": "environments/environment.ts",
+        "hmr": "environments/environment.hmr.ts",
         "prod": "environments/environment.prod.ts"
       }
     }
@@ -59,8 +60,8 @@
   "defaults": {
     "styleExt": "scss",
     "serve": {
-        "port": 4200,
-        "host": "localhost"
+      "port": 4200,
+      "host": "localhost"
     }
   }
 }

@@ -1,3 +1,4 @@
-export const environment: {production: boolean} = {
+export const environment: any = {
   production: true,
+  hmr: false,
 };
