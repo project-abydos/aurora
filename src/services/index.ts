@@ -1,2 +1,3 @@
+import { IMDSService } from './imds';
 import { SharepointService } from './sharepoint';
-export { SharepointService };
+export { IMDSService, SharepointService };

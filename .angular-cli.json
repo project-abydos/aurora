@@ -61,7 +61,7 @@
     "styleExt": "scss",
     "serve": {
       "port": 4200,
-      "host": "localhost"
+      "host": "0.0.0.0"
     }
   }
 }

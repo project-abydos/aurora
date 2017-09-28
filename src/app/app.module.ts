@@ -1,4 +1,3 @@
-import { SharepointService } from './../services/sharepoint';
 import { NgModule, Type } from '@angular/core';
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -38,6 +37,8 @@ import {
 
 import { AppComponent } from './app.component';
 
+import { IMDSService } from './../services/imds';
+import { SharepointService } from './../services/sharepoint';
 import { routedComponents, AppRoutingModule } from './app-routing.module';
 
 import { SharedModule } from './shared/shared.module';
@@ -84,6 +85,7 @@ import { SharedModule } from './shared/shared.module';
     CovalentExpansionPanelModule,
   ], // modules needed to run this module
   providers: [
+    IMDSService,
     SharepointService,
     Title,
   ], // additional providers needed for this module

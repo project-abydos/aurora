@@ -1,6 +1,7 @@
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { enableProdMode } from '@angular/core';
 import { environment } from './environments/environment';
+import { SharepointService } from './services/sharepoint';
 import { AppModule } from './app/';
 import { hmrBootstrap } from './hmr';
 
@@ -8,12 +9,14 @@ if (environment.production) {
   enableProdMode();
 }
 
+SharepointService.CONFIG.BASE_URL = '_api/web/lists';
+
 // tslint:disable
 const bootstrap = () => platformBrowserDynamic().bootstrapModule(AppModule);
 
 if (environment.hmr) {
   console.log(module);
-  if (module[ 'hot' ]) {
+  if (module['hot']) {
     hmrBootstrap(module, bootstrap);
   } else {
     console.error('HMR is not enabled for webpack-dev-server!');

@@ -1,0 +1,985 @@
+const D51MS_XML: string = `
+<?xml version="1.0" encoding="UTF-8" ?>
+<gmr elc="5814" remote_id="D17" txn_dt_tm="17256/1934" program_id="MH" version_date="121216" unit_id="D"
+     user_id="GRUNDHAA    ">
+    <ReportTitle>51MS - Maintenance History Review</ReportTitle>
+    <ReportAsof>13 SEP 2017 15:34</ReportAsof>
+    <Transaction>GMRD51MS:0</Transaction>
+    <TypeOutput>1</TypeOutput>
+    <Workcenter>51MS</Workcenter>
+    <ReportAsOf>13 SEP 2017 15:34</ReportAsOf>
+    <UnitId>D</UnitId>
+    <StartDate>13 SEP 17</StartDate>
+    <StopDate>13 SEP 17</StopDate>
+    <ReportOptions>History For Today</ReportOptions>
+    <EventDataRow>
+        <EventId>171040087</EventId>
+        <UnitId>D</UnitId>
+        <EmbedTransaction1>GMSD171040087</EmbedTransaction1>
+        <DiscrepancyNarrativeRow>
+            <DiscrepancyNarrative>RADIO FAULT ERROR</DiscrepancyNarrative>
+        </DiscrepancyNarrativeRow>
+        <WorkcenterEventDataRow>
+            <WorkcenterEvent>001</WorkcenterEvent>
+            <UnitId>D</UnitId>
+            <PerformingWorkcenter>D51MS</PerformingWorkcenter>
+            <EquipmentId>C1FD1</EquipmentId>
+            <StandardReportingDesignator>U8B</StandardReportingDesignator>
+            <SerialNumber>000000000163715</SerialNumber>
+            <OperatingTimeHours>00000</OperatingTimeHours>
+            <TagNumber>000000</TagNumber>
+            <FederalStockClassificationCode>0000</FederalStockClassificationCode>
+            <MissionDesignSeries>AN/PRC152(V)1</MissionDesignSeries>
+            <Symbol>A</Symbol>
+            <RepeatDiscrepancy>0</RepeatDiscrepancy>
+            <RecurringDiscrepancy>0</RecurringDiscrepancy>
+            <EmbedTransaction1>GMSD171040087001</EmbedTransaction1>
+            <WCENarrativeRow>
+                <WCENarrative>REPAIR AS REQUIRED</WCENarrative>
+            </WCENarrativeRow>
+            <DDRInformationDataRow></DDRInformationDataRow>
+            <DDRInformationDataRow>
+                <DDRDataRow>
+                    <DDR>010</DDR>
+                    <UnitId>D</UnitId>
+                    <TypeMaintenanceCode>B</TypeMaintenanceCode>
+                    <WorkUnitCode>AA000</WorkUnitCode>
+                    <StatusDateTimeRow>
+                        <StartTime>0730</StartTime>
+                        <Date>17256</Date>
+                        <StopTime>0745</StopTime>
+                    </StatusDateTimeRow>
+                    <ActionTakenCode>C</ActionTakenCode>
+                    <WhenDiscoveredCode>J</WhenDiscoveredCode>
+                    <HowMalfunctionCode>070</HowMalfunctionCode>
+                    <UnitsProduced>0</UnitsProduced>
+                    <Symbol>A</Symbol>
+                    <CrewSize>2</CrewSize>
+                    <CategoryOfLaborCode>1</CategoryOfLaborCode>
+                    <MajorCommandCode>1S</MajorCommandCode>
+                    <CorrectedByIMDSCDBUserId>BROWNM23</CorrectedByIMDSCDBUserId>
+                    <AirForceSpecialtyCodeIndicator>3D153</AirForceSpecialtyCodeIndicator>
+                    <ChangeDate>2017256</ChangeDate>
+                    <ChangeTime>1356</ChangeTime>
+                    <CorrectiveActionNarrativeRow>
+                        <CorrectiveActionNarrative>13 SEP 17-DUE TO PRICING ISSUES ON OUR END. WE HAD TO FILL O
+                        </CorrectiveActionNarrative>
+                        <CorrectiveActionNarrative>UT TWO SEPERATE INVOICES FOR HUB PIN TO BE REPAIRED. WAITING
+                        </CorrectiveActionNarrative>
+                        <CorrectiveActionNarrative>FOR PURCHASER APPROVAL ON INVOICES. //MWB//
+                        </CorrectiveActionNarrative>
+                    </CorrectiveActionNarrativeRow>
+                </DDRDataRow>
+            </DDRInformationDataRow>
+        </WorkcenterEventDataRow>
+    </EventDataRow>
+</gmr>
+`;
+
+const D52MS_XML: string = `
+<?xml version="1.0" encoding="UTF-8" ?>
+<gmr elc="5814" remote_id="D14" txn_dt_tm="17256/1954" program_id="MH" version_date="121216" unit_id="D"
+     user_id="SPAULDIN3   ">
+    <ReportTitle>52MS - Maintenance History Review</ReportTitle>
+    <ReportAsof>13 SEP 2017 15:54</ReportAsof>
+    <Transaction>GMRD52MS:0</Transaction>
+    <TypeOutput>1</TypeOutput>
+    <Workcenter>52MS</Workcenter>
+    <ReportAsOf>13 SEP 2017 15:54</ReportAsOf>
+    <UnitId>D</UnitId>
+    <StartDate>13 SEP 17</StartDate>
+    <StopDate>13 SEP 17</StopDate>
+    <ReportOptions>History For Today</ReportOptions>
+    <EventDataRow>
+        <EventId>17250B051</EventId>
+        <UnitId>D</UnitId>
+        <EmbedTransaction1>GMSD17250B051</EmbedTransaction1>
+        <DiscrepancyNarrativeRow>
+            <DiscrepancyNarrative>DAILY PMI IAW LWC 5CCG-AN/PRC-152-1 CARD NO. 1-01</DiscrepancyNarrative>
+            <DiscrepancyNarrative>FREQ 000001D DUE 2017250</DiscrepancyNarrative>
+            <DiscrepancyNarrative>C2FC1</DiscrepancyNarrative>
+        </DiscrepancyNarrativeRow>
+        <WorkcenterEventDataRow>
+            <WorkcenterEvent>001</WorkcenterEvent>
+            <UnitId>D</UnitId>
+            <PerformingWorkcenter>D52MS</PerformingWorkcenter>
+            <EquipmentId>C2FC1</EquipmentId>
+            <StandardReportingDesignator>U8B</StandardReportingDesignator>
+            <SerialNumber>0000000001C2FC1</SerialNumber>
+            <OperatingTimeHours>00000</OperatingTimeHours>
+            <TagNumber>000000</TagNumber>
+            <FederalStockClassificationCode>0000</FederalStockClassificationCode>
+            <MissionDesignSeries>AN/PRC152(V)1</MissionDesignSeries>
+            <Symbol>G</Symbol>
+            <RepeatDiscrepancy>0</RepeatDiscrepancy>
+            <RecurringDiscrepancy>0</RecurringDiscrepancy>
+            <EmbedTransaction1>GMSD17250B051001</EmbedTransaction1>
+            <WCENarrativeRow>
+                <WCENarrative>DAILY PMI IAW LWC 5CCG-AN/PRC-152-1 CARD NO. 1-01</WCENarrative>
+            </WCENarrativeRow>
+            <DDRInformationDataRow></DDRInformationDataRow>
+            <DDRInformationDataRow>
+                <DDRDataRow>
+                    <DDR>001</DDR>
+                    <UnitId>D</UnitId>
+                    <TypeMaintenanceCode>D</TypeMaintenanceCode>
+                    <WorkUnitCode>03101</WorkUnitCode>
+                    <StatusDateTimeRow>
+                        <StartTime>0900</StartTime>
+                        <Date>17256</Date>
+                        <StopTime>0910</StopTime>
+                    </StatusDateTimeRow>
+                    <UnitsProduced>1</UnitsProduced>
+                    <Symbol>G</Symbol>
+                    <CrewSize>2</CrewSize>
+                    <CategoryOfLaborCode>1</CategoryOfLaborCode>
+                    <MajorCommandCode>1S</MajorCommandCode>
+                    <CorrectedByIMDSCDBUserId>HARRISS14</CorrectedByIMDSCDBUserId>
+                    <AirForceSpecialtyCodeIndicator>3D133</AirForceSpecialtyCodeIndicator>
+                    <ChangeDate>2017256</ChangeDate>
+                    <ChangeTime>1730</ChangeTime>
+                    <CorrectiveActionNarrativeRow>
+                        <CorrectiveActionNarrative>13 SEP 17 - DAILY PMI COMPLETED//SRA HARRIS.52MS
+                        </CorrectiveActionNarrative>
+                    </CorrectiveActionNarrativeRow>
+                </DDRDataRow>
+            </DDRInformationDataRow>
+        </WorkcenterEventDataRow>
+    </EventDataRow>
+    <EventDataRow>
+        <EventId>17250B053</EventId>
+        <UnitId>D</UnitId>
+        <EmbedTransaction1>GMSD17250B053</EmbedTransaction1>
+        <DiscrepancyNarrativeRow>
+            <DiscrepancyNarrative>DAILY PMI IAW LWC 5CCG-AN/PRC-152-1 CARD NO. 1-01</DiscrepancyNarrative>
+            <DiscrepancyNarrative>FREQ 000001D DUE 2017250</DiscrepancyNarrative>
+            <DiscrepancyNarrative>C2FD0</DiscrepancyNarrative>
+        </DiscrepancyNarrativeRow>
+        <WorkcenterEventDataRow>
+            <WorkcenterEvent>001</WorkcenterEvent>
+            <UnitId>D</UnitId>
+            <PerformingWorkcenter>D52MS</PerformingWorkcenter>
+            <EquipmentId>C2FD0</EquipmentId>
+            <StandardReportingDesignator>U8B</StandardReportingDesignator>
+            <SerialNumber>0000000001C2FD0</SerialNumber>
+            <OperatingTimeHours>00000</OperatingTimeHours>
+            <TagNumber>000000</TagNumber>
+            <FederalStockClassificationCode>0000</FederalStockClassificationCode>
+            <MissionDesignSeries>AN/PRC152(V)1</MissionDesignSeries>
+            <Symbol>G</Symbol>
+            <RepeatDiscrepancy>0</RepeatDiscrepancy>
+            <RecurringDiscrepancy>0</RecurringDiscrepancy>
+            <EmbedTransaction1>GMSD17250B053001</EmbedTransaction1>
+            <WCENarrativeRow>
+                <WCENarrative>DAILY PMI IAW LWC 5CCG-AN/PRC-152-1 CARD NO. 1-01</WCENarrative>
+            </WCENarrativeRow>
+            <DDRInformationDataRow>
+                <DDRDataRow>
+                    <DDR>001</DDR>
+                    <UnitId>D</UnitId>
+                    <TypeMaintenanceCode>D</TypeMaintenanceCode>
+                    <WorkUnitCode>03101</WorkUnitCode>
+                    <StatusDateTimeRow>
+                        <StartTime>0910</StartTime>
+                        <Date>17256</Date>
+                        <StopTime>0920</StopTime>
+                    </StatusDateTimeRow>
+                    <UnitsProduced>1</UnitsProduced>
+                    <Symbol>G</Symbol>
+                    <CrewSize>2</CrewSize>
+                    <CategoryOfLaborCode>1</CategoryOfLaborCode>
+                    <MajorCommandCode>1S</MajorCommandCode>
+                    <CorrectedByIMDSCDBUserId>HARRISS14</CorrectedByIMDSCDBUserId>
+                    <AirForceSpecialtyCodeIndicator>3D133</AirForceSpecialtyCodeIndicator>
+                    <ChangeDate>2017256</ChangeDate>
+                    <ChangeTime>1732</ChangeTime>
+                    <CorrectiveActionNarrativeRow>
+                        <CorrectiveActionNarrative>13 SEP 17 - DAILY PMI COMPLETED//SRA HARRIS.52MS
+                        </CorrectiveActionNarrative>
+                    </CorrectiveActionNarrativeRow>
+                </DDRDataRow>
+            </DDRInformationDataRow>
+        </WorkcenterEventDataRow>
+    </EventDataRow>
+    <EventDataRow>
+        <EventId>17250B055</EventId>
+        <UnitId>D</UnitId>
+        <EmbedTransaction1>GMSD17250B055</EmbedTransaction1>
+        <DiscrepancyNarrativeRow>
+            <DiscrepancyNarrative>DAILY PMI IAW LWC 5CCG-AN/PRC-152-1 CARD NO. 1-01</DiscrepancyNarrative>
+            <DiscrepancyNarrative>FREQ 000001D DUE 2017250</DiscrepancyNarrative>
+            <DiscrepancyNarrative>C2FD1</DiscrepancyNarrative>
+        </DiscrepancyNarrativeRow>
+        <WorkcenterEventDataRow>
+            <WorkcenterEvent>001</WorkcenterEvent>
+            <UnitId>D</UnitId>
+            <PerformingWorkcenter>D52MS</PerformingWorkcenter>
+            <EquipmentId>C2FD1</EquipmentId>
+            <StandardReportingDesignator>U8B</StandardReportingDesignator>
+            <SerialNumber>0000000001C2FD1</SerialNumber>
+            <OperatingTimeHours>00000</OperatingTimeHours>
+            <TagNumber>000000</TagNumber>
+            <FederalStockClassificationCode>0000</FederalStockClassificationCode>
+            <MissionDesignSeries>AN/PRC152(V)1</MissionDesignSeries>
+            <Symbol>G</Symbol>
+            <RepeatDiscrepancy>0</RepeatDiscrepancy>
+            <RecurringDiscrepancy>0</RecurringDiscrepancy>
+            <EmbedTransaction1>GMSD17250B055001</EmbedTransaction1>
+            <WCENarrativeRow>
+                <WCENarrative>DAILY PMI IAW LWC 5CCG-AN/PRC-152-1 CARD NO. 1-01</WCENarrative>
+            </WCENarrativeRow>
+            <DDRInformationDataRow>
+                <DDRDataRow>
+                    <DDR>001</DDR>
+                    <UnitId>D</UnitId>
+                    <TypeMaintenanceCode>D</TypeMaintenanceCode>
+                    <WorkUnitCode>03101</WorkUnitCode>
+                    <StatusDateTimeRow>
+                        <StartTime>0900</StartTime>
+                        <Date>17256</Date>
+                        <StopTime>0910</StopTime>
+                    </StatusDateTimeRow>
+                    <UnitsProduced>1</UnitsProduced>
+                    <Symbol>G</Symbol>
+                    <CrewSize>2</CrewSize>
+                    <CategoryOfLaborCode>1</CategoryOfLaborCode>
+                    <MajorCommandCode>1S</MajorCommandCode>
+                    <CorrectedByIMDSCDBUserId>HARRISS14</CorrectedByIMDSCDBUserId>
+                    <AirForceSpecialtyCodeIndicator>3D133</AirForceSpecialtyCodeIndicator>
+                    <ChangeDate>2017256</ChangeDate>
+                    <ChangeTime>1736</ChangeTime>
+                    <CorrectiveActionNarrativeRow>
+                        <CorrectiveActionNarrative>13 SEP 17 - DAILY PMI COMPLETED//SRA HARRIS.52MS
+                        </CorrectiveActionNarrative>
+                    </CorrectiveActionNarrativeRow>
+                </DDRDataRow>
+            </DDRInformationDataRow>
+        </WorkcenterEventDataRow>
+    </EventDataRow>
+    <EventDataRow>
+        <EventId>17250B057</EventId>
+        <UnitId>D</UnitId>
+        <EmbedTransaction1>GMSD17250B057</EmbedTransaction1>
+        <DiscrepancyNarrativeRow>
+            <DiscrepancyNarrative>DAILY PMI IAW LWC 5CCG-AN/PRC-152-1 CARD NO. 1-01</DiscrepancyNarrative>
+            <DiscrepancyNarrative>FREQ 000001D DUE 2017250</DiscrepancyNarrative>
+            <DiscrepancyNarrative>C2FD3</DiscrepancyNarrative>
+        </DiscrepancyNarrativeRow>
+        <WorkcenterEventDataRow>
+            <WorkcenterEvent>001</WorkcenterEvent>
+            <UnitId>D</UnitId>
+            <PerformingWorkcenter>D52MS</PerformingWorkcenter>
+            <EquipmentId>C2FD3</EquipmentId>
+            <StandardReportingDesignator>U8B</StandardReportingDesignator>
+            <SerialNumber>0000000001C2FD3</SerialNumber>
+            <OperatingTimeHours>00000</OperatingTimeHours>
+            <TagNumber>000000</TagNumber>
+            <FederalStockClassificationCode>0000</FederalStockClassificationCode>
+            <MissionDesignSeries>AN/PRC152(V)1</MissionDesignSeries>
+            <Symbol>G</Symbol>
+            <RepeatDiscrepancy>0</RepeatDiscrepancy>
+            <RecurringDiscrepancy>0</RecurringDiscrepancy>
+            <EmbedTransaction1>GMSD17250B057001</EmbedTransaction1>
+            <WCENarrativeRow>
+                <WCENarrative>DAILY PMI IAW LWC 5CCG-AN/PRC-152-1 CARD NO. 1-01</WCENarrative>
+            </WCENarrativeRow>
+            <DDRInformationDataRow>
+                <DDRDataRow>
+                    <DDR>001</DDR>
+                    <UnitId>D</UnitId>
+                    <TypeMaintenanceCode>D</TypeMaintenanceCode>
+                    <WorkUnitCode>03101</WorkUnitCode>
+                    <StatusDateTimeRow>
+                        <StartTime>0910</StartTime>
+                        <Date>17256</Date>
+                        <StopTime>0920</StopTime>
+                    </StatusDateTimeRow>
+                    <UnitsProduced>1</UnitsProduced>
+                    <Symbol>G</Symbol>
+                    <CrewSize>2</CrewSize>
+                    <CategoryOfLaborCode>1</CategoryOfLaborCode>
+                    <MajorCommandCode>1S</MajorCommandCode>
+                    <CorrectedByIMDSCDBUserId>HARRISS14</CorrectedByIMDSCDBUserId>
+                    <AirForceSpecialtyCodeIndicator>3D133</AirForceSpecialtyCodeIndicator>
+                    <ChangeDate>2017256</ChangeDate>
+                    <ChangeTime>1740</ChangeTime>
+                    <CorrectiveActionNarrativeRow>
+                        <CorrectiveActionNarrative>13 SEP 17 - DAILY PMI COMPLETED//SRA HARRIS.52MS
+                        </CorrectiveActionNarrative>
+                    </CorrectiveActionNarrativeRow>
+                </DDRDataRow>
+            </DDRInformationDataRow>
+        </WorkcenterEventDataRow>
+    </EventDataRow>
+    <EventDataRow>
+        <EventId>17250B059</EventId>
+        <UnitId>D</UnitId>
+        <EmbedTransaction1>GMSD17250B059</EmbedTransaction1>
+        <DiscrepancyNarrativeRow>
+            <DiscrepancyNarrative>DAILY PMI IAW LWC 5CCG-AN/PRC-152-1 CARD NO. 1-01</DiscrepancyNarrative>
+            <DiscrepancyNarrative>FREQ 000001D DUE 2017250</DiscrepancyNarrative>
+            <DiscrepancyNarrative>C2FD5</DiscrepancyNarrative>
+        </DiscrepancyNarrativeRow>
+        <WorkcenterEventDataRow>
+            <WorkcenterEvent>001</WorkcenterEvent>
+            <UnitId>D</UnitId>
+            <PerformingWorkcenter>D52MS</PerformingWorkcenter>
+            <EquipmentId>C2FD5</EquipmentId>
+            <StandardReportingDesignator>U8B</StandardReportingDesignator>
+            <SerialNumber>0000000001C2FD5</SerialNumber>
+            <OperatingTimeHours>00000</OperatingTimeHours>
+            <TagNumber>000000</TagNumber>
+            <FederalStockClassificationCode>0000</FederalStockClassificationCode>
+            <MissionDesignSeries>AN/PRC152(V)1</MissionDesignSeries>
+            <Symbol>G</Symbol>
+            <RepeatDiscrepancy>0</RepeatDiscrepancy>
+            <RecurringDiscrepancy>0</RecurringDiscrepancy>
+            <EmbedTransaction1>GMSD17250B059001</EmbedTransaction1>
+            <WCENarrativeRow>
+                <WCENarrative>DAILY PMI IAW LWC 5CCG-AN/PRC-152-1 CARD NO. 1-01</WCENarrative>
+            </WCENarrativeRow>
+            <DDRInformationDataRow>
+                <DDRDataRow>
+                    <DDR>001</DDR>
+                    <UnitId>D</UnitId>
+                    <TypeMaintenanceCode>D</TypeMaintenanceCode>
+                    <WorkUnitCode>03101</WorkUnitCode>
+                    <StatusDateTimeRow>
+                        <StartTime>0910</StartTime>
+                        <Date>17256</Date>
+                        <StopTime>0920</StopTime>
+                    </StatusDateTimeRow>
+                    <UnitsProduced>1</UnitsProduced>
+                    <Symbol>G</Symbol>
+                    <CrewSize>2</CrewSize>
+                    <CategoryOfLaborCode>1</CategoryOfLaborCode>
+                    <MajorCommandCode>1S</MajorCommandCode>
+                    <CorrectedByIMDSCDBUserId>HARRISS14</CorrectedByIMDSCDBUserId>
+                    <AirForceSpecialtyCodeIndicator>3D133</AirForceSpecialtyCodeIndicator>
+                    <ChangeDate>2017256</ChangeDate>
+                    <ChangeTime>1742</ChangeTime>
+                    <CorrectiveActionNarrativeRow>
+                        <CorrectiveActionNarrative>13 SEP 17 - DAILY PMI COMPLETED//SRA HARRIS.52MS
+                        </CorrectiveActionNarrative>
+                    </CorrectiveActionNarrativeRow>
+                </DDRDataRow>
+            </DDRInformationDataRow>
+        </WorkcenterEventDataRow>
+    </EventDataRow>
+    <EventDataRow>
+        <EventId>17250B061</EventId>
+        <UnitId>D</UnitId>
+        <EmbedTransaction1>GMSD17250B061</EmbedTransaction1>
+        <DiscrepancyNarrativeRow>
+            <DiscrepancyNarrative>DAILY PMI IAW LWC 5CCG-AN/PRC-152-1 CARD NO. 1-01</DiscrepancyNarrative>
+            <DiscrepancyNarrative>FREQ 000001D DUE 2017250</DiscrepancyNarrative>
+            <DiscrepancyNarrative>C2FD6</DiscrepancyNarrative>
+        </DiscrepancyNarrativeRow>
+        <WorkcenterEventDataRow>
+            <WorkcenterEvent>001</WorkcenterEvent>
+            <UnitId>D</UnitId>
+            <PerformingWorkcenter>D52MS</PerformingWorkcenter>
+            <EquipmentId>C2FD6</EquipmentId>
+            <StandardReportingDesignator>U8B</StandardReportingDesignator>
+            <SerialNumber>0000000001C2FD6</SerialNumber>
+            <OperatingTimeHours>00000</OperatingTimeHours>
+            <TagNumber>000000</TagNumber>
+            <FederalStockClassificationCode>0000</FederalStockClassificationCode>
+            <MissionDesignSeries>AN/PRC152(V)1</MissionDesignSeries>
+            <Symbol>G</Symbol>
+            <RepeatDiscrepancy>0</RepeatDiscrepancy>
+            <RecurringDiscrepancy>0</RecurringDiscrepancy>
+            <EmbedTransaction1>GMSD17250B061001</EmbedTransaction1>
+            <WCENarrativeRow>
+                <WCENarrative>DAILY PMI IAW LWC 5CCG-AN/PRC-152-1 CARD NO. 1-01</WCENarrative>
+            </WCENarrativeRow>
+            <DDRInformationDataRow>
+                <DDRDataRow>
+                    <DDR>001</DDR>
+                    <UnitId>D</UnitId>
+                    <TypeMaintenanceCode>D</TypeMaintenanceCode>
+                    <WorkUnitCode>03101</WorkUnitCode>
+                    <StatusDateTimeRow>
+                        <StartTime>0900</StartTime>
+                        <Date>17256</Date>
+                        <StopTime>0910</StopTime>
+                    </StatusDateTimeRow>
+                    <UnitsProduced>1</UnitsProduced>
+                    <Symbol>G</Symbol>
+                    <CrewSize>2</CrewSize>
+                    <CategoryOfLaborCode>1</CategoryOfLaborCode>
+                    <MajorCommandCode>1S</MajorCommandCode>
+                    <CorrectedByIMDSCDBUserId>HARRISS14</CorrectedByIMDSCDBUserId>
+                    <AirForceSpecialtyCodeIndicator>3D133</AirForceSpecialtyCodeIndicator>
+                    <ChangeDate>2017256</ChangeDate>
+                    <ChangeTime>1744</ChangeTime>
+                    <CorrectiveActionNarrativeRow>
+                        <CorrectiveActionNarrative>13 SEP 17 - DAILY PMI COMPLETED//SRA HARRIS.52MS
+                        </CorrectiveActionNarrative>
+                    </CorrectiveActionNarrativeRow>
+                </DDRDataRow>
+            </DDRInformationDataRow>
+        </WorkcenterEventDataRow>
+    </EventDataRow>
+    <EventDataRow>
+        <EventId>17250B063</EventId>
+        <UnitId>D</UnitId>
+        <EmbedTransaction1>GMSD17250B063</EmbedTransaction1>
+        <DiscrepancyNarrativeRow>
+            <DiscrepancyNarrative>DAILY PMI IAW LWC 5CCG-AN/PRC-152-1 CARD NO. 1-01</DiscrepancyNarrative>
+            <DiscrepancyNarrative>FREQ 000001D DUE 2017250</DiscrepancyNarrative>
+            <DiscrepancyNarrative>C2FD7</DiscrepancyNarrative>
+        </DiscrepancyNarrativeRow>
+        <WorkcenterEventDataRow>
+            <WorkcenterEvent>001</WorkcenterEvent>
+            <UnitId>D</UnitId>
+            <PerformingWorkcenter>D52MS</PerformingWorkcenter>
+            <EquipmentId>C2FD7</EquipmentId>
+            <StandardReportingDesignator>U8B</StandardReportingDesignator>
+            <SerialNumber>0000000001C2FD7</SerialNumber>
+            <OperatingTimeHours>00000</OperatingTimeHours>
+            <TagNumber>000000</TagNumber>
+            <FederalStockClassificationCode>0000</FederalStockClassificationCode>
+            <MissionDesignSeries>AN/PRC152(V)1</MissionDesignSeries>
+            <Symbol>G</Symbol>
+            <RepeatDiscrepancy>0</RepeatDiscrepancy>
+            <RecurringDiscrepancy>0</RecurringDiscrepancy>
+            <EmbedTransaction1>GMSD17250B063001</EmbedTransaction1>
+            <WCENarrativeRow>
+                <WCENarrative>DAILY PMI IAW LWC 5CCG-AN/PRC-152-1 CARD NO. 1-01</WCENarrative>
+            </WCENarrativeRow>
+            <DDRInformationDataRow>
+                <DDRDataRow>
+                    <DDR>001</DDR>
+                    <UnitId>D</UnitId>
+                    <TypeMaintenanceCode>D</TypeMaintenanceCode>
+                    <WorkUnitCode>03101</WorkUnitCode>
+                    <StatusDateTimeRow>
+                        <StartTime>0900</StartTime>
+                        <Date>17256</Date>
+                        <StopTime>0910</StopTime>
+                    </StatusDateTimeRow>
+                    <UnitsProduced>1</UnitsProduced>
+                    <Symbol>G</Symbol>
+                    <CrewSize>2</CrewSize>
+                    <CategoryOfLaborCode>1</CategoryOfLaborCode>
+                    <MajorCommandCode>1S</MajorCommandCode>
+                    <CorrectedByIMDSCDBUserId>HARRISS14</CorrectedByIMDSCDBUserId>
+                    <AirForceSpecialtyCodeIndicator>3D133</AirForceSpecialtyCodeIndicator>
+                    <ChangeDate>2017256</ChangeDate>
+                    <ChangeTime>1747</ChangeTime>
+                    <CorrectiveActionNarrativeRow>
+                        <CorrectiveActionNarrative>13 SEP 17 - DAILY PMI COMPLETED//SRA HARRIS.52MS
+                        </CorrectiveActionNarrative>
+                    </CorrectiveActionNarrativeRow>
+                </DDRDataRow>
+            </DDRInformationDataRow>
+        </WorkcenterEventDataRow>
+    </EventDataRow>
+    <EventDataRow>
+        <EventId>17250B065</EventId>
+        <UnitId>D</UnitId>
+        <EmbedTransaction1>GMSD17250B065</EmbedTransaction1>
+        <DiscrepancyNarrativeRow>
+            <DiscrepancyNarrative>DAILY PMI IAW LWC 5CCG-AN/PRC-152-1 CARD NO. 1-01</DiscrepancyNarrative>
+            <DiscrepancyNarrative>FREQ 000001D DUE 2017250</DiscrepancyNarrative>
+            <DiscrepancyNarrative>C2FD8</DiscrepancyNarrative>
+        </DiscrepancyNarrativeRow>
+        <WorkcenterEventDataRow>
+            <WorkcenterEvent>001</WorkcenterEvent>
+            <UnitId>D</UnitId>
+            <PerformingWorkcenter>D52MS</PerformingWorkcenter>
+            <EquipmentId>C2FD8</EquipmentId>
+            <StandardReportingDesignator>U8B</StandardReportingDesignator>
+            <SerialNumber>0000000001C2FD8</SerialNumber>
+            <OperatingTimeHours>00000</OperatingTimeHours>
+            <TagNumber>000000</TagNumber>
+            <FederalStockClassificationCode>0000</FederalStockClassificationCode>
+            <MissionDesignSeries>AN/PRC152(V)1</MissionDesignSeries>
+            <Symbol>G</Symbol>
+            <RepeatDiscrepancy>0</RepeatDiscrepancy>
+            <RecurringDiscrepancy>0</RecurringDiscrepancy>
+            <EmbedTransaction1>GMSD17250B065001</EmbedTransaction1>
+            <WCENarrativeRow>
+                <WCENarrative>DAILY PMI IAW LWC 5CCG-AN/PRC-152-1 CARD NO. 1-01</WCENarrative>
+            </WCENarrativeRow>
+            <DDRInformationDataRow>
+                <DDRDataRow>
+                    <DDR>001</DDR>
+                    <UnitId>D</UnitId>
+                    <TypeMaintenanceCode>D</TypeMaintenanceCode>
+                    <WorkUnitCode>03101</WorkUnitCode>
+                    <StatusDateTimeRow>
+                        <StartTime>0900</StartTime>
+                        <Date>17256</Date>
+                        <StopTime>0910</StopTime>
+                    </StatusDateTimeRow>
+                    <UnitsProduced>1</UnitsProduced>
+                    <Symbol>G</Symbol>
+                    <CrewSize>2</CrewSize>
+                    <CategoryOfLaborCode>1</CategoryOfLaborCode>
+                    <MajorCommandCode>1S</MajorCommandCode>
+                    <CorrectedByIMDSCDBUserId>HARRISS14</CorrectedByIMDSCDBUserId>
+                    <AirForceSpecialtyCodeIndicator>3D133</AirForceSpecialtyCodeIndicator>
+                    <ChangeDate>2017256</ChangeDate>
+                    <ChangeTime>1748</ChangeTime>
+                    <CorrectiveActionNarrativeRow>
+                        <CorrectiveActionNarrative>13 SEP 17 - DAILY PMI COMPLETED//SRA HARRIS.52MS
+                        </CorrectiveActionNarrative>
+                    </CorrectiveActionNarrativeRow>
+                </DDRDataRow>
+            </DDRInformationDataRow>
+        </WorkcenterEventDataRow>
+    </EventDataRow>
+    <EventDataRow>
+        <EventId>17250B087</EventId>
+        <UnitId>D</UnitId>
+        <EmbedTransaction1>GMSD17250B087</EmbedTransaction1>
+        <DiscrepancyNarrativeRow>
+            <DiscrepancyNarrative>DAILY PMI IAW LWC-5CCG-QLAA-6WC-1 CARD# 1-01</DiscrepancyNarrative>
+            <DiscrepancyNarrative>FREQ 000001D DUE 2017250</DiscrepancyNarrative>
+            <DiscrepancyNarrative>R3229</DiscrepancyNarrative>
+        </DiscrepancyNarrativeRow>
+        <WorkcenterEventDataRow>
+            <WorkcenterEvent>001</WorkcenterEvent>
+            <UnitId>D</UnitId>
+            <PerformingWorkcenter>D52MS</PerformingWorkcenter>
+            <EquipmentId>R3229</EquipmentId>
+            <StandardReportingDesignator>BAU</StandardReportingDesignator>
+            <SerialNumber>5CCG00000003229</SerialNumber>
+            <OperatingTimeHours>00000</OperatingTimeHours>
+            <TagNumber>000000</TagNumber>
+            <FederalStockClassificationCode>0000</FederalStockClassificationCode>
+            <MissionDesignSeries>OE-593/FR</MissionDesignSeries>
+            <Symbol>G</Symbol>
+            <RepeatDiscrepancy>0</RepeatDiscrepancy>
+            <RecurringDiscrepancy>0</RecurringDiscrepancy>
+            <EmbedTransaction1>GMSD17250B087001</EmbedTransaction1>
+            <WCENarrativeRow>
+                <WCENarrative>DAILY PMI IAW LWC-5CCG-QLAA-6WC-1 CARD# 1-0</WCENarrative>
+            </WCENarrativeRow>
+            <DDRInformationDataRow>
+                <DDRDataRow>
+                    <DDR>001</DDR>
+                    <UnitId>D</UnitId>
+                    <TypeMaintenanceCode>D</TypeMaintenanceCode>
+                    <WorkUnitCode>03101</WorkUnitCode>
+                    <StatusDateTimeRow>
+                        <StartTime>0910</StartTime>
+                        <Date>17256</Date>
+                        <StopTime>0920</StopTime>
+                    </StatusDateTimeRow>
+                    <UnitsProduced>1</UnitsProduced>
+                    <Symbol>G</Symbol>
+                    <CrewSize>2</CrewSize>
+                    <CategoryOfLaborCode>1</CategoryOfLaborCode>
+                    <MajorCommandCode>1S</MajorCommandCode>
+                    <CorrectedByIMDSCDBUserId>HARRISS14</CorrectedByIMDSCDBUserId>
+                    <AirForceSpecialtyCodeIndicator>3D133</AirForceSpecialtyCodeIndicator>
+                    <ChangeDate>2017256</ChangeDate>
+                    <ChangeTime>1800</ChangeTime>
+                    <CorrectiveActionNarrativeRow>
+                        <CorrectiveActionNarrative>13 SEP 17 - DAILY PMI COMPLETED//SRA HARRIS.52MS
+                        </CorrectiveActionNarrative>
+                    </CorrectiveActionNarrativeRow>
+                </DDRDataRow>
+            </DDRInformationDataRow>
+        </WorkcenterEventDataRow>
+    </EventDataRow>
+    <EventDataRow>
+        <EventId>17250B091</EventId>
+        <UnitId>D</UnitId>
+        <EmbedTransaction1>GMSD17250B091</EmbedTransaction1>
+        <DiscrepancyNarrativeRow>
+            <DiscrepancyNarrative>7-DAY PMI IAW LWC-5CCG-QLAA-6WC-1 CARD# 2-01</DiscrepancyNarrative>
+            <DiscrepancyNarrative>FREQ 000007D DUE 2017250</DiscrepancyNarrative>
+            <DiscrepancyNarrative>R3231</DiscrepancyNarrative>
+        </DiscrepancyNarrativeRow>
+        <WorkcenterEventDataRow>
+            <WorkcenterEvent>001</WorkcenterEvent>
+            <UnitId>D</UnitId>
+            <PerformingWorkcenter>D52MS</PerformingWorkcenter>
+            <EquipmentId>R3231</EquipmentId>
+            <StandardReportingDesignator>BAU</StandardReportingDesignator>
+            <SerialNumber>5CCG00000003231</SerialNumber>
+            <OperatingTimeHours>00000</OperatingTimeHours>
+            <TagNumber>000000</TagNumber>
+            <FederalStockClassificationCode>0000</FederalStockClassificationCode>
+            <MissionDesignSeries>OE-593/FR</MissionDesignSeries>
+            <Symbol>G</Symbol>
+            <RepeatDiscrepancy>0</RepeatDiscrepancy>
+            <RecurringDiscrepancy>0</RecurringDiscrepancy>
+            <EmbedTransaction1>GMSD17250B091001</EmbedTransaction1>
+            <WCENarrativeRow>
+                <WCENarrative>7-DAY PMI IAW LWC-5CCG-QLAA-6WC-1 CARD# 2-01</WCENarrative>
+            </WCENarrativeRow>
+            <DDRInformationDataRow>
+                <DDRDataRow>
+                    <DDR>001</DDR>
+                    <UnitId>D</UnitId>
+                    <TypeMaintenanceCode>D</TypeMaintenanceCode>
+                    <WorkUnitCode>03107</WorkUnitCode>
+                    <StatusDateTimeRow>
+                        <StartTime>0930</StartTime>
+                        <Date>17256</Date>
+                        <StopTime>1000</StopTime>
+                    </StatusDateTimeRow>
+                    <UnitsProduced>1</UnitsProduced>
+                    <Symbol>G</Symbol>
+                    <CrewSize>2</CrewSize>
+                    <CategoryOfLaborCode>1</CategoryOfLaborCode>
+                    <MajorCommandCode>1S</MajorCommandCode>
+                    <CorrectedByIMDSCDBUserId>HARRISS14</CorrectedByIMDSCDBUserId>
+                    <AirForceSpecialtyCodeIndicator>3D133</AirForceSpecialtyCodeIndicator>
+                    <ChangeDate>2017256</ChangeDate>
+                    <ChangeTime>1802</ChangeTime>
+                    <CorrectiveActionNarrativeRow>
+                        <CorrectiveActionNarrative>13 SEP 17 - 7-DAY PMI COMPLETED//SRA HARRIS.52MS
+                        </CorrectiveActionNarrative>
+                    </CorrectiveActionNarrativeRow>
+                </DDRDataRow>
+            </DDRInformationDataRow>
+        </WorkcenterEventDataRow>
+    </EventDataRow>
+    <EventDataRow>
+        <EventId>17250B093</EventId>
+        <UnitId>D</UnitId>
+        <EmbedTransaction1>GMSD17250B093</EmbedTransaction1>
+        <DiscrepancyNarrativeRow>
+            <DiscrepancyNarrative>DAILY PMI IAW LWC-5CCG-QLAA-6WC-1 CARD# 1-01</DiscrepancyNarrative>
+            <DiscrepancyNarrative>FREQ 000001D DUE 2017250</DiscrepancyNarrative>
+            <DiscrepancyNarrative>R3235</DiscrepancyNarrative>
+        </DiscrepancyNarrativeRow>
+        <WorkcenterEventDataRow>
+            <WorkcenterEvent>001</WorkcenterEvent>
+            <UnitId>D</UnitId>
+            <PerformingWorkcenter>D52MS</PerformingWorkcenter>
+            <EquipmentId>R3235</EquipmentId>
+            <StandardReportingDesignator>BAU</StandardReportingDesignator>
+            <SerialNumber>5CCG00000003235</SerialNumber>
+            <OperatingTimeHours>00000</OperatingTimeHours>
+            <TagNumber>000000</TagNumber>
+            <FederalStockClassificationCode>0000</FederalStockClassificationCode>
+            <MissionDesignSeries>OE-593/FR</MissionDesignSeries>
+            <Symbol>G</Symbol>
+            <RepeatDiscrepancy>0</RepeatDiscrepancy>
+            <RecurringDiscrepancy>0</RecurringDiscrepancy>
+            <EmbedTransaction1>GMSD17250B093001</EmbedTransaction1>
+            <WCENarrativeRow>
+                <WCENarrative>DAILY PMI IAW LWC-5CCG-QLAA-6WC-1 CARD# 1-0</WCENarrative>
+            </WCENarrativeRow>
+            <DDRInformationDataRow>
+                <DDRDataRow>
+                    <DDR>001</DDR>
+                    <UnitId>D</UnitId>
+                    <TypeMaintenanceCode>D</TypeMaintenanceCode>
+                    <WorkUnitCode>03101</WorkUnitCode>
+                    <StatusDateTimeRow>
+                        <StartTime>0930</StartTime>
+                        <Date>17256</Date>
+                        <StopTime>0940</StopTime>
+                    </StatusDateTimeRow>
+                    <UnitsProduced>1</UnitsProduced>
+                    <Symbol>G</Symbol>
+                    <CrewSize>2</CrewSize>
+                    <CategoryOfLaborCode>1</CategoryOfLaborCode>
+                    <MajorCommandCode>1S</MajorCommandCode>
+                    <CorrectedByIMDSCDBUserId>HARRISS14</CorrectedByIMDSCDBUserId>
+                    <AirForceSpecialtyCodeIndicator>3D133</AirForceSpecialtyCodeIndicator>
+                    <ChangeDate>2017256</ChangeDate>
+                    <ChangeTime>1805</ChangeTime>
+                    <CorrectiveActionNarrativeRow>
+                        <CorrectiveActionNarrative>13 SEP 17 - DAILY PMI COMPLETED//SRA HARRIS.52MS
+                        </CorrectiveActionNarrative>
+                    </CorrectiveActionNarrativeRow>
+                </DDRDataRow>
+            </DDRInformationDataRow>
+        </WorkcenterEventDataRow>
+    </EventDataRow>
+    <EventDataRow>
+        <EventId>17250B147</EventId>
+        <UnitId>D</UnitId>
+        <EmbedTransaction1>GMSD17250B147</EmbedTransaction1>
+        <DiscrepancyNarrativeRow>
+            <DiscrepancyNarrative>DAILY PMI IAW OP &#38; UNIT LEV MAINT MAN TBL 3.3-2</DiscrepancyNarrative>
+            <DiscrepancyNarrative>FREQ 000001D DUE 2017250</DiscrepancyNarrative>
+            <DiscrepancyNarrative>R2108</DiscrepancyNarrative>
+        </DiscrepancyNarrativeRow>
+        <WorkcenterEventDataRow>
+            <WorkcenterEvent>001</WorkcenterEvent>
+            <UnitId>D</UnitId>
+            <PerformingWorkcenter>D52MS</PerformingWorkcenter>
+            <EquipmentId>R2108</EquipmentId>
+            <StandardReportingDesignator>BAR</StandardReportingDesignator>
+            <SerialNumber>000000000002108</SerialNumber>
+            <OperatingTimeHours>00000</OperatingTimeHours>
+            <TagNumber>000000</TagNumber>
+            <FederalStockClassificationCode>0000</FederalStockClassificationCode>
+            <MissionDesignSeries>TSC179 R</MissionDesignSeries>
+            <Symbol>G</Symbol>
+            <RepeatDiscrepancy>0</RepeatDiscrepancy>
+            <RecurringDiscrepancy>0</RecurringDiscrepancy>
+            <EmbedTransaction1>GMSD17250B147001</EmbedTransaction1>
+            <WCENarrativeRow>
+                <WCENarrative>DAILY PMI IAW OP / UNIT LEV MAINT MAN TBL 3 3-2</WCENarrative>
+            </WCENarrativeRow>
+            <DDRInformationDataRow>
+                <DDRDataRow>
+                    <DDR>001</DDR>
+                    <UnitId>D</UnitId>
+                    <TypeMaintenanceCode>D</TypeMaintenanceCode>
+                    <WorkUnitCode>03100</WorkUnitCode>
+                    <StatusDateTimeRow>
+                        <StartTime>1000</StartTime>
+                        <Date>17256</Date>
+                        <StopTime>1030</StopTime>
+                    </StatusDateTimeRow>
+                    <UnitsProduced>1</UnitsProduced>
+                    <Symbol>G</Symbol>
+                    <CrewSize>2</CrewSize>
+                    <CategoryOfLaborCode>1</CategoryOfLaborCode>
+                    <MajorCommandCode>1S</MajorCommandCode>
+                    <CorrectedByIMDSCDBUserId>HARRISS14</CorrectedByIMDSCDBUserId>
+                    <AirForceSpecialtyCodeIndicator>3D133</AirForceSpecialtyCodeIndicator>
+                    <ChangeDate>2017256</ChangeDate>
+                    <ChangeTime>1812</ChangeTime>
+                    <CorrectiveActionNarrativeRow>
+                        <CorrectiveActionNarrative>13 SEP 17 - DAILY PMI COMPLETED//SRA HARRIS.52MS
+                        </CorrectiveActionNarrative>
+                    </CorrectiveActionNarrativeRow>
+                </DDRDataRow>
+            </DDRInformationDataRow>
+        </WorkcenterEventDataRow>
+    </EventDataRow>
+    <EventDataRow>
+        <EventId>17250B149</EventId>
+        <UnitId>D</UnitId>
+        <EmbedTransaction1>GMSD17250B149</EmbedTransaction1>
+        <DiscrepancyNarrativeRow>
+            <DiscrepancyNarrative>DAILY PMI IAW OP &#38; UNIT LEV MAINT MAN TBL 3.3-2</DiscrepancyNarrative>
+            <DiscrepancyNarrative>FREQ 000001D DUE 2017250</DiscrepancyNarrative>
+            <DiscrepancyNarrative>R2139</DiscrepancyNarrative>
+        </DiscrepancyNarrativeRow>
+        <WorkcenterEventDataRow>
+            <WorkcenterEvent>001</WorkcenterEvent>
+            <UnitId>D</UnitId>
+            <PerformingWorkcenter>D52MS</PerformingWorkcenter>
+            <EquipmentId>R2139</EquipmentId>
+            <StandardReportingDesignator>BAR</StandardReportingDesignator>
+            <SerialNumber>000000000002139</SerialNumber>
+            <OperatingTimeHours>00000</OperatingTimeHours>
+            <TagNumber>000000</TagNumber>
+            <FederalStockClassificationCode>0000</FederalStockClassificationCode>
+            <MissionDesignSeries>TSC179 R</MissionDesignSeries>
+            <Symbol>G</Symbol>
+            <RepeatDiscrepancy>0</RepeatDiscrepancy>
+            <RecurringDiscrepancy>0</RecurringDiscrepancy>
+            <EmbedTransaction1>GMSD17250B149001</EmbedTransaction1>
+            <WCENarrativeRow>
+                <WCENarrative>DAILY PMI IAW OP / UNIT LEV MAINT MAN TBL 3 3-2</WCENarrative>
+            </WCENarrativeRow>
+            <DDRInformationDataRow>
+                <DDRDataRow>
+                    <DDR>001</DDR>
+                    <UnitId>D</UnitId>
+                    <TypeMaintenanceCode>D</TypeMaintenanceCode>
+                    <WorkUnitCode>03100</WorkUnitCode>
+                    <StatusDateTimeRow>
+                        <StartTime>1000</StartTime>
+                        <Date>17256</Date>
+                        <StopTime>1030</StopTime>
+                    </StatusDateTimeRow>
+                    <UnitsProduced>1</UnitsProduced>
+                    <Symbol>G</Symbol>
+                    <CrewSize>2</CrewSize>
+                    <CategoryOfLaborCode>1</CategoryOfLaborCode>
+                    <MajorCommandCode>1S</MajorCommandCode>
+                    <CorrectedByIMDSCDBUserId>HARRISS14</CorrectedByIMDSCDBUserId>
+                    <AirForceSpecialtyCodeIndicator>3D133</AirForceSpecialtyCodeIndicator>
+                    <ChangeDate>2017256</ChangeDate>
+                    <ChangeTime>1815</ChangeTime>
+                    <CorrectiveActionNarrativeRow>
+                        <CorrectiveActionNarrative>13 SEP 17 - DAILY PMI COMPLETED//SRA HARRIS.52MS
+                        </CorrectiveActionNarrative>
+                    </CorrectiveActionNarrativeRow>
+                </DDRDataRow>
+            </DDRInformationDataRow>
+        </WorkcenterEventDataRow>
+    </EventDataRow>
+    <EventDataRow>
+        <EventId>172560025</EventId>
+        <UnitId>D</UnitId>
+        <EmbedTransaction1>GMSD172560025</EmbedTransaction1>
+        <DiscrepancyNarrativeRow>
+            <DiscrepancyNarrative>BROKEN ANTENNA CONTROL UNIT(ACU)CABLE</DiscrepancyNarrative>
+        </DiscrepancyNarrativeRow>
+        <WorkcenterEventDataRow>
+            <WorkcenterEvent>001</WorkcenterEvent>
+            <UnitId>D</UnitId>
+            <PerformingWorkcenter>D52MS</PerformingWorkcenter>
+            <EquipmentId>R3231</EquipmentId>
+            <StandardReportingDesignator>BAU</StandardReportingDesignator>
+            <SerialNumber>5CCG00000003231</SerialNumber>
+            <OperatingTimeHours>00000</OperatingTimeHours>
+            <TagNumber>000000</TagNumber>
+            <FederalStockClassificationCode>0000</FederalStockClassificationCode>
+            <MissionDesignSeries>OE-593/FR</MissionDesignSeries>
+            <Symbol>R</Symbol>
+            <RepeatDiscrepancy>0</RepeatDiscrepancy>
+            <RecurringDiscrepancy>0</RecurringDiscrepancy>
+            <EmbedTransaction1>GMSD172560025001</EmbedTransaction1>
+            <WCENarrativeRow>
+                <WCENarrative>REPAIR AS REQUIRED</WCENarrative>
+            </WCENarrativeRow>
+            <DDRInformationDataRow>
+                <DDRDataRow>
+                    <DDR>001</DDR>
+                    <UnitId>D</UnitId>
+                    <TypeMaintenanceCode>D</TypeMaintenanceCode>
+                    <WorkUnitCode>BBAPB</WorkUnitCode>
+                    <StatusDateTimeRow>
+                        <StartTime>1000</StartTime>
+                        <Date>17256</Date>
+                        <StopTime>1100</StopTime>
+                    </StatusDateTimeRow>
+                    <ActionTakenCode>R</ActionTakenCode>
+                    <WhenDiscoveredCode>J</WhenDiscoveredCode>
+                    <HowMalfunctionCode>875</HowMalfunctionCode>
+                    <UnitsProduced>0</UnitsProduced>
+                    <Symbol>R</Symbol>
+                    <CrewSize>2</CrewSize>
+                    <CategoryOfLaborCode>2</CategoryOfLaborCode>
+                    <MajorCommandCode>1S</MajorCommandCode>
+                    <CorrectedByIMDSCDBUserId>GREENJ25</CorrectedByIMDSCDBUserId>
+                    <AirForceSpecialtyCodeIndicator>3D132</AirForceSpecialtyCodeIndicator>
+                    <ChangeDate>2017256</ChangeDate>
+                    <ChangeTime>1632</ChangeTime>
+                    <CorrectiveActionNarrativeRow>
+                        <CorrectiveActionNarrative>SHIPPED REPLACEMENT CABLE FROM QLAA 3231 TO DEPLOYED LOCATIO
+                        </CorrectiveActionNarrative>
+                        <CorrectiveActionNarrative>N. AWAITING TRACKING NUMBER.//SRA JOHN GREEN.52MS
+                        </CorrectiveActionNarrative>
+                    </CorrectiveActionNarrativeRow>
+                </DDRDataRow>
+            </DDRInformationDataRow>
+        </WorkcenterEventDataRow>
+    </EventDataRow>
+    <EventDataRow>
+        <EventId>172560033</EventId>
+        <UnitId>D</UnitId>
+        <EmbedTransaction1>GMSD172560033</EmbedTransaction1>
+        <DiscrepancyNarrativeRow>
+            <DiscrepancyNarrative>BROKEN ANTENNA CONTROL UNIT (ACU) CABLE</DiscrepancyNarrative>
+        </DiscrepancyNarrativeRow>
+        <WorkcenterEventDataRow>
+            <WorkcenterEvent>001</WorkcenterEvent>
+            <UnitId>D</UnitId>
+            <PerformingWorkcenter>D52MS</PerformingWorkcenter>
+            <EquipmentId>R3229</EquipmentId>
+            <StandardReportingDesignator>BAU</StandardReportingDesignator>
+            <SerialNumber>5CCG00000003229</SerialNumber>
+            <OperatingTimeHours>00000</OperatingTimeHours>
+            <TagNumber>000000</TagNumber>
+            <FederalStockClassificationCode>0000</FederalStockClassificationCode>
+            <MissionDesignSeries>OE-593/FR</MissionDesignSeries>
+            <Symbol>R</Symbol>
+            <RepeatDiscrepancy>0</RepeatDiscrepancy>
+            <RecurringDiscrepancy>0</RecurringDiscrepancy>
+            <EmbedTransaction1>GMSD172560033001</EmbedTransaction1>
+            <WCENarrativeRow>
+                <WCENarrative>REPAIR AS REQUIRED</WCENarrative>
+            </WCENarrativeRow>
+            <DDRInformationDataRow>
+                <DDRDataRow>
+                    <DDR>001</DDR>
+                    <UnitId>D</UnitId>
+                    <TypeMaintenanceCode>D</TypeMaintenanceCode>
+                    <WorkUnitCode>BBAPB</WorkUnitCode>
+                    <StatusDateTimeRow>
+                        <StartTime>1000</StartTime>
+                        <Date>17256</Date>
+                        <StopTime>1100</StopTime>
+                    </StatusDateTimeRow>
+                    <ActionTakenCode>R</ActionTakenCode>
+                    <WhenDiscoveredCode>J</WhenDiscoveredCode>
+                    <HowMalfunctionCode>070</HowMalfunctionCode>
+                    <UnitsProduced>0</UnitsProduced>
+                    <Symbol>R</Symbol>
+                    <CrewSize>2</CrewSize>
+                    <CategoryOfLaborCode>1</CategoryOfLaborCode>
+                    <MajorCommandCode>1S</MajorCommandCode>
+                    <CorrectedByIMDSCDBUserId>GREENJ25</CorrectedByIMDSCDBUserId>
+                    <AirForceSpecialtyCodeIndicator>3D132</AirForceSpecialtyCodeIndicator>
+                    <ChangeDate>2017256</ChangeDate>
+                    <ChangeTime>1625</ChangeTime>
+                    <CorrectiveActionNarrativeRow>
+                        <CorrectiveActionNarrative>SHIPPED REPLACEMENT CABLE FROM QLAA 3231 TO DEPLOYED LOCATIO
+                        </CorrectiveActionNarrative>
+                        <CorrectiveActionNarrative>N. AWAITING TRACKING NUMBER.//SRA JOHN GREEN.52MS
+                        </CorrectiveActionNarrative>
+                    </CorrectiveActionNarrativeRow>
+                </DDRDataRow>
+            </DDRInformationDataRow>
+        </WorkcenterEventDataRow>
+    </EventDataRow>
+    <EventDataRow>
+        <EventId>172560039</EventId>
+        <UnitId>D</UnitId>
+        <EmbedTransaction1>GMSD172560039</EmbedTransaction1>
+        <DiscrepancyNarrativeRow>
+            <DiscrepancyNarrative>MISSING PARTS</DiscrepancyNarrative>
+        </DiscrepancyNarrativeRow>
+        <WorkcenterEventDataRow>
+            <WorkcenterEvent>001</WorkcenterEvent>
+            <UnitId>D</UnitId>
+            <PerformingWorkcenter>D52MS</PerformingWorkcenter>
+            <EquipmentId>R2137</EquipmentId>
+            <StandardReportingDesignator>BAR</StandardReportingDesignator>
+            <SerialNumber>000000000002137</SerialNumber>
+            <OperatingTimeHours>00000</OperatingTimeHours>
+            <TagNumber>000000</TagNumber>
+            <FederalStockClassificationCode>0000</FederalStockClassificationCode>
+            <MissionDesignSeries>TSC179 R</MissionDesignSeries>
+            <Symbol>R</Symbol>
+            <RepeatDiscrepancy>0</RepeatDiscrepancy>
+            <RecurringDiscrepancy>0</RecurringDiscrepancy>
+            <EmbedTransaction1>GMSD172560039001</EmbedTransaction1>
+            <WCENarrativeRow>
+                <WCENarrative>REPAIR AS REQUIRED</WCENarrative>
+            </WCENarrativeRow>
+            <DDRInformationDataRow>
+                <DDRDataRow>
+                    <DDR>001</DDR>
+                    <UnitId>D</UnitId>
+                    <TypeMaintenanceCode>B</TypeMaintenanceCode>
+                    <WorkUnitCode>BAQFA</WorkUnitCode>
+                    <StatusDateTimeRow>
+                        <StartTime>1400</StartTime>
+                        <Date>17256</Date>
+                        <StopTime>1405</StopTime>
+                    </StatusDateTimeRow>
+                    <ActionTakenCode>R</ActionTakenCode>
+                    <WhenDiscoveredCode>P</WhenDiscoveredCode>
+                    <HowMalfunctionCode>070</HowMalfunctionCode>
+                    <UnitsProduced>0</UnitsProduced>
+                    <Symbol>R</Symbol>
+                    <CrewSize>2</CrewSize>
+                    <CategoryOfLaborCode>1</CategoryOfLaborCode>
+                    <MajorCommandCode>1S</MajorCommandCode>
+                    <CorrectedByIMDSCDBUserId>COLEMANJ20</CorrectedByIMDSCDBUserId>
+                    <AirForceSpecialtyCodeIndicator>3D133</AirForceSpecialtyCodeIndicator>
+                    <ChangeDate>2017256</ChangeDate>
+                    <ChangeTime>1906</ChangeTime>
+                    <CorrectiveActionNarrativeRow>
+                        <CorrectiveActionNarrative>13 SEP 17- AWAITING MIPR FUNDING TO PMO TO PURCHASE PARTS./
+                        </CorrectiveActionNarrative>
+                        <CorrectiveActionNarrative>/SRA JESSICA COLEMAN.52MS</CorrectiveActionNarrative>
+                    </CorrectiveActionNarrativeRow>
+                </DDRDataRow>
+            </DDRInformationDataRow>
+        </WorkcenterEventDataRow>
+    </EventDataRow>
+</gmr>
+`;
+
+export { D51MS_XML, D52MS_XML };

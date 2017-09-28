@@ -1,7 +1,9 @@
+import { IMDSService } from './../../services/imds';
 import { SharepointService, ISharePointMDC } from './../../services/sharepoint';
 import { Component, OnInit } from '@angular/core';
 import * as moment from 'moment';
 import { JsonPipe } from '@angular/common';
+import * as xml2js from 'xml2js';
 
 import { Title } from '@angular/platform-browser';
 
@@ -95,10 +97,14 @@ export class DashboardComponent {
 
   constructor(private _dataTableService: TdDataTableService,
     private _titleService: Title,
+    private _imdsService: IMDSService,
     private _sharePointService: SharepointService) {
 
+    // tslint:disable-next-line:no-console
+    this._imdsService.imds.subscribe(thing => xml2js.parseString(thing, (err, result) => console.dir(result)));
+
     this._titleService.setTitle(APP_TITLE);
-    this._sharePointService.mdc.subscribe(mdc => {
+    this._sharePointService.getMDC().subscribe(mdc => {
       this.mdc = mdc.map(row => {
         const newRow: ICustomMDCData = <ICustomMDCData>row;
         const julianFormat: string = 'YYDDDHHmm';
