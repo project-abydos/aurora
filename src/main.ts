@@ -9,7 +9,7 @@ if (environment.production) {
   enableProdMode();
 }
 
-SharepointService.CONFIG.BASE_URL = '_api/web/lists';
+SharepointService.CONFIG.BASE_URL = 'https://cs2.eis.af.mil/sites/10383/mdrp/_vti_bin/ListData.svc';
 
 // tslint:disable
 const bootstrap = () => platformBrowserDynamic().bootstrapModule(AppModule);

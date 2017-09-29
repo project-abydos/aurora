@@ -58,11 +58,12 @@ export class SharepointService {
 
   request(path: string, options?: RequestOptionsArgs): Observable<any> {
 
-    const url: string = `${SharepointService.CONFIG.BASE_URL}/GetByTitle('${path}')/items`;
+    const url: string = `${SharepointService.CONFIG.BASE_URL}/${path}`;
 
     options = options || new RequestOptions();
     options.headers = new Headers();
-    options.headers.set('content-type', 'application/json;odata=verbose' );
+    options.headers.set('Accept', 'application/json');
+    options.headers.set('Content-Type', 'application/json');
 
     return this.http
       .request(url, options)
@@ -71,7 +72,7 @@ export class SharepointService {
   }
 
   getMDC(): Observable<ISharePointMDC[]> {
-    return this.request('jobs');
+    return this.request('Jobs');
   }
 
 }
