@@ -10,8 +10,8 @@
     "build": "webpack"
   },
   "engines": {
-    "node": ">6",
-    "npm": ">3"
+    "node": ">=6",
+    "npm": ">=3"
   },
   "license": "MIT",
   "author": "Jeff McCoy: megamind@diux.mil",
