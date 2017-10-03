@@ -58,9 +58,9 @@ export class SharepointService {
 
   }
 
-  request(url: string, options?: RequestOptionsArgs, deleteOperation = false): Observable<any> {
+  request(url: string, options?: RequestOptionsArgs, deleteOperation: boolean = false): Observable<any> {
 
-    const isUpdate = !!get(options, '__metadata.uri');
+    const isUpdate: boolean = !!get(options, '__metadata.uri');
 
     options = options || new RequestOptions();
     options.headers = new Headers();
@@ -77,7 +77,10 @@ export class SharepointService {
 
     return this.http
       .request(url, options)
-      .map(response => response.json().d.results);
+      .map(response => {
+        const { d } = response.json();
+        return d.results || d;
+      });
 
   }
 
@@ -85,17 +88,17 @@ export class SharepointService {
     return this.request('Jobs');
   }
 
-  createJob(job: ISharePointMDC): Observable<ISharePointMDC[]> {
+  createJob(job: ISharePointMDC): Observable<ISharePointMDC> {
     return this.request('Jobs', {
       method: 'post',
-      body: job
+      body: job,
     });
   }
 
-  updateJob(job: ISharePointMDC): Observable<ISharePointMDC[]> {
+  updateJob(job: ISharePointMDC): Observable<ISharePointMDC> {
     return this.request('Jobs', {
       method: 'put',
-      body: job
+      body: job,
     });
   }
 

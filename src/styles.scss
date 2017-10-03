@@ -21,6 +21,10 @@ a[md-icon-button] {
     text-transform: capitalize;
 }
 
+.start-imds-sync md-progress-spinner {
+    height: 40px!important;
+}
+
 // Lighter font weight in sub-toolbars
 td-layout-manage-list .mat-toolbar {
     font-weight: 400;
@@ -32,11 +36,14 @@ td-layout-manage-list .mat-toolbar {
     flex-flow: column;
     tr {
         border-left: 10px solid transparent;
-        &.Red {
+        &.R {
             border-left-color: #c60000;
         }
-        &.Amber {
+        &.A {
             border-left-color: #ff9339;
+        }
+        &.G {
+            border-left-color: #0EC50E;
         }
     }
     th,
@@ -71,7 +78,7 @@ td-layout-manage-list .mat-toolbar {
                 justify-content: flex-start;
             }
         }
-        .ellipses {
+        .ellipses span {
             width: 100%;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -86,9 +93,16 @@ td-layout-manage-list .mat-toolbar {
             float: left;
         }
         tr.td-data-table-row {
-            transition: all 0;
+            transition: all 0 ease;
             transition-delay: 200ms;
             background-color: white;
+            margin-top: 10PX;
+            margin-bottom: 10px;
+            border-bottom: none;
+            &:hover {
+                transition: none!important;
+                background: rgba(238, 238, 238, 0.25);
+            }
         }
         tr.td-data-table-row.expanded {
             transition: none;

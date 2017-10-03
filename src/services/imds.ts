@@ -20,7 +20,7 @@ interface IParsedDDRDataRow {
         Date: string;
         StartTime: string;
         StopTime: string;
-    }
+    };
     Symbol: string;
     TypeMaintnenanceCode: string;
     UnitId: string;
@@ -55,7 +55,7 @@ interface IParsedEventDataRow {
         DiscrepancyNarrative: string[];
     };
     EmbedTransaction1: string;
-    EventDateTimeStamp:string;
+    EventDateTimeStamp: string;
     EventId: string;
     EventNeedForm: string;
     EventStatus: string;
