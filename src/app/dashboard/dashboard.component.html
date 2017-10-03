@@ -41,7 +41,7 @@
             <th td-data-table-column class="WorkCenter">Shop</th>
             <th td-data-table-column class="EquipID">S/N</th>
             <th td-data-table-column class="Discrepancy">Discrepancy</th>
-            <th td-data-table-column class="CFPComments">CFP Notes</th>
+            <th td-data-table-column class="LastUpdate">Last Update</th>
             <th td-data-table-column class="ETIC">ETIC</th>
             <th td-data-table-column class="ApprovalStatus">Status</th>
           </thead>
@@ -65,8 +65,8 @@
                   <span>{{row.Discrepancy}}</span>
                 </td>
 
-                <td td-data-table-cell class="CFPComments ellipses">
-                  <span>{{row.CFPComments}}</span>
+                <td td-data-table-cell class="LastUpdate ellipses">
+                  <span>{{row.LastUpdate}}</span>
                 </td>
 
                 <td td-data-table-cell class="ETIC" *ngIf="!row.isExpanded">
@@ -132,7 +132,7 @@
   </div>
   <td-layout-footer>
     <div layout="row" layout-align="start center">
-      <span class="md-caption">Developed by the 5 CBCS/SCS, Robins AFB, GA.</span>
+      <span class="md-caption">Developed by the 5 CBCSS/SCS, Robins AFB, GA.</span>
       <span flex></span>
       <md-icon class="md-icon-ux" svgIcon="assets:teradata-ux"></md-icon>
     </div>

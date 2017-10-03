@@ -18,8 +18,6 @@ import {
   MdTabsModule, MdSelectModule,
 } from '@angular/material';
 
-import { NgxChartsModule, } from '@swimlane/ngx-charts';
-
 const FLEX_LAYOUT_MODULES: any[] = [
   FlexLayoutModule,
 ];
@@ -43,17 +41,12 @@ const COVALENT_MODULES: any[] = [
   CovalentCommonModule, CovalentDialogsModule,
 ];
 
-const CHART_MODULES: any[] = [
-  NgxChartsModule,
-];
-
 @NgModule({
   imports: [
     CommonModule,
     ANGULAR_MODULES,
     MATERIAL_MODULES,
     COVALENT_MODULES,
-    CHART_MODULES,
     FLEX_LAYOUT_MODULES,
   ],
   declarations: [
@@ -63,7 +56,6 @@ const CHART_MODULES: any[] = [
     ANGULAR_MODULES,
     MATERIAL_MODULES,
     COVALENT_MODULES,
-    CHART_MODULES,
     FLEX_LAYOUT_MODULES,
   ],
 })

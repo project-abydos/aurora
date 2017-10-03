@@ -4,8 +4,8 @@
   "private": true,
   "description": "",
   "scripts": {
-    "start": "webpack-dev-server --port=4200 --disableHostCheck",
-    "hmr": "ng serve --hmr -e=hmr --disableHostCheck",
+    "start": "webpack-dev-server",
+    "hmr": "ng serve --hmr -e=hmr",
     "lint": "ng lint",
     "build": "webpack"
   },
