@@ -65,7 +65,7 @@ td-layout-manage-list .mat-toolbar {
         }
     }
     tbody {
-        height: calc(100vh - 225px)!important;
+        height: calc(100vh - 250px)!important;
         overflow-y: auto;
         width: 100%;
         display: block;
@@ -136,7 +136,7 @@ td-layout-manage-list .mat-toolbar {
         tr.td-data-table-row .ApprovalStatus {
             md-select {
                 padding-top: 0;
-                .mat-select-arrow {
+                .mat-select-arrow, .mat-select-underline {
                     display: none;
                 }
             }

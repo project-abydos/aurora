@@ -3,7 +3,7 @@
     <span class="animated fadeIn">{{appTitle}}</span>
     <span flex></span>
     <span class="julian-date animated fadeInRightBig">Julian Date: {{julianDate}}</span>
-    <span class="pull-right-sm start-imds-sync">
+    <span class="pull-right-sm start-imds-sync animated fadeInRightBig">
         <ng-template tdLoading="imds-380" tdLoadingColor="accent">
           <button md-icon-button (click)="syncIMDS()">
               <md-icon>cloud_download</md-icon>
@@ -54,7 +54,7 @@
                   </td>
 
                   <td td-data-table-cell class="LastUpdate ellipses">
-                    <span>{{row.timeStampPretty}}: {{row.LastUpdate}}</span>
+                    <span><strong>{{row.timeStampPretty}}</strong> | <em>{{row.LastUpdate}}</em></span>
                   </td>
 
                   <td td-data-table-cell class="ETIC" *ngIf="!row.isExpanded">

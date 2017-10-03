@@ -117,7 +117,7 @@ export class DashboardComponent implements OnInit {
         return item.join ? item.join(' ') : String(item);
       };
 
-      result.EquipmentDataRow.EventDataRow.forEach(row => {
+      result.EquipmentDataRow.EventDataRow.forEach((row, index) => {
 
         const job: ISharePointMDC = {
           JCN: row.EventId,
@@ -130,8 +130,6 @@ export class DashboardComponent implements OnInit {
           LastUpdate: flatten(row.WorkcenterEventDataRow.WorkcenterEventNarrativeRow.WorkcenterEventNarrative),
         };
 
-        console.log(job);
-
         const match: ICustomMDCData = find(this.mdc, { JCN: job.JCN });
 
         if (match) {
@@ -142,15 +140,18 @@ export class DashboardComponent implements OnInit {
             this.mapMDCRow(job);
           }
         } else {
+          this._loadingService.register('imds-380', index);
           // New record
           this._sharePointService
             .createJob(job)
-            .subscribe(createdJob => this.mapMDCRow(createdJob));
+            .subscribe(createdJob => {
+              this.mapMDCRow(createdJob);
+              this._loadingService.resolve('imds-380', index);
+            });
         }
       });
 
-      setTimeout(() =>
-        this._loadingService.resolve('imds-380'), 2000);
+      this._loadingService.resolve('imds-380');
 
     }));
 
@@ -167,7 +168,7 @@ export class DashboardComponent implements OnInit {
     ].join(' - ');
 
     newRow.ApprovalStatus = row.ApprovalStatus || '-';
-    newRow.timeStampPretty = moment(row.Timestamp, 'YYDDD HH:mm:ss').fromNow();
+    newRow.timeStampPretty = moment(row.Timestamp, 'YYDDD HH:mm:ss').fromNow(true);
     newRow.WhenDiscText = row.WhenDISC ? `${row.WhenDISC} - ${WHEN_DISCOVERED_CODES[row.WhenDISC]}` : '';
     newRow.DownTimeCodeText = row.DownTimeCode ? `${row.DownTimeCode} - ${DOWN_TIME_CODES[row.DownTimeCode]}` : '';
     newRow.DelayCodeText = row.DelayCode ? `${row.DelayCode} - ${DELAY_CODES[row.DelayCode]}` : '';
@@ -189,9 +190,9 @@ export class DashboardComponent implements OnInit {
   }
 
   filter(): void {
-    let newData: ICustomMDCData[];
-    newData = this._dataTableService.filterData(this.mdc, this.searchTerm, true);
-    newData = this._dataTableService.sortData(this.mdc, this.sortBy, this.sortOrder);
+    let newData: ICustomMDCData[] = cloneDeep(this.mdc);
+    newData = this._dataTableService.filterData(newData, this.searchTerm, true);
+    newData = this._dataTableService.sortData(newData, this.sortBy, this.sortOrder);
     this.filteredData = newData;
   }
 
