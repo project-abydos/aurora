@@ -17,6 +17,7 @@ import {
 import { APP_TITLE, APPROVAL_STATUS_OPTIONS, ISelectOption, DELAY_CODES, WHEN_DISCOVERED_CODES, DOWN_TIME_CODES } from '../contanstants';
 import { Moment } from 'moment';
 import { style, transition, trigger, animate } from '@angular/animations';
+import { CrossDomainService } from 'services';
 
 interface ICustomMDCData extends ISharePointMDC {
   dateRange: string;
@@ -45,7 +46,6 @@ interface ICustomMDCData extends ISharePointMDC {
           animate(150, style({ height: '0' })),
         ]),
       ],
-
     ),
   ],
 })
@@ -83,6 +83,7 @@ export class DashboardComponent implements OnInit {
     private _imdsService: IMDSService,
     private _sharePointService: SharepointService,
     private _loadingService: TdLoadingService,
+    private _crossDomainService: CrossDomainService,
   ) {
 
     this._titleService.setTitle(APP_TITLE);
@@ -90,13 +91,13 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this._loadingService.register('mdc');
-    this._sharePointService.getMDC().subscribe(mdc => {
-      mdc.forEach(row => this.mapMDCRow(row));
-      this.filter();
-      this._loadingService.resolve('mdc');
-      this.isLoaded = true;
-    });
+    // this._loadingService.register('mdc');
+    // this._sharePointService.getMDC().subscribe(mdc => {
+    //   mdc.forEach(row => this.mapMDCRow(row));
+    //   this.filter();
+    //   this._loadingService.resolve('mdc');
+    //   this.isLoaded = true;
+    // });
   }
 
   syncIMDS(): void {

@@ -1,3 +1,4 @@
+import { CrossDomainService } from './cross-domain';
 import { IMDSService } from './imds';
 import { SharepointService } from './sharepoint';
-export { IMDSService, SharepointService };
+export { CrossDomainService, IMDSService, SharepointService };

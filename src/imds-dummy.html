@@ -1,0 +1,120 @@
+<HTML>
+
+<HEAD>
+	<TITLE>Air Force Automated Maintenance System</TITLE>
+	<META content=text/html;charset=utf-8 http-equiv=Content-Type>
+	<STYLE type=text/css>
+		BODY {
+			BACKGROUND-COLOR: #ffffff
+		}
+
+		.title3 {
+			FONT-SIZE: 18pt;
+			FONT-FAMILY: "Times New Roman";
+			FONT-WEIGHT: bold;
+			COLOR: #000090;
+			FONT-STYLE: italic
+		}
+
+		.title4 {
+			FONT-SIZE: 10pt;
+			FONT-FAMILY: Tahoma;
+			FONT-WEIGHT: bold
+		}
+
+		.boxborder {
+			BACKGROUND-COLOR: #e8e1e1
+		}
+
+		.text2 {
+			FONT-SIZE: 14px;
+			FONT-FAMILY: Tahoma, Helvetica, sans-serif
+		}
+	</STYLE>
+
+</HEAD>
+
+<BODY>
+	<DIV id=div1 class=boxborder style="BORDER-TOP: thin outset; BORDER-RIGHT: thin outset; WIDTH: 868px; BORDER-BOTTOM: thin outset; PADDING-BOTTOM: 25px; PADDING-TOP: 25px; PADDING-LEFT: 25px; MARGIN-LEFT: 100px; BORDER-LEFT: thin outset; PADDING-RIGHT: 25px">
+		<TABLE style="WIDTH: 100%">
+			<TBODY>
+				<TR>
+					<TD class=title3 style="TEXT-ALIGN: center" colSpan=2>IMDS CDB </TD>
+				</TR>
+				<TR>
+					<TD>&nbsp;</TD>
+				</TR>
+				<TR>
+					<TD class=title4 style="TEXT-ALIGN: center" colSpan=2>To process concurrent TIP sessions you must access each one from a separate browser window. </TD>
+				</TR>
+				<TR>
+					<TD>&nbsp;</TD>
+				</TR>
+				<TR>
+					<TD class=title4 colSpan=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1). Close This Window</TD>
+				</TR>
+				<TR>
+					<TD class=title4 colSpan=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2). Open A New Browser By Clicking Your Shortcut Button or the IE button on
+						your toolbar </TD>
+				</TR>
+				<TR>
+					<TD>&nbsp;</TD>
+				</TR>
+				<TR>
+					<TD>&nbsp;</TD>
+				</TR>
+				<TR>
+					<TD>&nbsp;</TD>
+				</TR>
+				<TR class=text2>
+					<TD>&nbsp;&nbsp;&nbsp;&nbsp;Logged On Via:&nbsp;&nbsp;
+						<SPAN id=IPortal>Direct</SPAN>
+					</TD>
+				</TR>
+				<TR class=text2>
+					<TD>&nbsp;&nbsp;&nbsp;&nbsp;Host:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<SPAN id=IPath>https://imds-octf.csd.disa.mil/</SPAN>
+					</TD>
+				</TR>
+			</TBODY>
+		</TABLE>
+	</DIV>
+
+</BODY>
+
+<script>
+
+
+	function runIt() {
+		var init = false;
+		var url = "http://localhost:4200";
+		//	var url = "http://www.this-page-intentionally-left-blank.org/";
+		var mdrp = window.open(url, '_blank', 'toolbar=0,location=0,directories=0,status=0,menubar=0,titlebar=0,scrollbars=1,resizable=1');
+
+		window.addEventListener('message', receiveMessage, false);
+		waitForInit();
+
+		function waitForInit() {
+			if (init) {
+				console.log("app initialized");
+			} else {
+				console.log("wait for activation...");
+				mdrp.postMessage("Activate", "*");
+				setTimeout(waitForInit, 250);
+			}
+		}
+
+		function receiveMessage(message) {
+			console.log(message);
+			if (message.data && message.data.init === true) {
+				init = true;
+			}
+		}
+
+	}
+	setTimeout(runIt, 250);
+
+
+</script>
+
+</HTML>

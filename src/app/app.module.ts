@@ -37,8 +37,7 @@ import {
 
 import { AppComponent } from './app.component';
 
-import { IMDSService } from './../services/imds';
-import { SharepointService } from './../services/sharepoint';
+import { CrossDomainService, IMDSService, SharepointService } from 'services';
 import { routedComponents, AppRoutingModule } from './app-routing.module';
 
 import { SharedModule } from './shared/shared.module';
@@ -85,6 +84,7 @@ import { SharedModule } from './shared/shared.module';
     CovalentExpansionPanelModule,
   ], // modules needed to run this module
   providers: [
+    CrossDomainService,
     IMDSService,
     SharepointService,
     Title,

@@ -1,7 +1,7 @@
 export interface ISelectOption {
     value: string;
     label: string;
-}
+} 
 
 export interface ICodes {
     [key: string]: string;
