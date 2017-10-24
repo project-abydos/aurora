@@ -105,7 +105,7 @@ export class IMDSService {
     readonly imds: Observable<ISharePointMDC> = this._imds.asObservable();
 
     constructor(private _crossDomainService: CrossDomainService, private _loadingService: TdLoadingService) {
-        _crossDomainService.receiveSyncData.subscribe()
+        _crossDomainService.receiveSyncData.subscribe(xml => this._processXML(xml));
     }
 
     flatten(item: string[]): string {
@@ -114,11 +114,13 @@ export class IMDSService {
 
     fetch380(org: string): void {
 
-        this._loadingService.register('imds-380');
-
         this._crossDomainService.peformSyncOperation();
 
-        const xml: string = D52MS_380_XML;
+    }
+
+    private _processXML(xml: string): void {
+
+        this._loadingService.register('imds-380');
 
         this._parser.parseString(xml, (err, result: IParsed380) => {
 
