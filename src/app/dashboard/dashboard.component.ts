@@ -3,7 +3,6 @@ import { SharepointService, ISharePointMDC } from '../../services/sharepoint';
 import { Component, OnInit } from '@angular/core';
 import * as moment from 'moment';
 import { JsonPipe } from '@angular/common';
-import * as xml2js from 'xml2js';
 import { cloneDeep, defaults, find } from 'lodash';
 
 import { Title } from '@angular/platform-browser';
@@ -86,7 +85,31 @@ export class DashboardComponent implements OnInit {
     private _crossDomainService: CrossDomainService,
   ) {
 
-    this._titleService.setTitle(APP_TITLE);
+    _titleService.setTitle(APP_TITLE);
+
+    _imdsService.imds.subscribe(job => {
+
+      const match: ICustomMDCData = find(this.mdc, { JCN: job.JCN });
+
+      if (match) {
+        if (match.Timestamp !== job.Timestamp) {
+          // this._sharePointService.updateJob(job)
+          defaults(job, match);
+          match.updated = true;
+          this.mapMDCRow(job);
+        }
+      } else {
+        this._loadingService.register('imds-380', job.Id);
+        // New record
+        this._sharePointService
+          .createJob(job)
+          .subscribe(createdJob => {
+            this.mapMDCRow(createdJob);
+            this._loadingService.resolve('imds-380', job.Id);
+          });
+      }
+
+    });
 
   }
 
@@ -102,59 +125,7 @@ export class DashboardComponent implements OnInit {
 
   syncIMDS(): void {
 
-    const parser: any = new xml2js.Parser({
-      explicitRoot: false,
-      explicitArray: false,
-    });
-
-    this._loadingService.register('imds-380');
-
-    this._imdsService.imds.subscribe(xml => parser.parseString(xml, (err, result: IParsed380) => {
-
-      console.clear();
-      console.log(result.EquipmentDataRow);
-
-      const flatten: Function = (item: string[]): string => {
-        return item.join ? item.join(' ') : String(item);
-      };
-
-      result.EquipmentDataRow.EventDataRow.forEach((row, index) => {
-
-        const job: ISharePointMDC = {
-          JCN: row.EventId,
-          CC: row.EventSymbol,
-          Discrepancy: flatten(row.DiscrepancyNarrativeRow.DiscrepancyNarrative),
-          WorkCenter: result.EquipmentDataRow.Workcenter,
-          Timestamp: row.EventDateTimeStamp,
-          EquipID: row.WorkcenterEventDataRow.EquipmentIdOrPartNumber,
-          DelayCode: row.DefereCode,
-          LastUpdate: flatten(row.WorkcenterEventDataRow.WorkcenterEventNarrativeRow.WorkcenterEventNarrative),
-        };
-
-        const match: ICustomMDCData = find(this.mdc, { JCN: job.JCN });
-
-        if (match) {
-          if (match.Timestamp !== job.Timestamp) {
-            // this._sharePointService.updateJob(job)
-            defaults(job, match);
-            match.updated = true;
-            this.mapMDCRow(job);
-          }
-        } else {
-          this._loadingService.register('imds-380', index);
-          // New record
-          this._sharePointService
-            .createJob(job)
-            .subscribe(createdJob => {
-              this.mapMDCRow(createdJob);
-              this._loadingService.resolve('imds-380', index);
-            });
-        }
-      });
-
-      this._loadingService.resolve('imds-380');
-
-    }));
+    this._imdsService.fetch380('test');
 
   }
 

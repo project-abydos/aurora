@@ -1,8 +1,13 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import { Parser } from 'xml2js';
+import { defaults, find } from 'lodash';
 
 import { D52MS_380_XML } from './mock-data-imds-screen-380';
+import { CrossDomainService } from 'services';
+import { ISharePointMDC } from 'services/sharepoint';
+import { TdLoadingService } from '@covalent/core';
 
 interface IParsedDDRDataRow {
     ActionTakenCode: string;
@@ -90,11 +95,52 @@ interface IParsed380 {
 @Injectable()
 export class IMDSService {
 
-    private _imds: BehaviorSubject<string> = new BehaviorSubject(D52MS_380_XML);
+    private _imds: BehaviorSubject<ISharePointMDC> = new BehaviorSubject(undefined);
 
-    public readonly imds: Observable<string> = this._imds.asObservable();
+    private _parser: Parser = new Parser({
+        explicitRoot: false,
+        explicitArray: false,
+    });
 
-    // constructor() { }
+    readonly imds: Observable<ISharePointMDC> = this._imds.asObservable();
+
+    constructor(private _crossDomainService: CrossDomainService, private _loadingService: TdLoadingService) {
+        _crossDomainService.receiveSyncData.subscribe()
+    }
+
+    flatten(item: string[]): string {
+        return item.join ? item.join(' ') : String(item);
+    }
+
+    fetch380(org: string): void {
+
+        this._loadingService.register('imds-380');
+
+        this._crossDomainService.peformSyncOperation();
+
+        const xml: string = D52MS_380_XML;
+
+        this._parser.parseString(xml, (err, result: IParsed380) => {
+
+            console.clear();
+            console.log(result.EquipmentDataRow);
+
+            result.EquipmentDataRow.EventDataRow.forEach((row, index) =>
+                this._imds.next({
+                    JCN: row.EventId,
+                    CC: row.EventSymbol,
+                    Discrepancy: this.flatten(row.DiscrepancyNarrativeRow.DiscrepancyNarrative),
+                    WorkCenter: result.EquipmentDataRow.Workcenter,
+                    Timestamp: row.EventDateTimeStamp,
+                    EquipID: row.WorkcenterEventDataRow.EquipmentIdOrPartNumber,
+                    DelayCode: row.DefereCode,
+                    LastUpdate: this.flatten(row.WorkcenterEventDataRow.WorkcenterEventNarrativeRow.WorkcenterEventNarrative),
+                }));
+
+            this._loadingService.resolve('imds-380');
+
+        });
+    }
 
 }
 

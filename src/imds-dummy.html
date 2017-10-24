@@ -88,7 +88,6 @@
 	function runIt() {
 		var init = false;
 		var url = "http://localhost:4200";
-		//	var url = "http://www.this-page-intentionally-left-blank.org/";
 		var mdrp = window.open(url, '_blank', 'toolbar=0,location=0,directories=0,status=0,menubar=0,titlebar=0,scrollbars=1,resizable=1');
 
 		window.addEventListener('message', receiveMessage, false);
@@ -105,14 +104,32 @@
 		}
 
 		function receiveMessage(message) {
+
 			console.log(message);
-			if (message.data && message.data.init === true) {
-				init = true;
+
+			message = message.data || {}
+			var state = Object.keys(message)[0];
+			var data = message[state];
+
+			if (!state || !data) {
+				console.log("unknown post message");
+				return;
 			}
+
+			switch (state) {
+
+				case "IMDS_SYNC_HTML":
+					init = true;
+					document.write(data);
+					break;
+
+			}
+
 		}
 
 	}
-	setTimeout(runIt, 250);
+
+	setTimeout(runIt, 5000);
 
 
 </script>

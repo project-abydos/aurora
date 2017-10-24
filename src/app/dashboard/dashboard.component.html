@@ -3,7 +3,7 @@
     <span class="animated fadeIn">{{appTitle}}</span>
     <span flex></span>
     <span class="julian-date animated fadeInRightBig">Julian Date: {{julianDate}}</span>
-    <span class="pull-right-sm start-imds-sync animated fadeInRightBig">
+    <span class="pull-right-sm start-imds-sync animated fadeInRightBig" *ngIf="_crossDomainService.connectionEnabled | async">
         <ng-template tdLoading="imds-380" tdLoadingColor="accent">
           <button md-icon-button (click)="syncIMDS()">
               <md-icon>cloud_download</md-icon>
