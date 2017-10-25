@@ -3,10 +3,10 @@
     <span class="animated fadeIn">{{appTitle}}</span>
     <span flex></span>
     <span class="julian-date animated fadeInRightBig">Julian Date: {{julianDate}}</span>
-    <span class="pull-right-sm start-imds-sync animated fadeInRightBig" *ngIf="_crossDomainService.connectionEnabled | async">
+    <span class="pull-right-sm start-imds-sync animated fadeInRightBig" *ngIf="crossDomainService.connectionEnabled | async">
         <ng-template tdLoading="imds-380" tdLoadingColor="accent">
-          <button md-icon-button (click)="syncIMDS()">
-              <md-icon>cloud_download</md-icon>
+          <button mat-icon-button (click)="syncIMDS()">
+              <mat-icon>cloud_download</mat-icon>
             </button>
         </ng-template>
     </span>
@@ -14,7 +14,7 @@
   <div layout-gt-sm="row" tdMediaToggle="gt-xs" [mediaClasses]="['push-sm']">
     <div flex-gt-sm="100">
       <ng-template tdLoading="mdc">
-        <md-card *ngIf="isLoaded" class="animated zoomIn">
+        <mat-card *ngIf="isLoaded" class="animated zoomIn">
 
           <div layout="row" layout-align="start center" class="pad-left-sm pad-right-sm">
 
@@ -22,7 +22,7 @@
               flex=1>
             </td-search-box>
           </div>
-          <md-divider></md-divider>
+          <mat-divider></mat-divider>
           <table td-data-table class="table--fixed">
             <thead>
               <th td-data-table-column class="JCN">JCN</th>
@@ -38,7 +38,7 @@
                 <tr td-data-table-row [ngClass]="[row.CC, row.isExpanded ? 'expanded' : 'collapsed']" (click)="toggleExpanded(row)">
 
                   <td td-data-table-cell [numeric]="true" class="JCN">
-                    <button md-button md-raised color="primary" (click)="$event.stopPropagation()">{{row.JCN}}</button>
+                    <button mat-button mat-raised color="primary" (click)="$event.stopPropagation()">{{row.JCN}}</button>
                   </td>
 
                   <td td-data-table-cell class="WorkCenter">
@@ -62,46 +62,46 @@
                   </td>
 
                   <td td-data-table-cell class="ETIC" *ngIf="row.isExpanded">
-                    <input mdInput [mdDatepicker]="picker" placeholder="Choose a date" [(ngModel)]="row.eticDate">
-                    <md-datepicker-toggle mdSuffix [for]="picker"></md-datepicker-toggle>
-                    <md-datepicker #picker></md-datepicker>
+                    <input matInput [matDatepicker]="picker" placeholder="Choose a date" [(ngModel)]="row.eticDate">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
                   </td>
 
                   <td td-data-table-cell class="ApprovalStatus">
-                    <md-select placeholder="" [(ngModel)]="row.ApprovalStatus" name="status" (click)="$event.stopPropagation()">
-                      <md-option *ngFor="let status of approvalOptions" [value]="status.value">
+                    <mat-select placeholder="" [(ngModel)]="row.ApprovalStatus" name="status" (click)="$event.stopPropagation()">
+                      <mat-option *ngFor="let status of approvalOptions" [value]="status.value">
                         {{status.label}}
-                      </md-option>
-                    </md-select>
+                      </mat-option>
+                    </mat-select>
                   </td>
 
                 </tr>
 
                 <tr class="expanded-row {{row.CC}}" [@slideToggle] *ngIf="row.isExpanded">
                   <td colspan="7">
-                    <md-card class="job-info">
-                      <md-card-title>Job Info</md-card-title>
-                      <md-card-content>
+                    <mat-card class="job-info">
+                      <mat-card-title>Job Info</mat-card-title>
+                      <mat-card-content>
                         <form>
-                          <md-form-field class="wide">
-                            <input mdInput placeholder="When Discovered" disabled [value]="row.WhenDiscText">
-                          </md-form-field>
-                          <md-form-field class="wide">
-                            <input mdInput placeholder="Delay Code" disabled [value]="row.DelayCodeText">
-                          </md-form-field>
-                          <md-form-field class="wide">
-                            <input mdInput placeholder="Down Time" disabled [value]="row.DownTimeCodeText">
-                          </md-form-field>
+                          <mat-form-field class="wide">
+                            <input matInput placeholder="When Discovered" disabled [value]="row.WhenDiscText">
+                          </mat-form-field>
+                          <mat-form-field class="wide">
+                            <input matInput placeholder="Delay Code" disabled [value]="row.DelayCodeText">
+                          </mat-form-field>
+                          <mat-form-field class="wide">
+                            <input matInput placeholder="Down Time" disabled [value]="row.DownTimeCodeText">
+                          </mat-form-field>
                         </form>
-                      </md-card-content>
-                    </md-card>
+                      </mat-card-content>
+                    </mat-card>
 
-                    <md-card class="job-history">
-                      <md-card-title>History</md-card-title>
-                      <md-card-content>
+                    <mat-card class="job-history">
+                      <mat-card-title>History</mat-card-title>
+                      <mat-card-content>
 
-                      </md-card-content>
-                    </md-card>
+                      </mat-card-content>
+                    </mat-card>
                   </td>
 
                 </tr>
@@ -109,20 +109,20 @@
             </tbody>
           </table>
 
-          <div class="md-padding" *ngIf="filteredData.length < 1" layout="row" layout-align="center center">
+          <div class="mat-padding" *ngIf="filteredData.length < 1" layout="row" layout-align="center center">
             <h3>No results to display.</h3>
           </div>
 
-        </md-card>
+        </mat-card>
       </ng-template>
     </div>
 
   </div>
   <td-layout-footer>
     <div layout="row" layout-align="start center">
-      <span class="md-caption">Developed by the 5 CBCSS/SCS, Robins AFB, GA.</span>
+      <span class="mat-caption">Developed by the 5 CBCSS/SCS, Robins AFB, GA.</span>
       <span flex></span>
-      <md-icon class="md-icon-ux" svgIcon="assets:teradata-ux"></md-icon>
+      <mat-icon class="mat-icon-ux"></mat-icon>
     </div>
   </td-layout-footer>
 </td-layout-nav>

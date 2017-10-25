@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { AsyncSubject } from 'rxjs/AsyncSubject';
 import { Observable } from 'rxjs/Observable';
 import { Parser } from 'xml2js';
 import { defaults, find } from 'lodash';
 
 import { D52MS_380_XML } from './mock-data-imds-screen-380';
-import { CrossDomainService } from 'services';
-import { ISharePointMDC } from 'services/sharepoint';
+import { CrossDomainService } from './cross-domain';
+import { ISharePointMDC } from './sharepoint';
 import { TdLoadingService } from '@covalent/core';
 
 interface IParsedDDRDataRow {
@@ -95,7 +95,7 @@ interface IParsed380 {
 @Injectable()
 export class IMDSService {
 
-    private _imds: BehaviorSubject<ISharePointMDC> = new BehaviorSubject(undefined);
+    private _imds: AsyncSubject<ISharePointMDC> = new AsyncSubject();
 
     private _parser: Parser = new Parser({
         explicitRoot: false,
@@ -136,7 +136,7 @@ export class IMDSService {
                     Timestamp: row.EventDateTimeStamp,
                     EquipID: row.WorkcenterEventDataRow.EquipmentIdOrPartNumber,
                     DelayCode: row.DefereCode,
-                    LastUpdate: this.flatten(row.WorkcenterEventDataRow.WorkcenterEventNarrativeRow.WorkcenterEventNarrative),
+                    LastUpdate: this.flatten(<string[]>row.WorkcenterEventDataRow.WorkcenterEventNarrativeRow.WorkcenterEventNarrative),
                 }));
 
             this._loadingService.resolve('imds-380');

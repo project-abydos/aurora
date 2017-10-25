@@ -98,7 +98,7 @@
 				console.log("app initialized");
 			} else {
 				console.log("wait for activation...");
-				mdrp.postMessage("Activate", "*");
+				sendMessage({ ACTIVATE: true });
 				setTimeout(waitForInit, 250);
 			}
 		}
@@ -125,6 +125,35 @@
 
 			}
 
+		}
+
+		function sendMessage(data) {
+			mdrp.postMessage(data, "*");
+		}
+
+		function postToIMDS(orgId) {
+			var url = "/txl/TtwTxn";
+
+			var data = {
+				R0_C0_L0_Y: "GDM" + orgId
+			};
+
+			var json = JSON.stringify(data);
+
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", url, true);
+			xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+			xhr.onload = function () {
+				var users = JSON.parse(xhr.responseText);
+				if (xhr.readyState == 4 && xhr.status == "201") {
+					sendMessage({
+						IMDS_RECEIVE_380_XML: xhr.responseText
+					});
+				} else {
+					console.error(users);
+				}
+			}
+			xhr.send(json);
 		}
 
 	}

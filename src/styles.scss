@@ -11,8 +11,8 @@ $frost :#eee;
     width: 100%!important;
 }
 
-// Href line height wasn't right for md-icon-button
-a[md-icon-button] {
+// Href line height wasn't right for mat-icon-button
+a[mat-icon-button] {
     line-height: 36px;
 }
 
@@ -21,7 +21,7 @@ a[md-icon-button] {
     text-transform: capitalize;
 }
 
-.start-imds-sync md-progress-spinner {
+.start-imds-sync mat-progress-spinner {
     height: 40px!important;
 }
 
@@ -134,7 +134,7 @@ td-layout-manage-list .mat-toolbar {
             }
         }
         tr.td-data-table-row .ApprovalStatus {
-            md-select {
+            mat-select {
                 padding-top: 0;
                 .mat-select-arrow, .mat-select-underline {
                     display: none;

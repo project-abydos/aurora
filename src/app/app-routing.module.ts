@@ -3,7 +3,6 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { MainComponent } from './main/main.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { FormComponent } from './form/form.component';
 
 const routes: Routes = [
     {
@@ -30,5 +29,4 @@ export class AppRoutingModule { }
 export const routedComponents: any[] = [
     MainComponent,
     DashboardComponent,
-    FormComponent,
 ];

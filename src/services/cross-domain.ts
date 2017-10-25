@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { AsyncSubject } from 'rxjs/AsyncSubject';
 import { Observable } from 'rxjs/Observable';
 
 const IMDS_SYNC_HTML: string = `
@@ -42,8 +42,8 @@ const IMDS_SYNC_HTML: string = `
 @Injectable()
 export class CrossDomainService {
 
-    private _connectionEnabled: BehaviorSubject<boolean> = new BehaviorSubject(false);
-    private _receiveSyncData: BehaviorSubject<string> = new BehaviorSubject(undefined);
+    private _connectionEnabled: AsyncSubject<boolean> = new AsyncSubject();
+    private _receiveSyncData: AsyncSubject<string> = new AsyncSubject();
     private imdsWindow: Window;
 
     readonly connectionEnabled: Observable<boolean>;
@@ -57,24 +57,32 @@ export class CrossDomainService {
     }
 
     receiveMessage = (event: MessageEvent): void => {
-
         event = event.data || {};
         const state: string = Object.keys(event)[0];
         const data: any = event[state];
 
-        if (!this.imdsWindow && event.source !== window) {
-            this.imdsWindow = event.source;
-            this.imdsWindow.postMessage({ IMDS_SYNC_HTML }, '*');
-            this._connectionEnabled.next(true);
-        }
+        switch (state) {
 
-        if (state === 'SYNC') {
-            this._receiveSyncData.next(data);
+            case 'ACTIVATE':
+                return this._bindWindow(event);
+
+            case 'SYNC':
+                return this._receiveSyncData.next(data);
+
+            default:
         }
     }
 
     peformSyncOperation = () => {
         this.imdsWindow.postMessage({ START_SYNC: true }, '*');
+    }
+
+    private _bindWindow = (event: MessageEvent) => {
+        if (!this.imdsWindow && event.source !== window) {
+            this.imdsWindow = event.source;
+            this.imdsWindow.postMessage({ IMDS_SYNC_HTML }, '*');
+            this._connectionEnabled.next(true);
+        }
     }
 
 }

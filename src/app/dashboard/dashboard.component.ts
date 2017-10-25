@@ -82,7 +82,7 @@ export class DashboardComponent implements OnInit {
     private _imdsService: IMDSService,
     private _sharePointService: SharepointService,
     private _loadingService: TdLoadingService,
-    private _crossDomainService: CrossDomainService,
+    public crossDomainService: CrossDomainService,
   ) {
 
     _titleService.setTitle(APP_TITLE);
@@ -114,13 +114,13 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this._loadingService.register('mdc');
-    // this._sharePointService.getMDC().subscribe(mdc => {
-    //   mdc.forEach(row => this.mapMDCRow(row));
-    //   this.filter();
-    //   this._loadingService.resolve('mdc');
-    //   this.isLoaded = true;
-    // });
+    this._loadingService.register('mdc');
+    this._sharePointService.getMDC().subscribe(mdc => {
+      mdc.forEach(row => this.mapMDCRow(row));
+      this.filter();
+      this._loadingService.resolve('mdc');
+      this.isLoaded = true;
+    });
   }
 
   syncIMDS(): void {

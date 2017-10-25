@@ -23,7 +23,4 @@ export class MainComponent {
 
   constructor(private _router: Router) { }
 
-  logout(): void {
-    this._router.navigate(['/login']);
-  }
 }
