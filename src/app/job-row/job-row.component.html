@@ -1,0 +1,74 @@
+<tr [ngClass]="[job.CC, isExpanded ? 'expanded' : 'collapsed']" (click)="toggleExpanded(row)">
+
+  <td class="JCN">
+    <button mat-button mat-raised color="primary" (click)="$event.stopPropagation()">{{job.JCN}}</button>
+  </td>
+
+  <td class="WorkCenter">
+    <span>{{job.WorkCenter}}</span>
+  </td>
+
+  <td class="EquipID">
+    <span>{{job.EquipID}}</span>
+  </td>
+
+  <td class="Discrepancy ellipses">
+    <span>{{job.Discrepancy}}</span>
+  </td>
+
+  <td class="LastUpdate ellipses">
+    <span>
+      <strong>{{job.timeStampPretty}}</strong> |
+      <em>{{job.LastUpdate}}</em>
+    </span>
+  </td>
+
+  <td class="ETIC" *ngIf="!isExpanded">
+    <span>{{job.ETIC}}</span>
+  </td>
+
+  <td class="ETIC" *ngIf="isExpanded">
+    <input matInput [matDatepicker]="picker" placeholder="Choose a date" [(ngModel)]="job.eticDate">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </td>
+
+  <td class="ApprovalStatus">
+    <mat-select placeholder="" [(ngModel)]="job.ApprovalStatus" name="status" (click)="$event.stopPropagation()" *ngIf="isExpanded">
+      <mat-option *ngFor="let status of approvalOptions" [value]="status.value">
+        {{status.label}}
+      </mat-option>
+    </mat-select>
+    <span *ngIf="!isExpanded">{{job.ApprovalStatus}}</span>
+  </td>
+
+</tr>
+
+<tr class="expanded-row {{job.CC}}" *ngIf="isExpanded">
+  <td colspan="7">
+    <mat-card class="job-info">
+      <mat-card-title>Job Info</mat-card-title>
+      <mat-card-content>
+        <form>
+          <mat-form-field class="wide">
+            <input matInput placeholder="When Discovered" disabled [value]="job.WhenDiscText">
+          </mat-form-field>
+          <mat-form-field class="wide">
+            <input matInput placeholder="Delay Code" disabled [value]="job.DelayCodeText">
+          </mat-form-field>
+          <mat-form-field class="wide">
+            <input matInput placeholder="Down Time" disabled [value]="job.DownTimeCodeText">
+          </mat-form-field>
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="job-history">
+      <mat-card-title>History</mat-card-title>
+      <mat-card-content>
+
+      </mat-card-content>
+    </mat-card>
+  </td>
+
+</tr>

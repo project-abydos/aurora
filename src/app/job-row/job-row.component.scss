@@ -58,3 +58,21 @@
     padding: 0;
     margin-left: -10px;
 }
+
+.expanded-row {
+    display: flex;
+    padding: 1em;
+    padding-top: 2em;
+    td {
+        display: flex;
+        mat-card {
+            background: #eee;
+            &.job-info {
+                flex: 1;
+            }
+            &.job-history {
+                flex: 3;
+            }
+        }
+    }
+}

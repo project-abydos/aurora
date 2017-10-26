@@ -6,91 +6,8 @@ import { defaults, find } from 'lodash';
 
 import { D52MS_380_XML } from './mock-data-imds-screen-380';
 import { CrossDomainService } from './cross-domain';
-import { ISharePointMDC } from './sharepoint';
 import { TdLoadingService } from '@covalent/core';
-
-interface IParsedDDRDataRow {
-    ActionTakenCode: string;
-    AirForceSpecialtyCodeIndicator: string;
-    CategoryOfLaborCode: string;
-    ChangeDate: string;
-    ChangeTime: string;
-    CorrectedByIMDSCDBUserId: string;
-    CorrectiveActionNarrativeRow: string | string[];
-    CrewSize: string;
-    DDR: string;
-    HowMalfunctionCode: string;
-    MajorCommandCode: string;
-    StatusDateTimeRow: {
-        Date: string;
-        StartTime: string;
-        StopTime: string;
-    };
-    Symbol: string;
-    TypeMaintnenanceCode: string;
-    UnitId: string;
-    UnitsProduced: string;
-    WhenDiscoveredCode: string;
-    WorkUnitCode: string;
-}
-
-interface IParsedWorkcenterEventDataRow {
-    DefereCode: string;
-    DeferMessage: string;
-    EmbedTransaction1: string;
-    EquipmentIdOrPartNumber: string;
-    Inshop: string;
-    WorkcenterEvent: string;
-    WorkcenterEventDateTimeStampe: string;
-    WorkcenterEventIsStarted: string;
-    WorkcenterEventNarrativeRow: {
-        WorkcenterEventNarrative: string | string[];
-    };
-    WorkcenterEventNeedForm: string;
-    WorkcenterEventStatus: string;
-    WorkcenterEventStatusDate: string;
-    WorkcenterEventStatusTime: string;
-    WorkcenterEventSymbol: string;
-}
-
-interface IParsedEventDataRow {
-    DefereCode: string;
-    DeferMessage: string;
-    DiscrepancyNarrativeRow: {
-        DiscrepancyNarrative: string[];
-    };
-    EmbedTransaction1: string;
-    EventDateTimeStamp: string;
-    EventId: string;
-    EventNeedForm: string;
-    EventStatus: string;
-    EventSymbol: string;
-    NWRM: string;
-    SortKey: string;
-    TypeEvent: string;
-    WorkcenterEventDataRow: IParsedWorkcenterEventDataRow;
-}
-
-interface IParsed380 {
-    $: {
-        elc: string;
-        program_id: string;
-        remote_id: string;
-        txn_dt_tm: string;
-        unit_id: string;
-        user_id: string;
-        version_date: string;
-    };
-    EquipmentDataRow: {
-        EventDataRow: IParsedEventDataRow[];
-        Workcenter: string;
-    };
-    ReportAsOf: string;
-    ReportOptions: string;
-    ReportTitle: string;
-    Transaction: string;
-    TypeOutput: string;
-}
+import { ISharePointMDC, IParsed380 } from 'app/types';
 
 @Injectable()
 export class IMDSService {
@@ -113,9 +30,7 @@ export class IMDSService {
     }
 
     fetch380(org: string): void {
-
         this._crossDomainService.peformSyncOperation();
-
     }
 
     private _processXML(xml: string): void {
@@ -145,5 +60,3 @@ export class IMDSService {
     }
 
 }
-
-export { IParsed380, IParsedEventDataRow, IParsedWorkcenterEventDataRow, IParsedDDRDataRow };

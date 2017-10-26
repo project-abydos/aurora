@@ -4,50 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { Http, Headers, RequestOptionsArgs, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { get } from 'lodash';
-
-interface ISharePointConfig {
-  BASE_URL?: string;
-}
-interface ISharePointResponse<T> {
-  d: {
-    results: T[];
-  };
-}
-
-interface ISharePointMetadata {
-  uri: string;
-  etag: string;
-  type: string;
-}
-
-interface ISharePointMDC {
-  __metadata?: ISharePointMetadata;
-  EquipID?: string;
-  JCN: string;
-  StartDate?: string;
-  StartTime?: string;
-  StopDate?: string;
-  StopTime?: string;
-  DownTimeCode?: string;
-  WUC?: string;
-  CC?: string;
-  WhenDISC?: string;
-  NameUserID?: string;
-  DelayCode?: string;
-  WorkCenter?: string;
-  Discrepancy?: string;
-  LastUpdate?: string;
-  ETIC?: string;
-  Location?: string;
-  ApprovalStatus?: string;
-  CFPComments?: string;
-  LastModifier?: string;
-  CS?: string;
-  Id?: number;
-  Modified?: string;
-  ModifiedById?: number;
-  Timestamp?: string;
-}
+import { ISharePointConfig, ISharePointMDC } from 'app/types';
 
 @Injectable()
 export class SharepointService {
@@ -103,5 +60,3 @@ export class SharepointService {
   }
 
 }
-
-export { ISharePointResponse, ISharePointMetadata, ISharePointMDC };

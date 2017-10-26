@@ -93,19 +93,16 @@ td-layout-manage-list .mat-toolbar {
             float: left;
         }
         tr.td-data-table-row {
-            transition: all 0 ease;
-            transition-delay: 200ms;
             background-color: white;
             margin-top: 10PX;
             margin-bottom: 10px;
             border-bottom: none;
             &:hover {
-                transition: none!important;
+        
                 background: rgba(238, 238, 238, 0.25);
             }
         }
-        tr.td-data-table-row.expanded {
-            transition: none;
+        tr.td-data-table-row.expanded {    
             background-color: $expand-bg-color;
             border-bottom: none;
             color: $frost!important;

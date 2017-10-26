@@ -1,6 +1,6 @@
-import { IMDSService, IParsed380 } from '../../services/imds';
-import { SharepointService, ISharePointMDC } from '../../services/sharepoint';
-import { Component, OnInit } from '@angular/core';
+import { IMDSService } from '../../services/imds';
+import { SharepointService } from '../../services/sharepoint';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import * as moment from 'moment';
 import { JsonPipe } from '@angular/common';
 import { cloneDeep, defaults, find } from 'lodash';
@@ -8,45 +8,21 @@ import { cloneDeep, defaults, find } from 'lodash';
 import { Title } from '@angular/platform-browser';
 
 import {
-  TdDigitsPipe, TdDataTableService,
+  TdDataTableService,
   TdDataTableSortingOrder, ITdDataTableColumn,
-  ITdDataTableSortChangeEvent, IPageChangeEvent, TdLoadingService,
+  ITdDataTableSortChangeEvent, TdLoadingService,
 } from '@covalent/core';
 
 import { APP_TITLE, APPROVAL_STATUS_OPTIONS, ISelectOption, DELAY_CODES, WHEN_DISCOVERED_CODES, DOWN_TIME_CODES } from '../contanstants';
 import { Moment } from 'moment';
-import { style, transition, trigger, animate } from '@angular/animations';
 import { CrossDomainService } from 'services';
-
-interface ICustomMDCData extends ISharePointMDC {
-  dateRange: string;
-  timeStampPretty: string;
-  WhenDiscText?: string;
-  DownTimeCodeText?: string;
-  DelayCodeText?: string;
-  eticDate?: Date;
-  isExpanded?: boolean;
-  updated?: boolean;
-}
+import { ISharePointMDC } from 'app/types';
 
 @Component({
   selector: 'qs-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
   viewProviders: [],
-  animations: [
-    trigger(
-      'slideToggle', [
-        transition(':enter', [
-          style({ maxHeight: '0' }),
-          animate(250, style({ maxHeight: '100%' })),
-        ]),
-        transition(':leave', [
-          animate(150, style({ height: '0' })),
-        ]),
-      ],
-    ),
-  ],
 })
 export class DashboardComponent implements OnInit {
 
@@ -57,7 +33,7 @@ export class DashboardComponent implements OnInit {
   // discoveredOptions: ISelectOption[] = WHEN_DISCOVERED_CODES;
   // downTimeOptions: ISelectOption[] = DOWN_TIME_CODES;
 
-  mdc: ICustomMDCData[] = [];
+  mdc: ISharePointMDC[] = [];
 
   isLoaded: boolean;
 
@@ -67,7 +43,7 @@ export class DashboardComponent implements OnInit {
     domain: ['#1565C0', '#2196F3', '#81D4FA', '#FF9800', '#EF6C00'],
   };
 
-  filteredData: any[] = [];
+  filteredData: ISharePointMDC[] = [];
   searchTerm: string = '';
   sortBy: string = 'Timestamp';
   sortOrder: TdDataTableSortingOrder = TdDataTableSortingOrder.Descending;
@@ -89,14 +65,13 @@ export class DashboardComponent implements OnInit {
 
     _imdsService.imds.subscribe(job => {
 
-      const match: ICustomMDCData = find(this.mdc, { JCN: job.JCN });
+      const match: ISharePointMDC = find(this.mdc, { JCN: job.JCN });
 
       if (match) {
         if (match.Timestamp !== job.Timestamp) {
           // this._sharePointService.updateJob(job)
           defaults(job, match);
-          match.updated = true;
-          this.mapMDCRow(job);
+          // this.mapMDCRow(job);
         }
       } else {
         this._loadingService.register('imds-380', job.Id);
@@ -104,7 +79,7 @@ export class DashboardComponent implements OnInit {
         this._sharePointService
           .createJob(job)
           .subscribe(createdJob => {
-            this.mapMDCRow(createdJob);
+            this.mdc.push(createdJob);
             this._loadingService.resolve('imds-380', job.Id);
           });
       }
@@ -114,9 +89,10 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log('init');
     this._loadingService.register('mdc');
     this._sharePointService.getMDC().subscribe(mdc => {
-      mdc.forEach(row => this.mapMDCRow(row));
+      this.mdc = mdc;
       this.filter();
       this._loadingService.resolve('mdc');
       this.isLoaded = true;
@@ -124,53 +100,35 @@ export class DashboardComponent implements OnInit {
   }
 
   syncIMDS(): void {
-
+    console.log('sync');
     this._imdsService.fetch380('test');
 
   }
 
-  mapMDCRow(row: ISharePointMDC): void {
-    const newRow: ICustomMDCData = <ICustomMDCData>cloneDeep(row);
-    const julianFormat: string = 'YYDDDHHmm';
-    const humanFormat: string = 'l, HHmm';
-
-    newRow.dateRange = [
-      moment(row.StartDate + row.StartTime, julianFormat).format(humanFormat),
-      moment(row.StopDate + row.StopTime, julianFormat).format(humanFormat),
-    ].join(' - ');
-
-    newRow.ApprovalStatus = row.ApprovalStatus || '-';
-    newRow.timeStampPretty = moment(row.Timestamp, 'YYDDD HH:mm:ss').fromNow(true);
-    newRow.WhenDiscText = row.WhenDISC ? `${row.WhenDISC} - ${WHEN_DISCOVERED_CODES[row.WhenDISC]}` : '';
-    newRow.DownTimeCodeText = row.DownTimeCode ? `${row.DownTimeCode} - ${DOWN_TIME_CODES[row.DownTimeCode]}` : '';
-    newRow.DelayCodeText = row.DelayCode ? `${row.DelayCode} - ${DELAY_CODES[row.DelayCode]}` : '';
-    newRow.eticDate = moment(row.ETIC).toDate();
-
-    this.mdc.push(newRow);
-    this.filter();
-  }
-
   sort(sortEvent: ITdDataTableSortChangeEvent): void {
+    console.log('sort');
     this.sortBy = sortEvent.name;
     this.sortOrder = sortEvent.order;
     this.filter();
   }
 
   search(searchTerm: string): void {
+    console.log('search');
     this.searchTerm = searchTerm;
     this.filter();
   }
 
   filter(): void {
-    let newData: ICustomMDCData[] = cloneDeep(this.mdc);
-    newData = this._dataTableService.filterData(newData, this.searchTerm, true);
+    console.log('filter');
+    let newData: ISharePointMDC[] = [];
+    newData = this._dataTableService.filterData(this.mdc, this.searchTerm, true);
     newData = this._dataTableService.sortData(newData, this.sortBy, this.sortOrder);
     this.filteredData = newData;
   }
 
-  toggleExpanded(row: ICustomMDCData): void {
-    row.isExpanded = !row.isExpanded;
-    console.log(row);
+  trackByFn(index: number, item: ISharePointMDC): number {
+    console.log('trackBy');
+    return item.Id;
   }
 
 }

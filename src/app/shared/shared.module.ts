@@ -14,7 +14,7 @@ import {
   MatButtonModule, MatCardModule, MatIconModule,
   MatListModule, MatMenuModule, MatTooltipModule,
   MatSlideToggleModule, MatInputModule, MatCheckboxModule,
-  MatToolbarModule, MatSnackBarModule, MatSidenavModule,
+  MatToolbarModule, MatSidenavModule,
   MatTabsModule, MatSelectModule,
 
 } from '@angular/material';
@@ -31,7 +31,7 @@ const MATERIAL_MODULES: any[] = [
   MatButtonModule, MatCardModule, MatIconModule,
   MatListModule, MatMenuModule, MatTooltipModule,
   MatSlideToggleModule, MatInputModule, MatCheckboxModule,
-  MatToolbarModule, MatSnackBarModule, MatSidenavModule,
+  MatToolbarModule, MatSidenavModule,
   MatTabsModule, MatSelectModule,
 ];
 

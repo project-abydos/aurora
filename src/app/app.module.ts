@@ -4,7 +4,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpModule } from '@angular/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { CovalentExpansionPanelModule } from '@covalent/core';
 import {
   MatAutocompleteModule,
   MatButtonModule,
@@ -40,11 +39,13 @@ import { CrossDomainService, IMDSService, SharepointService } from 'services';
 import { routedComponents, AppRoutingModule } from './app-routing.module';
 
 import { SharedModule } from './shared/shared.module';
+import { JobRowComponent } from './job-row/job-row.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     routedComponents,
+    JobRowComponent,
   ],
   imports: [
     AppRoutingModule,
@@ -79,7 +80,6 @@ import { SharedModule } from './shared/shared.module';
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
-    CovalentExpansionPanelModule,
   ], // modules needed to run this module
   providers: [
     CrossDomainService,

@@ -4,25 +4,25 @@
     <span flex></span>
     <span class="julian-date animated fadeInRightBig">Julian Date: {{julianDate}}</span>
     <span class="pull-right-sm start-imds-sync animated fadeInRightBig" *ngIf="crossDomainService.connectionEnabled | async">
-        <ng-template tdLoading="imds-380" tdLoadingColor="accent">
-          <button mat-icon-button (click)="syncIMDS()">
-              <mat-icon>cloud_download</mat-icon>
-            </button>
-        </ng-template>
+      <ng-template tdLoading="imds-380" tdLoadingColor="accent">
+        <button mat-icon-button (click)="syncIMDS()">
+          <mat-icon>cloud_download</mat-icon>
+        </button>
+      </ng-template>
     </span>
   </div>
   <div layout-gt-sm="row" tdMediaToggle="gt-xs" [mediaClasses]="['push-sm']">
     <div flex-gt-sm="100">
       <ng-template tdLoading="mdc">
-        <mat-card *ngIf="isLoaded" class="animated zoomIn">
-
+        <mat-card *ngIf="filteredData.length > 0" class="animated zoomIn">
           <div layout="row" layout-align="start center" class="pad-left-sm pad-right-sm">
-
             <td-search-box #searchBox backIcon="arrow_back" class="push-right-sm" placeholder="Search here" (searchDebounce)="search($event)"
               flex=1>
             </td-search-box>
           </div>
+
           <mat-divider></mat-divider>
+
           <table td-data-table class="table--fixed">
             <thead>
               <th td-data-table-column class="JCN">JCN</th>
@@ -34,78 +34,10 @@
               <th td-data-table-column class="ApprovalStatus">Status</th>
             </thead>
             <tbody>
-              <ng-container *ngFor="let row of filteredData">
-                <tr td-data-table-row [ngClass]="[row.CC, row.isExpanded ? 'expanded' : 'collapsed']" (click)="toggleExpanded(row)">
-
-                  <td td-data-table-cell [numeric]="true" class="JCN">
-                    <button mat-button mat-raised color="primary" (click)="$event.stopPropagation()">{{row.JCN}}</button>
-                  </td>
-
-                  <td td-data-table-cell class="WorkCenter">
-                    <span>{{row.WorkCenter}}</span>
-                  </td>
-
-                  <td td-data-table-cell class="EquipID">
-                    <span>{{row.EquipID}}</span>
-                  </td>
-
-                  <td td-data-table-cell class="Discrepancy ellipses">
-                    <span>{{row.Discrepancy}}</span>
-                  </td>
-
-                  <td td-data-table-cell class="LastUpdate ellipses">
-                    <span><strong>{{row.timeStampPretty}}</strong> | <em>{{row.LastUpdate}}</em></span>
-                  </td>
-
-                  <td td-data-table-cell class="ETIC" *ngIf="!row.isExpanded">
-                    <span>{{row.ETIC}}</span>
-                  </td>
-
-                  <td td-data-table-cell class="ETIC" *ngIf="row.isExpanded">
-                    <input matInput [matDatepicker]="picker" placeholder="Choose a date" [(ngModel)]="row.eticDate">
-                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
-                  </td>
-
-                  <td td-data-table-cell class="ApprovalStatus">
-                    <mat-select placeholder="" [(ngModel)]="row.ApprovalStatus" name="status" (click)="$event.stopPropagation()">
-                      <mat-option *ngFor="let status of approvalOptions" [value]="status.value">
-                        {{status.label}}
-                      </mat-option>
-                    </mat-select>
-                  </td>
-
-                </tr>
-
-                <tr class="expanded-row {{row.CC}}" [@slideToggle] *ngIf="row.isExpanded">
-                  <td colspan="7">
-                    <mat-card class="job-info">
-                      <mat-card-title>Job Info</mat-card-title>
-                      <mat-card-content>
-                        <form>
-                          <mat-form-field class="wide">
-                            <input matInput placeholder="When Discovered" disabled [value]="row.WhenDiscText">
-                          </mat-form-field>
-                          <mat-form-field class="wide">
-                            <input matInput placeholder="Delay Code" disabled [value]="row.DelayCodeText">
-                          </mat-form-field>
-                          <mat-form-field class="wide">
-                            <input matInput placeholder="Down Time" disabled [value]="row.DownTimeCodeText">
-                          </mat-form-field>
-                        </form>
-                      </mat-card-content>
-                    </mat-card>
-
-                    <mat-card class="job-history">
-                      <mat-card-title>History</mat-card-title>
-                      <mat-card-content>
-
-                      </mat-card-content>
-                    </mat-card>
-                  </td>
-
-                </tr>
-              </ng-container>
+              <ng-template ngFor let-row [ngForOf]="filteredData" [ngForTrackBy]="Id">
+                <!-- <span>{{row.Id}}</span> -->
+                <app-job-row [row]="row"></app-job-row>
+              </ng-template>
             </tbody>
           </table>
 
