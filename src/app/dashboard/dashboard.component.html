@@ -19,13 +19,6 @@
             <td-chips flex=1 placeholder="Add search terms and press enter" (add)="addSearchTerm($event)" (remove)="removeSearchTerm($event)">
             </td-chips>
           </div>
-          <md-divider></md-divider>
-          <div class="md-padding" *ngIf="filteredData.length < 1" layout="row" layout-align="center start">
-            <td-message color="accent" class="pad-sm" label="No Jobs Found" sublabel="Please clear or change your search criteria.">
-            </td-message>
-          </div>
-
-          <mat-divider></mat-divider>
 
           <table td-data-table class="table--fixed">
             <thead>

@@ -3,7 +3,7 @@ import { SharepointService } from '../../services/sharepoint';
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import * as moment from 'moment';
 import { JsonPipe } from '@angular/common';
-import { cloneDeep, defaults, find, every, timer } from 'lodash';
+import { cloneDeep, defaults, find, every, debounce } from 'lodash';
 
 import { Title } from '@angular/platform-browser';
 
@@ -16,7 +16,9 @@ import {
 import { APP_TITLE, APPROVAL_STATUS_OPTIONS, ISelectOption, DELAY_CODES, WHEN_DISCOVERED_CODES, DOWN_TIME_CODES } from '../contanstants';
 import { Moment } from 'moment';
 import { CrossDomainService } from 'services';
-import { ISharePointMDC } from 'app/types';
+import { ISharePointMDC, ICustomMDCData } from 'app/types';
+import { Observable } from 'rxjs/Observable';
+import { timer } from 'rxjs/observable/timer';
 
 @Component({
   selector: 'qs-dashboard',
@@ -25,6 +27,8 @@ import { ISharePointMDC } from 'app/types';
   viewProviders: [],
 })
 export class DashboardComponent implements OnInit {
+
+  searchTerms: string[] = [];
 
   julianDate: string = moment().format('YYDDD');
 
@@ -45,12 +49,12 @@ export class DashboardComponent implements OnInit {
 
   filteredData: ISharePointMDC[] = [];
   searchTerm: string = '';
-  sortBy: string = 'Timestamp';
-  sortOrder: TdDataTableSortingOrder = TdDataTableSortingOrder.Descending;
 
   appTitle: string = APP_TITLE;
 
   tableHeight: number = window.innerHeight - 250;
+
+  debouncedFilter: any = debounce(() => this.filter(), 200);
 
   constructor(
     private _dataTableService: TdDataTableService,
@@ -92,9 +96,19 @@ export class DashboardComponent implements OnInit {
     console.log('init');
     this._loadingService.register('mdc');
     this.reSyncJobs();
-    const interval: number = 5 * 60 * 1000;
-    const ping = timer(interval, interval);
+    const interval: number = 60 * 1000;
+    const ping: Observable<number> = timer(interval, interval);
     ping.subscribe(() => this.reSyncJobs());
+  }
+
+  addSearchTerm(searchTerm: string): void {
+    this.searchTerms.push(searchTerm.toUpperCase());
+    this.filter();
+  }
+
+  removeSearchTerm(searchTerm: string): void {
+    this.searchTerms.splice(this.searchTerms.indexOf(searchTerm.toUpperCase()), 1);
+    this.filter();
   }
 
   addOrUpdateJob(row: ISharePointMDC, match?: ISharePointMDC): void {
@@ -143,7 +157,7 @@ export class DashboardComponent implements OnInit {
   }
 
   transformMDCRow(row: ISharePointMDC): ICustomMDCData {
-    const _transform: ICustomMDCData = row;
+    const _transform: ICustomMDCData = <ICustomMDCData>row;
     const julianFormat: string = 'YYDDDHHmm';
     const humanFormat: string = 'l, HHmm';
 
@@ -160,7 +174,7 @@ export class DashboardComponent implements OnInit {
     _transform.CCText = {
       A: 'CC:Amber',
       R: 'CC:Red',
-      G: 'CC:Green'
+      G: 'CC:Green',
     }[_transform.CC];
     _transform.eticDate = moment(row.ETIC).toDate();
 
@@ -173,22 +187,15 @@ export class DashboardComponent implements OnInit {
       _transform.WorkCenter,
       _transform.EquipID,
       _transform.NameUserID,
-      _transform.DDR ? _transform.DDR.map(row => row.Text).join(' ') : '',
+      // _transform.DDR ? _transform.DDR.map(row => row.Text).join(' ') : '',
       _transform.ApprovalStatus,
       _transform.WhenDiscText,
       _transform.DownTimeCodeText,
       _transform.DelayCodeText,
-      _transform.eticDate
+      _transform.eticDate,
     ].join(' ').toUpperCase();
 
     return _transform;
-  }
-
-  sort(sortEvent: ITdDataTableSortChangeEvent): void {
-    console.log('sort');
-    this.sortBy = sortEvent.name;
-    this.sortOrder = sortEvent.order;
-    this.filter();
   }
 
   search(searchTerm: string): void {
@@ -197,10 +204,8 @@ export class DashboardComponent implements OnInit {
     this.filter();
   }
 
-  debouncedFilter = debounce(() => this.filter(), 200);
-
   filter(): void {
-    let mdc = this.mdc.sort((a, b) => -a.Timestamp.localeCompare(b.Timestamp));
+    let mdc: ICustomMDCData[] = <ICustomMDCData[]>this.mdc.sort((a, b) => -a.Timestamp.localeCompare(b.Timestamp));
     if (this.searchTerms.length) {
       mdc = mdc.filter(row => every(this.searchTerms, term => row.search.indexOf(term) > -1));
     }

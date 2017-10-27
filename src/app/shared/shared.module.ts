@@ -6,8 +6,7 @@ import { FlexLayoutModule, } from '@angular/flex-layout';
 import {
   CovalentDataTableModule, CovalentMediaModule, CovalentLoadingModule,
   CovalentNotificationsModule, CovalentLayoutModule, CovalentMenuModule,
-  CovalentPagingModule, CovalentSearchModule, CovalentStepsModule,
-  CovalentCommonModule, CovalentDialogsModule,
+  CovalentChipsModule, CovalentCommonModule, CovalentDialogsModule,
 } from '@covalent/core';
 
 import {
@@ -38,8 +37,7 @@ const MATERIAL_MODULES: any[] = [
 const COVALENT_MODULES: any[] = [
   CovalentDataTableModule, CovalentMediaModule, CovalentLoadingModule,
   CovalentNotificationsModule, CovalentLayoutModule, CovalentMenuModule,
-  CovalentPagingModule, CovalentSearchModule, CovalentStepsModule,
-  CovalentCommonModule, CovalentDialogsModule,
+  CovalentCommonModule, CovalentDialogsModule, CovalentChipsModule,
 ];
 
 @NgModule({

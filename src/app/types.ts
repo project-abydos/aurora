@@ -53,6 +53,12 @@ export interface ICustomMDCData extends ISharePointMDC {
     eticDate?: Date;
     isExpanded?: boolean;
     updated?: boolean;
+    CCText: any;
+    search: string;
+    DDR: {
+        Date: string;
+        Text: string;
+    };
 }
 
 export interface IParsedDDRDataRow {
