@@ -1,7 +1,7 @@
 import { NgModule, Type } from '@angular/core';
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpModule } from '@angular/http';
+import { HttpModule, Http, XHRBackend, RequestOptions, ConnectionBackend } from '@angular/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import {
@@ -40,6 +40,12 @@ import { routedComponents, AppRoutingModule } from './app-routing.module';
 
 import { SharedModule } from './shared/shared.module';
 import { JobRowComponent } from './job-row/job-row.component';
+import { HttpCacheService } from 'services/http-cache';
+
+// tslint:disable-next-line:typedef
+export function httpCacheService(backend: ConnectionBackend, defaultOptions: RequestOptions) {
+  return new HttpCacheService(backend, defaultOptions);
+}
 
 @NgModule({
   declarations: [
@@ -86,6 +92,11 @@ import { JobRowComponent } from './job-row/job-row.component';
     IMDSService,
     SharepointService,
     Title,
+    {
+      provide: Http,
+      deps: [XHRBackend, RequestOptions],
+      useFactory: httpCacheService,
+    },
   ], // additional providers needed for this module
   entryComponents: [],
   bootstrap: [AppComponent],

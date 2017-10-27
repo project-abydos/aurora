@@ -6,39 +6,35 @@
     font-size: 48px;
 }
 
-@mixin flex($values) {
-    flex: $values 0 0;
-}
-
 .JCN {
-    @include flex(2);
+    // @include flex(2);
 }
 
 .WorkCenter {
-    @include flex(2);
+    // @include flex(2);
 }
 
 .EquipID {
-    @include flex(2);
+    // @include flex(2);
 }
 
 .Discrepancy {
-    @include flex(10);
+    // @include flex(10);
 }
 
 .LastUpdate {
-    @include flex(8);
+    // @include flex(8);
 }
 
 .ETIC {
-    @include flex(4);
+    // @include flex(4);
     mat-datepicker-toggle {
         margin-left: -4em;
     }
 }
 
 .ApprovalStatus {
-    @include flex(4);
+    // @include flex(4);
 }
 
 .JCN,

@@ -11,7 +11,7 @@ import { ISharePointMDC, ICustomMDCData } from 'app/types';
 import { WHEN_DISCOVERED_CODES, DOWN_TIME_CODES, DELAY_CODES } from 'app/contanstants';
 
 @Component({
-  selector: 'app-job-row',
+  selector: 'mdrp-job-row',
   templateUrl: './job-row.component.html',
   styleUrls: ['./job-row.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

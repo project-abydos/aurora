@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { Http, Headers, RequestOptionsArgs, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { get } from 'lodash';
+
 import { ISharePointConfig, ISharePointMDC } from 'app/types';
 
 @Injectable()
@@ -32,12 +33,10 @@ export class SharepointService {
       url = `${SharepointService.CONFIG.BASE_URL}/${url}`;
     }
 
-    return this.http
-      .request(url, options)
-      .map(response => {
-        const { d } = response.json();
-        return d.results || d;
-      });
+    return this.http.request(url, options).map(response => {
+      const { d } = <any>response;
+      return d.results || d;
+    });
 
   }
 
