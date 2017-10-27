@@ -3,12 +3,7 @@ import { SharepointService } from '../../services/sharepoint';
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import * as moment from 'moment';
 import { JsonPipe } from '@angular/common';
-<<<<<<< Updated upstream
-import { cloneDeep, defaults, find } from 'lodash';
-=======
-import * as xml2js from 'xml2js';
-import { cloneDeep, defaults, find, findIndex, debounce, some, every } from 'lodash';
->>>>>>> Stashed changes
+import { cloneDeep, defaults, find, every, timer } from 'lodash';
 
 import { Title } from '@angular/platform-browser';
 
@@ -96,12 +91,8 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     console.log('init');
     this._loadingService.register('mdc');
-<<<<<<< Updated upstream
-    this._sharePointService.getMDC().subscribe(mdc => {
-      this.mdc = mdc;
-=======
     this.reSyncJobs();
-    const interval = 5 * 60 * 1000;
+    const interval: number = 5 * 60 * 1000;
     const ping = timer(interval, interval);
     ping.subscribe(() => this.reSyncJobs());
   }
@@ -127,7 +118,6 @@ export class DashboardComponent implements OnInit {
     this._loadingService.register('imds-380');
     this._sharePointService.getMDC().subscribe(mdc => {
       mdc.forEach(row => this.addOrUpdateJob(row));
->>>>>>> Stashed changes
       this.filter();
       this._loadingService.resolve('mdc');
       this.isLoaded = true;
@@ -138,86 +128,17 @@ export class DashboardComponent implements OnInit {
     console.log('sync');
     this._imdsService.fetch380('test');
 
-<<<<<<< Updated upstream
-=======
-    const workCenters = [
-      '51ms',
-      '52no',
-      '51nt',
-      '52ms',
-      '52no',
-    ];
+    // const workCenters: string[] = [
+    //   '51ms',
+    //   '52no',
+    //   '51nt',
+    //   '52ms',
+    //   '52no',
+    // ];
 
-    workCenters.forEach(workcenter =>
-      this._imdsService.fetch(workcenter).subscribe(xml => this.processIMDS380(xml))
-    );
-
-  }
-
-  processIMDS380(xml: string) {
-
-    const parser: any = new xml2js.Parser({
-      explicitRoot: false,
-      explicitArray: false,
-    });
-
-    parser.parseString(xml, (err, parsedXML: IParsed380) => {
-
-      const flatten: Function = (item: string[]): string => {
-        return item.join ? item.join(' ') : String(item);
-      };
-
-      parsedXML.EquipmentDataRow.EventDataRow.forEach((row, index) => {
-
-        if (row.EventSymbol !== 'R' && row.EventSymbol !== 'A') {
-          // Ignore any jobs that aren't red or amber
-          return;
-        }
-
-        const job: ISharePointMDC = {
-          JCN: row.EventId,
-          CC: row.EventSymbol,
-          Discrepancy: flatten(row.DiscrepancyNarrativeRow.DiscrepancyNarrative),
-          WorkCenter: parsedXML.EquipmentDataRow.Workcenter,
-          Timestamp: row.EventDateTimeStamp,
-          EquipID: row.WorkcenterEventDataRow.EquipmentIdOrPartNumber,
-          DelayCode: row.DefereCode,
-          LastUpdate: flatten(row.WorkcenterEventDataRow.WorkcenterEventNarrativeRow.WorkcenterEventNarrative),
-        };
-
-        const match: ISharePointMDC = find(this.mdc, { JCN: row.EventId });
-
-        if (match) {
-
-          // update job
-          if (match.Timestamp !== job.Timestamp) {
-            this._loadingService.register('imds-380', index);
-            defaults(job, match);
-            this._sharePointService
-              .updateJob(job)
-              .subscribe(updatedJob => {
-                this.addOrUpdateJob(job, match);
-                this._loadingService.resolve('imds-380', index);
-              });
-            this.debouncedFilter();
-          }
-
-        } else {
-
-          // create job
-          this._loadingService.register('imds-380', index);
-          this._sharePointService
-            .createJob(job)
-            .subscribe(createdJob => {
-              this.mdc.push(this.transformMDCRow(createdJob));
-              this.debouncedFilter();
-              this._loadingService.resolve('imds-380', index);
-            });
-
-        }
-      });
-
-    });
+    // workCenters.forEach(workcenter =>
+    //   this._imdsService.fetch(workcenter).subscribe(xml => this.processIMDS380(xml))
+    // );
 
   }
 
@@ -261,7 +182,6 @@ export class DashboardComponent implements OnInit {
     ].join(' ').toUpperCase();
 
     return _transform;
->>>>>>> Stashed changes
   }
 
   sort(sortEvent: ITdDataTableSortChangeEvent): void {
@@ -277,23 +197,14 @@ export class DashboardComponent implements OnInit {
     this.filter();
   }
 
-<<<<<<< Updated upstream
-  filter(): void {
-    console.log('filter');
-    let newData: ISharePointMDC[] = [];
-    newData = this._dataTableService.filterData(this.mdc, this.searchTerm, true);
-    newData = this._dataTableService.sortData(newData, this.sortBy, this.sortOrder);
-    this.filteredData = newData;
-=======
   debouncedFilter = debounce(() => this.filter(), 200);
 
-  filter() {
+  filter(): void {
     let mdc = this.mdc.sort((a, b) => -a.Timestamp.localeCompare(b.Timestamp));
     if (this.searchTerms.length) {
       mdc = mdc.filter(row => every(this.searchTerms, term => row.search.indexOf(term) > -1));
     }
     this.filteredData = mdc;
->>>>>>> Stashed changes
   }
 
   trackByFn(index: number, item: ISharePointMDC): number {

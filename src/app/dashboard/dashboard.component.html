@@ -16,11 +16,6 @@
       <ng-template tdLoading="mdc">
         <mat-card *ngIf="filteredData.length > 0" class="animated zoomIn">
           <div layout="row" layout-align="start center" class="pad-left-sm pad-right-sm">
-<<<<<<< Updated upstream
-            <td-search-box #searchBox backIcon="arrow_back" class="push-right-sm" placeholder="Search here" (searchDebounce)="search($event)"
-              flex=1>
-            </td-search-box>
-=======
             <td-chips flex=1 placeholder="Add search terms and press enter" (add)="addSearchTerm($event)" (remove)="removeSearchTerm($event)">
             </td-chips>
           </div>
@@ -28,7 +23,6 @@
           <div class="md-padding" *ngIf="filteredData.length < 1" layout="row" layout-align="center start">
             <td-message color="accent" class="pad-sm" label="No Jobs Found" sublabel="Please clear or change your search criteria.">
             </td-message>
->>>>>>> Stashed changes
           </div>
 
           <mat-divider></mat-divider>
