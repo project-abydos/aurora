@@ -54,8 +54,6 @@ export class DashboardComponent implements OnInit {
 
   tableHeight: number = window.innerHeight - 250;
 
-  debouncedFilter: any = debounce(() => this.filter(), 200);
-
   constructor(
     private _dataTableService: TdDataTableService,
     private _titleService: Title,
@@ -187,7 +185,7 @@ export class DashboardComponent implements OnInit {
       _transform.WorkCenter,
       _transform.EquipID,
       _transform.NameUserID,
-      // _transform.DDR ? _transform.DDR.map(row => row.Text).join(' ') : '',
+      _transform.DDR ? _transform.DDR.map(ddr => ddr.Text).join(' ') : '',
       _transform.ApprovalStatus,
       _transform.WhenDiscText,
       _transform.DownTimeCodeText,
@@ -210,11 +208,6 @@ export class DashboardComponent implements OnInit {
       mdc = mdc.filter(row => every(this.searchTerms, term => row.search.indexOf(term) > -1));
     }
     this.filteredData = mdc;
-  }
-
-  trackByFn(index: number, item: ISharePointMDC): number {
-    console.log('trackBy');
-    return item.Id;
   }
 
 }

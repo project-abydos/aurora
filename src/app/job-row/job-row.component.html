@@ -1,76 +1,73 @@
-<div class="mat-row" [ngClass]="job.CC">
+<div class="mat-row" [ngClass]="[row.CC, isExpanded ? 'expanded' : 'collapsed']" (click)="toggleExpanded(row)">
 
   <div class="mat-cell JCN">
-    <!-- <button mat-button mat-raised color="primary" (click)="$event.stopPropagation()">{{job.JCN}}</button> -->
-    <span>{{job.JCN}}</span>
+    <!-- <button mat-button mat-raised color="primary" (click)="$event.stopPropagation()">{{row.JCN}}</button> -->
+    {{row.JCN}}
   </div>
 
   <div class="mat-cell WorkCenter">
-    <span>{{job.WorkCenter}}</span>
+    <span>{{row.WorkCenter}}</span>
   </div>
 
   <div class="mat-cell EquipID">
-    <span>{{job.EquipID}}</span>
+    <span>{{row.EquipID}}</span>
   </div>
 
   <div class="mat-cell Discrepancy ellipses">
-    <span>{{job.Discrepancy}}</span>
+    <span>{{row.Discrepancy}}</span>
   </div>
 
   <div class="mat-cell LastUpdate ellipses">
     <span>
-      <strong>{{job.timeStampPretty}}</strong> |
-      <em>{{job.LastUpdate}}</em>
+      <strong>{{row.timeStampPretty}}</strong> |
+      <em>{{row.LastUpdate}}</em>
     </span>
   </div>
 
-  <div class="mat-cell ETIC">
-    <span>{{job.ETIC}}</span>
+  <div class="mat-cell ETIC" *ngIf="!isExpanded">
+    <span>{{row.ETIC}}</span>
   </div>
 
-  <!-- <div class="ETIC" *ngIf="isExpanded">
-    <input matInput [matDatepicker]="picker" placeholder="Choose a date" [(ngModel)]="job.eticDate">
+  <div class="mat-cell ETIC" *ngIf="isExpanded">
+    <input matInput [matDatepicker]="picker" placeholder="Choose a date" [(ngModel)]="row.eticDate">
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker></mat-datepicker>
-  </div> -->
+  </div>
 
   <div class="mat-cell ApprovalStatus">
-    <!-- <mat-select placeholder="" [(ngModel)]="job.ApprovalStatus" name="status" (click)="$event.stopPropagation()" *ngIf="isExpanded">
+    <mat-select placeholder="" [(ngModel)]="row.ApprovalStatus" name="status" (click)="$event.stopPropagation()" *ngIf="isExpanded">
       <mat-option *ngFor="let status of approvalOptions" [value]="status.value">
         {{status.label}}
       </mat-option>
-    </mat-select> -->
-    <span>{{job.ApprovalStatus}}</span>
+    </mat-select>
+    <span *ngIf="!isExpanded">{{row.ApprovalStatus}}</span>
   </div>
 
 </div>
 
-<!-- <tr class="expanded-row {{job.CC}}">
-  <div colspan="7">
-    <mat-card class="job-info">
-      <mat-card-title>Job Info</mat-card-title>
-      <mat-card-content>
-        <form>
-          <mat-form-field class="wide">
-            <input matInput placeholder="When Discovered" disabled [value]="job.WhenDiscText">
-          </mat-form-field>
-          <mat-form-field class="wide">
-            <input matInput placeholder="Delay Code" disabled [value]="job.DelayCodeText">
-          </mat-form-field>
-          <mat-form-field class="wide">
-            <input matInput placeholder="Down Time" disabled [value]="job.DownTimeCodeText">
-          </mat-form-field>
-        </form>
-      </mat-card-content>
-    </mat-card>
+<div class="mat-row expanded-row {{row.CC}}" *ngIf="isExpanded">
+  <mat-card class="job-info">
+    <mat-card-title>Job Info</mat-card-title>
+    <mat-card-content>
+      <form>
+        <mat-form-field class="wide">
+          <input matInput placeholder="When Discovered" disabled [value]="row.WhenDiscText">
+        </mat-form-field>
+        <mat-form-field class="wide">
+          <input matInput placeholder="Delay Code" disabled [value]="row.DelayCodeText">
+        </mat-form-field>
+        <mat-form-field class="wide">
+          <input matInput placeholder="Down Time" disabled [value]="row.DownTimeCodeText">
+        </mat-form-field>
+      </form>
+    </mat-card-content>
+  </mat-card>
 
-    <mat-card class="job-history">
-      <mat-card-title>History</mat-card-title>
-      <mat-card-content>
+  <mat-card class="job-history">
+    <mat-card-title>History</mat-card-title>
+    <mat-card-content>
 
-      </mat-card-content>
-    </mat-card>
-  </div> 
+    </mat-card-content>
+  </mat-card>
 
-</tr>
--->
+</div>

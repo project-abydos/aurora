@@ -58,7 +58,7 @@ export interface ICustomMDCData extends ISharePointMDC {
     DDR: {
         Date: string;
         Text: string;
-    };
+    }[];
 }
 
 export interface IParsedDDRDataRow {

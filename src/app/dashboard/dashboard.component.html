@@ -14,32 +14,32 @@
   <div layout-gt-sm="row" tdMediaToggle="gt-xs" [mediaClasses]="['push-sm']">
     <div flex-gt-sm="100">
       <ng-template tdLoading="mdc">
-        <mat-card *ngIf="filteredData.length > 0" class="animated zoomIn">
+        <mat-card class="animated zoomIn" style="background: #eee">
           <div layout="row" layout-align="start center" class="pad-left-sm pad-right-sm">
             <td-chips flex=1 placeholder="Add search terms and press enter" (add)="addSearchTerm($event)" (remove)="removeSearchTerm($event)">
             </td-chips>
           </div>
 
-          <table td-data-table class="table--fixed">
-            <thead>
-              <th td-data-table-column class="JCN">JCN</th>
-              <th td-data-table-column class="WorkCenter">Shop</th>
-              <th td-data-table-column class="EquipID">S/N</th>
-              <th td-data-table-column class="Discrepancy">Discrepancy</th>
-              <th td-data-table-column class="LastUpdate">Last Update</th>
-              <th td-data-table-column class="ETIC">ETIC</th>
-              <th td-data-table-column class="ApprovalStatus">Status</th>
-            </thead>
-            <tbody>
+          <div class="dashboard mat-table">
+            <div class="dashboard-header mat-header-row mat-elevation-z4">
+              <div class="mat-header-cell JCN">JCN</div>
+              <div class="mat-header-cell WorkCenter">Shop</div>
+              <div class="mat-header-cell EquipID">S/N</div>
+              <div class="mat-header-cell Discrepancy">Discrepancy</div>
+              <div class="mat-header-cell LastUpdate">Last Update</div>
+              <div class="mat-header-cell ETIC">ETIC</div>
+              <div class="mat-header-cell ApprovalStatus">Status</div>
+            </div>
+            <div class="dashboard-body">
               <ng-template ngFor let-row [ngForOf]="filteredData" [ngForTrackBy]="Id">
                 <!-- <span>{{row.Id}}</span> -->
-                <app-job-row [row]="row"></app-job-row>
+                <mdrp-job-row [row]="row"></mdrp-job-row>
               </ng-template>
-            </tbody>
-          </table>
+            </div>
 
-          <div class="mat-padding" *ngIf="filteredData.length < 1" layout="row" layout-align="center center">
-            <h3>No results to display.</h3>
+            <div class="mat-padding" *ngIf="filteredData.length < 1" layout="row" layout-align="center center">
+              <h3>No results to display.</h3>
+            </div>
           </div>
 
         </mat-card>
