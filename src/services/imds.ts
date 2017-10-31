@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { AsyncSubject } from 'rxjs/AsyncSubject';
 import { Observable } from 'rxjs/Observable';
 import { Parser } from 'xml2js';
+import { Subject } from 'rxjs';
 import { defaults, find } from 'lodash';
 
 import { D52MS_380_XML } from './mock-data-imds-screen-380';
@@ -12,7 +12,7 @@ import { ISharePointMDC, IParsed380 } from 'app/types';
 @Injectable()
 export class IMDSService {
 
-    private _imds: AsyncSubject<ISharePointMDC> = new AsyncSubject();
+    private _imds: Subject<ISharePointMDC> = new Subject();
 
     private _parser: Parser = new Parser({
         explicitRoot: false,
@@ -30,7 +30,7 @@ export class IMDSService {
     }
 
     fetch380(org: string): void {
-        this._crossDomainService.peformSyncOperation();
+        this._crossDomainService.peformSyncOperation(org);
     }
 
     private _processXML(xml: string): void {

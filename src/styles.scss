@@ -21,8 +21,10 @@ a[mat-icon-button] {
     text-transform: capitalize;
 }
 
-.start-imds-sync mat-progress-spinner {
+.start-imds-sync mat-progress-spinner,
+.start-imds-sync mat-progress-spinner svg {
     height: 40px!important;
+    width: 40px!important;
 }
 
 // Lighter font weight in sub-toolbars

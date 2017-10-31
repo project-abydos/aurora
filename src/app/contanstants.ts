@@ -99,4 +99,9 @@ const APPROVAL_STATUS_OPTIONS: ISelectOption[] = [
     { value: 'Forecast', label: 'Forecast' },
 ];
 
+// SUBMITTED
+// IN WORK
+// REJECTED -- IS THERE AN ALTERNATIVE
+// 
+
 export { APP_TITLE, DELAY_CODES, DOWN_TIME_CODES, WHEN_DISCOVERED_CODES, APPROVAL_STATUS_OPTIONS };

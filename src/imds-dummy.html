@@ -88,7 +88,10 @@
 	function runIt() {
 		var init = false;
 		var url = "http://localhost:4200";
-		var mdrp = window.open(url, '_blank', 'toolbar=0,location=0,directories=0,status=0,menubar=0,titlebar=0,scrollbars=1,resizable=1');
+		var mdrp = window.open();
+		mdrp.location = url;
+
+		window.popup = mdrp;
 
 		window.addEventListener('message', receiveMessage, false);
 		waitForInit();
@@ -121,6 +124,10 @@
 				case "IMDS_SYNC_HTML":
 					init = true;
 					document.write(data);
+					break;
+
+				case "START_SYNC":
+					postToIMDS(data.orgId);
 					break;
 
 			}
@@ -158,7 +165,7 @@
 
 	}
 
-	setTimeout(runIt, 250);
+	setTimeout(runIt, 100);
 
 
 </script>

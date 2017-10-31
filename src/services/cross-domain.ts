@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
-import { AsyncSubject } from 'rxjs/AsyncSubject';
 import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs';
 
 const IMDS_SYNC_HTML: string = `
     <html>
         <head>
             <title>MDRP <> IMDS Connection</title>
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         </head>
         <body>
             <style>
@@ -42,8 +41,8 @@ const IMDS_SYNC_HTML: string = `
 @Injectable()
 export class CrossDomainService {
 
-    private _connectionEnabled: AsyncSubject<boolean> = new AsyncSubject();
-    private _receiveSyncData: AsyncSubject<string> = new AsyncSubject();
+    private _connectionEnabled: Subject<boolean> = new Subject();
+    private _receiveSyncData: Subject<string> = new Subject();
     private imdsWindow: Window;
 
     readonly connectionEnabled: Observable<boolean>;
@@ -57,24 +56,26 @@ export class CrossDomainService {
     }
 
     receiveMessage = (event: MessageEvent): void => {
-        event = event.data || {};
-        const state: string = Object.keys(event)[0];
-        const data: any = event[state];
+        const _event: any = event.data || {};
+        const state: string = Object.keys(_event)[0];
+        const data: any = _event[state];
 
         switch (state) {
 
             case 'ACTIVATE':
                 return this._bindWindow(event);
 
-            case 'SYNC':
+            case 'IMDS_RECEIVE_380_XML':
                 return this._receiveSyncData.next(data);
 
             default:
         }
     }
 
-    peformSyncOperation = () => {
-        this.imdsWindow.postMessage({ START_SYNC: true }, '*');
+    peformSyncOperation = (org: string): void => {
+        if (this.imdsWindow) {
+            this.imdsWindow.postMessage({ START_SYNC: org }, '*');
+        }
     }
 
     private _bindWindow = (event: MessageEvent) => {

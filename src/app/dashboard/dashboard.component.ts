@@ -54,6 +54,8 @@ export class DashboardComponent implements OnInit {
 
   tableHeight: number = window.innerHeight - 250;
 
+  debouncedFilter: Function = debounce(this.filter, 200);
+
   constructor(
     private _dataTableService: TdDataTableService,
     private _titleService: Title,
@@ -64,34 +66,11 @@ export class DashboardComponent implements OnInit {
   ) {
 
     _titleService.setTitle(APP_TITLE);
-
-    _imdsService.imds.subscribe(job => {
-
-      const match: ISharePointMDC = find(this.mdc, { JCN: job.JCN });
-
-      if (match) {
-        if (match.Timestamp !== job.Timestamp) {
-          // this._sharePointService.updateJob(job)
-          defaults(job, match);
-          // this.mapMDCRow(job);
-        }
-      } else {
-        this._loadingService.register('imds-380', job.Id);
-        // New record
-        this._sharePointService
-          .createJob(job)
-          .subscribe(createdJob => {
-            this.mdc.push(createdJob);
-            this._loadingService.resolve('imds-380', job.Id);
-          });
-      }
-
-    });
+    _imdsService.imds.subscribe(job => this.addOrUpdateJob(job, true));
 
   }
 
   ngOnInit(): void {
-    console.log('init');
     this._loadingService.register('mdc');
     this.reSyncJobs();
     const interval: number = 60 * 1000;
@@ -109,19 +88,28 @@ export class DashboardComponent implements OnInit {
     this.filter();
   }
 
-  addOrUpdateJob(row: ISharePointMDC, match?: ISharePointMDC): void {
+  addOrUpdateJob(job: ISharePointMDC, updateSharePoint: boolean): void {
 
-    match = match || find(this.mdc, { JCN: row.JCN });
+    const match: ISharePointMDC = find(this.mdc, { JCN: job.JCN });
 
     if (match) {
       // Matching job found
-      if (match.Timestamp !== row.Timestamp) {
+      if (match.Timestamp !== job.Timestamp) {
         // Job has been updated since last pull
-        this.mdc[this.mdc.indexOf(match)] = this.transformMDCRow(row);
+        const matchId: number = this.mdc.indexOf(match);
+        if (updateSharePoint) {
+          this._sharePointService.updateJob(match).subscribe(update => this.transformMDCRow(update, matchId));
+        } else {
+          this.transformMDCRow(job, matchId);
+        }
       }
     } else {
       // New job
-      this.mdc.push(this.transformMDCRow(row));
+      if (updateSharePoint) {
+        this._sharePointService.createJob(job).subscribe(update => this.transformMDCRow(update));
+      } else {
+        this.transformMDCRow(job);
+      }
     }
 
   }
@@ -129,9 +117,10 @@ export class DashboardComponent implements OnInit {
   reSyncJobs(): void {
     this._loadingService.register('imds-380');
     this._sharePointService.getMDC().subscribe(mdc => {
-      mdc.forEach(row => this.addOrUpdateJob(row));
+      mdc.forEach(row => this.addOrUpdateJob(row, false));
       this.filter();
       this._loadingService.resolve('mdc');
+      this._loadingService.resolve('imds-380');
       this.isLoaded = true;
     });
   }
@@ -154,10 +143,17 @@ export class DashboardComponent implements OnInit {
 
   }
 
-  transformMDCRow(row: ISharePointMDC): ICustomMDCData {
-    const _transform: ICustomMDCData = <ICustomMDCData>row;
+  transformMDCRow(row: ISharePointMDC, matchId?: number): void {
+
+    if (row.CC === 'G') {
+      // Ignore all green jobs, because--well they're green and stuff
+      return;
+    }
+
+    const _transform: ICustomMDCData = <ICustomMDCData>cloneDeep(row);
     const julianFormat: string = 'YYDDDHHmm';
     const humanFormat: string = 'l, HHmm';
+    const daysDiff: number = moment().diff(moment(row.Timestamp, 'YYDDD HH:mm:ss'), 'days');
 
     _transform.dateRange = [
       moment(row.StartDate + row.StartTime, julianFormat).format(humanFormat),
@@ -165,7 +161,7 @@ export class DashboardComponent implements OnInit {
     ].join(' - ');
 
     _transform.ApprovalStatus = row.ApprovalStatus || '-';
-    _transform.timeStampPretty = moment(row.Timestamp, 'YYDDD HH:mm:ss').fromNow(true);
+    _transform.timeStampPretty = daysDiff + ' days';
     _transform.WhenDiscText = row.WhenDISC ? `${row.WhenDISC} - ${WHEN_DISCOVERED_CODES[row.WhenDISC]}` : '';
     _transform.DownTimeCodeText = row.DownTimeCode ? `${row.DownTimeCode} - ${DOWN_TIME_CODES[row.DownTimeCode]}` : '';
     _transform.DelayCodeText = row.DelayCode ? `${row.DelayCode} - ${DELAY_CODES[row.DelayCode]}` : '';
@@ -193,7 +189,12 @@ export class DashboardComponent implements OnInit {
       _transform.eticDate,
     ].join(' ').toUpperCase();
 
-    return _transform;
+    if (isNaN(matchId)) {
+      this.mdc.push(_transform);
+    } else {
+      this.mdc[matchId] = _transform;
+    }
+    this.debouncedFilter();
   }
 
   search(searchTerm: string): void {
