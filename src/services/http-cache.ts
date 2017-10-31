@@ -4,8 +4,10 @@ import { Injectable } from '@angular/core';
 import { Http, ConnectionBackend, Headers, Request, RequestOptions, Response, RequestOptionsArgs } from '@angular/http';
 import { Observable, Subscriber } from 'rxjs';
 
-import * as _ from 'lodash';
+import { orderBy, isEqual } from 'lodash';
 import * as localForage from 'localforage';
+import { ISharePointMDC } from 'app/types';
+import { Utilities } from 'services/utilities';
 
 @Injectable()
 export class HttpCacheService extends Http {
@@ -19,38 +21,50 @@ export class HttpCacheService extends Http {
     }
 
     request(req: string | Request, options?: RequestOptionsArgs): Observable<Response> {
-        const url: string = typeof req === 'string' ? req : req.url;
 
-        const reqResponse: Observable<Response> = new Observable((subscriber: Subscriber<Response>) => {
-            Observable.fromPromise(localForage.getItem(url))
-                .subscribe((localData: Response) => {
+        const url: string = typeof req === 'string' ? req : req.url;
+        const isSharePoint: boolean = url.includes('/_vti_bin/ListData.svc/');
+
+        return new Observable((subscriber: Subscriber<Response>) => {
+
+            Observable
+                .fromPromise(localForage.getItem(url))
+                .subscribe((localData: any) => {
+
                     if (localData) {
                         subscriber.next(localData);
                     }
-                    super.request(req, options)
-                        .map(resp => {
-                            if (typeof resp === 'object') {
-                                return resp.json();
-                            } else {
-                                return resp;
-                            }
-                        })
+
+                    if (isSharePoint) {
+                        const data: ISharePointMDC[] = localData.d.results || localData.d;
+                        const latest: ISharePointMDC = orderBy(data, ['Modified'], ['desc'])[0];
+                        const lastModified: Date = Utilities.convertDate(latest.Modified);
+                        const urlAppend: string = `?$filter=Modified gt datetime'${lastModified.toISOString()}'`;
+                        if (typeof req === 'string') {
+                            req += urlAppend;
+                        } else {
+                            req.url += urlAppend;
+                        }
+                    }
+
+                    super
+                        .request(req, options)
+                        .map(resp => (typeof resp === 'object') ? resp.json() : resp)
                         .subscribe((remoteData: Response) => {
-                            // TODO check if both remote and local data are different
-                            // if they are, avoid saving remote data to localStorage and .next() on subject
-                            if (_.isEqual(remoteData, localData)) {
+                            console.log(remoteData);
+                            if (isEqual(remoteData, localData)) {
                                 subscriber.complete();
                             } else {
-                                Observable.fromPromise(localForage.setItem(url, remoteData)).subscribe((saved) => {
-                                    subscriber.next(remoteData);
-                                    subscriber.complete();
-                                });
+                                // Observable.fromPromise(localForage.setItem(url, remoteData)).subscribe((saved) => {
+                                //     subscriber.next(remoteData);
+                                //     subscriber.complete();
+                                // });
                             }
                         });
+
                 });
         });
 
-        return reqResponse;
     }
 
 }

@@ -131,8 +131,7 @@ td-chips{
         .mat-row {
             cursor: pointer;
         }
-        .ellipses span {
-            width: 100%;
+        .ellipses {            
             text-overflow: ellipsis;
             white-space: nowrap;
             overflow: hidden;

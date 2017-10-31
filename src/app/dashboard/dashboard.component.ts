@@ -126,21 +126,15 @@ export class DashboardComponent implements OnInit {
   }
 
   syncIMDS(): void {
-    console.log('sync');
-    this._imdsService.fetch380('test');
-
-    // const workCenters: string[] = [
-    //   '51ms',
-    //   '52no',
-    //   '51nt',
-    //   '52ms',
-    //   '52no',
-    // ];
-
-    // workCenters.forEach(workcenter =>
-    //   this._imdsService.fetch(workcenter).subscribe(xml => this.processIMDS380(xml))
-    // );
-
+    [
+      '51ms',
+      '52no',
+      '51nt',
+      '52ms',
+      '52no',
+    ].forEach((workcenter, index) => {
+      setTimeout(() => this._imdsService.fetch380(workcenter), 3000 * index);
+    });
   }
 
   transformMDCRow(row: ISharePointMDC, matchId?: number): void {
