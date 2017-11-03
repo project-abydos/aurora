@@ -90,7 +90,7 @@ export class DashboardComponent implements OnInit {
 
     const match: ISharePointMDC = find(this.mdc, { JCN: job.JCN });
 
-    if (job.CC === 'G') {
+    if (job.CC === 'G'  || job.CC === '-') {
       return;
     }
 
