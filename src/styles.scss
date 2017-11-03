@@ -145,21 +145,25 @@ td-chips{
         //     float: left;
         // }
         .mat-row {
+            transition: background cubic-bezier(0.25, 0.46, 0.45, 0.94) .2s;
             background-color: white;
             padding-top: 3px;
             padding-bottom: 3px;
             border-bottom: none;
             &:hover {
-        
                 background: rgba(238, 238, 238, 0.25);
             }
         }
-        .mat-row.expanded {    
-            background-color: $expand-bg-color;
+        .mat-row.expanded-row {
+            display: flex;                    
+        }
+        .mat-row.expanded, .mat-row.expanded-row {    
+            background-color: $expand-bg-color!important;
             border-bottom: none;
-            color: $frost!important;
             height: auto;
             .mat-cell {
+                color: $frost!important;
+                display: inline-flex;
                 span {
                     text-overflow: initial;
                     white-space: normal;
@@ -167,16 +171,16 @@ td-chips{
                 // .td-data-table-cell-content-wrapper {
                 //     height: auto!important;
                 // }
-                button {
-                    margin-top: -10px;
-                    color: $frost;
-                    box-shadow: 0 3px 1px -2px rgba(240, 240, 240, .2), 0 2px 2px 0 rgba(240, 240, 240, .14), 0 1px 5px 0 rgba(240, 240, 240, .12);
-                    background-color: rgba(240, 240, 240, .2);
-                    &:hover {
-                        color: #333;
-                        background-color: rgba(240, 240, 240, .7);
-                    }
-                }
+                // button {
+                //     margin-top: -10px;
+                //     color: $frost;
+                //     box-shadow: 0 3px 1px -2px rgba(240, 240, 240, .2), 0 2px 2px 0 rgba(240, 240, 240, .14), 0 1px 5px 0 rgba(240, 240, 240, .12);
+                //     background-color: rgba(240, 240, 240, .2);
+                //     &:hover {
+                //         color: #333;
+                //         background-color: rgba(240, 240, 240, .7);
+                //     }
+                // }
                 .mat-select-value-text {
                     color: $frost;
                 }

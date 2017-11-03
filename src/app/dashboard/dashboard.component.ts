@@ -90,7 +90,7 @@ export class DashboardComponent implements OnInit {
 
     const match: ISharePointMDC = find(this.mdc, { JCN: job.JCN });
 
-    if (job.CC === 'G'  || job.CC === '-') {
+    if (job.CC === 'G' || job.CC === '-') {
       return;
     }
 
@@ -157,16 +157,18 @@ export class DashboardComponent implements OnInit {
 
     const _transform: ICustomMDCData = <ICustomMDCData>cloneDeep(row);
     const julianFormat: string = 'YYDDDHHmm';
-    const humanFormat: string = 'l, HHmm';
-    const daysDiff: number = moment().diff(moment(row.Timestamp, 'YYDDD HH:mm:ss'), 'days');
-
-    _transform.dateRange = [
-      moment(row.StartDate + row.StartTime, julianFormat).format(humanFormat),
-      moment(row.StopDate + row.StopTime, julianFormat).format(humanFormat),
-    ].join(' - ');
+    const timestampMoment: Moment = moment.utc(row.Timestamp, 'YYDDD HH:mm:ss').local();
+    const diff: string = timestampMoment.calendar(undefined, {
+      sameDay: '[Today at] HH:mm',
+      nextDay: '[Tomorrow]',
+      nextWeek: 'M-D-YYYY',
+      lastDay: '[Yesterday]',
+      lastWeek: 'M-D-YYYY',
+      sameElse: 'M-D-YYYY',
+    });
 
     _transform.ApprovalStatus = row.ApprovalStatus || '-';
-    _transform.timeStampPretty = daysDiff === 0 ? 'today' : `${daysDiff} days`;
+    _transform.timeStampPretty = diff;
     _transform.WhenDiscText = row.WhenDISC ? `${row.WhenDISC} - ${WHEN_DISCOVERED_CODES[row.WhenDISC]}` : '';
     _transform.DownTimeCodeText = row.DownTimeCode ? `${row.DownTimeCode} - ${DOWN_TIME_CODES[row.DownTimeCode]}` : '';
     _transform.DelayCodeText = row.DelayCode ? `${row.DelayCode} - ${DELAY_CODES[row.DelayCode]}` : '';
@@ -175,7 +177,9 @@ export class DashboardComponent implements OnInit {
       R: 'CC:Red',
       G: 'CC:Green',
     }[_transform.CC];
-    _transform.eticDate = moment(row.ETIC).toDate();
+    if (row.ETIC) {
+      _transform.eticDate = moment(row.ETIC).toDate();
+    }
 
     _transform.search = [
       _transform.JCN,
@@ -186,12 +190,12 @@ export class DashboardComponent implements OnInit {
       _transform.WorkCenter,
       _transform.EquipID,
       _transform.NameUserID,
-      _transform.DDR ? _transform.DDR.map(ddr => ddr.Text).join(' ') : '',
+      _transform.DDR instanceof Array ? _transform.DDR.map(ddr => ddr.Text).join(' ') : '',
       _transform.ApprovalStatus,
       _transform.WhenDiscText,
       _transform.DownTimeCodeText,
       _transform.DelayCodeText,
-      _transform.eticDate,
+      _transform.eticDate || '',
     ].join(' ').toUpperCase();
 
     if (isNaN(matchId)) {

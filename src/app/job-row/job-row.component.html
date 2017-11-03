@@ -46,24 +46,21 @@
 </div>
 
 <div class="mat-row expanded-row {{row.CC}}" *ngIf="isExpanded">
-  <mat-card class="job-info">
+  <mat-card class="job-info" style="flex:1">
     <mat-card-title>Job Info</mat-card-title>
     <mat-card-content>
-      <form>
-        <mat-form-field class="wide">
-          <input matInput placeholder="When Discovered" disabled [value]="row.WhenDiscText">
-        </mat-form-field>
-        <mat-form-field class="wide">
-          <input matInput placeholder="Delay Code" disabled [value]="row.DelayCodeText">
-        </mat-form-field>
-        <mat-form-field class="wide">
-          <input matInput placeholder="Down Time" disabled [value]="row.DownTimeCodeText">
-        </mat-form-field>
-      </form>
+      <!-- <dl>
+        <dt>When Discovered</dt>
+        <dd>{{row.WhenDiscText}}</dd>
+        <dt>Delay Code</dt>
+        <dd>{{row.DelayCodeText}}</dd>
+        <dt>Down Time</dt>
+        <dd>{{row.DownTimeCodeText}}</dd>
+      </dl> -->
     </mat-card-content>
   </mat-card>
 
-  <mat-card class="job-history">
+  <mat-card class="job-history" style="flex:3">
     <mat-card-title>History</mat-card-title>
     <mat-card-content>
 
