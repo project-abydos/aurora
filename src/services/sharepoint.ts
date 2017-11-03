@@ -3,7 +3,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Http, Headers, RequestOptionsArgs, RequestOptions, RequestMethod } from '@angular/http';
 import 'rxjs/add/operator/map';
-import { get, pick } from 'lodash';
+import { get, pick, includes } from 'lodash';
 
 import { ISharePointConfig, ISharePointMDC } from 'app/types';
 
@@ -16,41 +16,35 @@ export class SharepointService {
 
   }
 
-  request(url: string, _options?: RequestOptionsArgs, deleteOperation: boolean = false): Observable<any> {
+  request(url: string, _options?: RequestOptionsArgs): Observable<any> {
 
     const options: RequestOptionsArgs = _options || new RequestOptions({
       method: RequestMethod.Get,
     });
 
-    const isPut: boolean = (options.method === RequestMethod.Put);
+    const isPut: boolean = (options.method === RequestMethod.Put) && options.body.__metadata;
     const isPost: boolean = (options.method === RequestMethod.Post);
+
+    url = `${SharepointService.CONFIG.BASE_URL}/${url}`;
 
     options.headers = new Headers();
     options.headers.set('Accept', 'application/json');
     options.headers.set('Content-Type', 'application/json');
 
-    if (isPut || isPost) {
-      url = get(options, 'body.__metadata.uri');
-      if (url.includes('/Jobs')) {
+    if (options.body) {
+      if (includes(url, '/Jobs')) {
         options.body = pick(options.body, SharepointService.CONFIG.JOB_FIELDS);
       }
+    }
+
+    if (isPut) {
+      url = options.body.__metadata.uri;
       options.headers.set('If-Match', options.body.__metadata.etag);
-    } else {
-      url = `${SharepointService.CONFIG.BASE_URL}/${url}`;
+      return this.http.request(url, options);
     }
 
     return this.http.request(url, options).map(response => {
-
-      if (response && response.status === 204) {
-        options.body.__metadata.etag = response.headers.get('ETag');
-        response = <any>{
-          d: options.body,
-        };
-      }
-
-      // tslint:disable-next-line:no-string-literal
-      return response['d'].results || response['d'] || response;
-
+      return get(response, 'd.results') || get(response, 'd') || response;
     });
 
   }

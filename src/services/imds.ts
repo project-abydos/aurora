@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Parser } from 'xml2js';
 import { Subject, Subscription } from 'rxjs';
-import { defaults, find, isArray } from 'lodash';
+import { defaults, find, get, isArray } from 'lodash';
 
 import { CrossDomainService } from './cross-domain';
 import { TdLoadingService } from '@covalent/core';
@@ -33,8 +33,9 @@ export class IMDSService {
         });
     }
 
-    flatten(item: string[]): string {
-        return item.join ? item.join(' ') : String(item);
+    flatten(row: IParsedEventDataRow, path: string): string {
+        const item: string[] | string = get(row, path);
+        return item instanceof Array ? item.join(' ') : String(item);
     }
 
     fetch380(): void {
@@ -64,21 +65,25 @@ export class IMDSService {
 
         this._parser.parseString(xml, (err, result: IParsed380) => {
 
+            const workcenter: string = get(result, 'EquipmentDataRow.Workcenter');
             let { EventDataRow } = result.EquipmentDataRow;
 
             // handle nulls and single-job 380s
-            EventDataRow = isArray(EventDataRow) ? EventDataRow : EventDataRow ? [<any>EventDataRow] : [];
+            EventDataRow = isArray(EventDataRow) ? EventDataRow :
+                (EventDataRow ? [<any>EventDataRow] : []);
+
+            console.log(EventDataRow);
 
             EventDataRow.forEach((row, index) =>
                 this._imds.next({
                     JCN: row.EventId,
                     CC: row.EventSymbol,
-                    Discrepancy: this.flatten(row.DiscrepancyNarrativeRow.DiscrepancyNarrative),
-                    WorkCenter: result.EquipmentDataRow.Workcenter,
+                    Discrepancy: this.flatten(row, 'DiscrepancyNarrativeRow.DiscrepancyNarrative'),
+                    WorkCenter: workcenter,
                     Timestamp: row.EventDateTimeStamp,
                     EquipID: row.WorkcenterEventDataRow.EquipmentIdOrPartNumber,
                     DelayCode: row.DeferCode,
-                    LastUpdate: this.flatten(<string[]>row.WorkcenterEventDataRow.WorkcenterEventNarrativeRow.WorkcenterEventNarrative),
+                    LastUpdate: this.flatten(row, 'WorkcenterEventDataRow.WorkcenterEventNarrativeRow.WorkcenterEventNarrative'),
                 }));
 
             this._loadingService.resolve('imds-380');

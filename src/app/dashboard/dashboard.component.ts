@@ -100,7 +100,12 @@ export class DashboardComponent implements OnInit {
         // Job has been updated since last pull
         const matchId: number = this.mdc.indexOf(match);
         if (updateSharePoint) {
-          this._sharePointService.updateJob(match).subscribe(update => this.transformMDCRow(update, matchId));
+          this._sharePointService.updateJob(match).subscribe(update => {
+            const strBase: string = match.__metadata.etag.replace(/[^\d]/g, '');
+            const base: number = parseInt(strBase, 10) || 0;
+            match.__metadata.etag = `W/"${base + 1}"`;
+            this.transformMDCRow(match, matchId);
+          });
         } else {
           this.transformMDCRow(job, matchId);
         }
@@ -128,6 +133,10 @@ export class DashboardComponent implements OnInit {
   }
 
   transformMDCRow(row: ISharePointMDC, matchId?: number): void {
+
+    if (!row) {
+      return;
+    }
 
     const G: string = 'G';
     const A: string = 'A';
