@@ -1,6 +1,7 @@
 
 export interface ISharePointConfig {
     BASE_URL?: string;
+    JOB_FIELDS?: string[];
 }
 
 export interface ISharePointResponse<T> {
@@ -87,7 +88,7 @@ export interface IParsedDDRDataRow {
 }
 
 export interface IParsedWorkcenterEventDataRow {
-    DefereCode: string;
+    DeferCode: string;
     DeferMessage: string;
     EmbedTransaction1: string;
     EquipmentIdOrPartNumber: string;
@@ -106,7 +107,7 @@ export interface IParsedWorkcenterEventDataRow {
 }
 
 export interface IParsedEventDataRow {
-    DefereCode: string;
+    DeferCode: string;
     DeferMessage: string;
     DiscrepancyNarrativeRow: {
         DiscrepancyNarrative: string[];

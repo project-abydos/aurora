@@ -83,6 +83,7 @@ export class CrossDomainService {
             this.imdsWindow = event.source;
             this.imdsWindow.postMessage({ IMDS_SYNC_HTML }, '*');
             this._connectionEnabled.next(true);
+            this._connectionEnabled.complete();
         }
     }
 

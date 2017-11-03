@@ -10,6 +10,32 @@ if (environment.production) {
 }
 
 SharepointService.CONFIG.BASE_URL = 'https://cs2.eis.af.mil/sites/10383/mdrp/_vti_bin/ListData.svc';
+SharepointService.CONFIG.JOB_FIELDS = [
+  '__metadata',
+  'EquipID',
+  'JCN',
+  'StartDate',
+  'StartTime',
+  'StopDate',
+  'StopTime',
+  'DownTimeCode',
+  'WUC',
+  'CC',
+  'WhenDISC',
+  'NameUserID',
+  'DelayCode',
+  'WorkCenter',
+  'Discrepancy',
+  'LastUpdate',
+  'ETIC',
+  'Location',
+  'ApprovalStatus',
+  'CFPComments',
+  'LastModifier',
+  'CS',
+  'Id',
+  'Timestamp',
+];
 
 // tslint:disable
 const bootstrap = () => platformBrowserDynamic().bootstrapModule(AppModule);

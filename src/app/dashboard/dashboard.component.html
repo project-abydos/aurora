@@ -2,13 +2,8 @@
   <div td-toolbar-content layout="row" layout-align="center center" flex class="">
     <span class="animated fadeIn">{{appTitle}}</span>
     <span flex></span>
-    <span class="julian-date animated fadeInRightBig">Julian Date: {{julianDate}}</span>
-    <span class="pull-right-sm start-imds-sync animated fadeInRightBig" *ngIf="crossDomainService.connectionEnabled | async">
-      <ng-template tdLoading="imds-380" tdLoadingColor="accent">
-        <button mat-icon-button (click)="syncIMDS()">
-          <mat-icon>cloud_download</mat-icon>
-        </button>
-      </ng-template>
+    <span class="pull-right-sm start-imds-sync animated fadeInRightBig">
+      <ng-template tdLoading="imds-380" tdLoadingColor="accent"> </ng-template>
     </span>
   </div>
   <div layout-gt-sm="row" tdMediaToggle="gt-xs" [mediaClasses]="['push-sm']">
@@ -51,7 +46,7 @@
     <div layout="row" layout-align="start center">
       <span class="mat-caption">Developed by the 5 CBCSS/SCS, Robins AFB, GA.</span>
       <span flex></span>
-      <mat-icon class="mat-icon-ux"></mat-icon>
+      <span class="julian-date animated fadeInRightBig">Julian Date: {{julianDate}}</span>
     </div>
   </td-layout-footer>
 </td-layout-nav>

@@ -15,7 +15,6 @@ import {
 
 import { APP_TITLE, APPROVAL_STATUS_OPTIONS, ISelectOption, DELAY_CODES, WHEN_DISCOVERED_CODES, DOWN_TIME_CODES } from '../contanstants';
 import { Moment } from 'moment';
-import { CrossDomainService } from 'services';
 import { ISharePointMDC, ICustomMDCData } from 'app/types';
 import { Observable } from 'rxjs/Observable';
 import { timer } from 'rxjs/observable/timer';
@@ -62,7 +61,6 @@ export class DashboardComponent implements OnInit {
     private _imdsService: IMDSService,
     private _sharePointService: SharepointService,
     private _loadingService: TdLoadingService,
-    public crossDomainService: CrossDomainService,
   ) {
 
     _titleService.setTitle(APP_TITLE);
@@ -91,6 +89,10 @@ export class DashboardComponent implements OnInit {
   addOrUpdateJob(job: ISharePointMDC, updateSharePoint: boolean): void {
 
     const match: ISharePointMDC = find(this.mdc, { JCN: job.JCN });
+
+    if (job.CC === 'G') {
+      return;
+    }
 
     if (match) {
       // Matching job found
@@ -125,21 +127,21 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  syncIMDS(): void {
-    [
-      '51ms',
-      '52no',
-      '51nt',
-      '52ms',
-      '52no',
-    ].forEach((workcenter, index) => {
-      setTimeout(() => this._imdsService.fetch380(workcenter), 3000 * index);
-    });
-  }
-
   transformMDCRow(row: ISharePointMDC, matchId?: number): void {
 
-    if (row.CC === 'G') {
+    const G: string = 'G';
+    const A: string = 'A';
+    const R: string = 'R';
+
+    // Map AGE CCs
+    row.CC = {
+      G, A, R,
+      '-': G,
+      '\\': A,
+      'X': R,
+    }[row.CC] || G;
+
+    if (row.CC === G) {
       // Ignore all green jobs, because--well they're green and stuff
       return;
     }
@@ -155,7 +157,7 @@ export class DashboardComponent implements OnInit {
     ].join(' - ');
 
     _transform.ApprovalStatus = row.ApprovalStatus || '-';
-    _transform.timeStampPretty = daysDiff + ' days';
+    _transform.timeStampPretty = daysDiff === 0 ? 'today' : `${daysDiff} days`;
     _transform.WhenDiscText = row.WhenDISC ? `${row.WhenDISC} - ${WHEN_DISCOVERED_CODES[row.WhenDISC]}` : '';
     _transform.DownTimeCodeText = row.DownTimeCode ? `${row.DownTimeCode} - ${DOWN_TIME_CODES[row.DownTimeCode]}` : '';
     _transform.DelayCodeText = row.DelayCode ? `${row.DelayCode} - ${DELAY_CODES[row.DelayCode]}` : '';
