@@ -155,8 +155,10 @@ export class DashboardComponent implements OnInit {
       return;
     }
 
+    const now: Moment = moment();
     const _transform: ICustomMDCData = <ICustomMDCData>cloneDeep(row);
-    const julianFormat: string = 'YYDDDHHmm';
+    const discrepancyText: string = _transform.Discrepancy.toUpperCase();
+    const julianDate: Moment = moment.utc(_transform.JCN.slice(0, 5), 'YYDDD').local();
     const timestampMoment: Moment = moment.utc(row.Timestamp, 'YYDDD HH:mm:ss').local();
     const diff: string = timestampMoment.calendar(undefined, {
       sameDay: '[Today at] HH:mm',
@@ -177,9 +179,25 @@ export class DashboardComponent implements OnInit {
       R: 'CC:Red',
       G: 'CC:Green',
     }[_transform.CC];
+
     if (row.ETIC) {
       _transform.eticDate = moment(row.ETIC).toDate();
     }
+
+    _transform.tags = [];
+
+    if (now.diff(julianDate, 'days') > 89) {
+      _transform.tags.push({ title: '90+ Days', style: 'accent' });
+    }
+
+    if (discrepancyText.includes('DEPLOYMENT INSPECTION')) {
+      _transform.tags.push({ title: 'PDI' });
+    }
+
+    if (_transform.JCN.match(/\d+[A-Z]\d+/)) {
+      _transform.tags.push({ title: 'PMI' });
+    }
+
 
     _transform.search = [
       _transform.JCN,
@@ -195,6 +213,7 @@ export class DashboardComponent implements OnInit {
       _transform.WhenDiscText,
       _transform.DownTimeCodeText,
       _transform.DelayCodeText,
+      _transform.tags.map(tag => tag.title).join(' '),
       _transform.eticDate || '',
     ].join(' ').toUpperCase();
 

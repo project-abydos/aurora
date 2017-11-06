@@ -161,9 +161,13 @@ td-chips{
             background-color: $expand-bg-color!important;
             border-bottom: none;
             height: auto;
+            .ellipses {                
+                line-height: 2em;
+            }
             .mat-cell {
                 color: $frost!important;
                 display: inline-flex;
+                
                 span {
                     text-overflow: initial;
                     white-space: normal;

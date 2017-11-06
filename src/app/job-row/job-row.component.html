@@ -14,7 +14,9 @@
   </div>
 
   <div class="mat-cell Discrepancy ellipses">
-    <span>{{row.Discrepancy}}</span>
+    <span>
+      <mat-chip *ngFor="let tag of row.tags" class="tag" [selected]="!!tag.style" [color]="tag.style">{{tag.title}}</mat-chip>
+      {{row.Discrepancy}}</span>
   </div>
 
   <div class="mat-cell LastUpdate ellipses">

@@ -56,6 +56,10 @@ export interface ICustomMDCData extends ISharePointMDC {
     updated?: boolean;
     CCText: any;
     search: string;
+    tags: {
+        title: string;
+        style?: string;
+    }[];
     DDR: {
         Date: string;
         Text: string;
