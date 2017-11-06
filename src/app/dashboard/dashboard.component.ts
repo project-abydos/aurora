@@ -58,6 +58,7 @@ export class DashboardComponent implements OnInit {
     red: number;
     amber: number;
     days90: number;
+    days30: number;
   };
 
   constructor(
@@ -194,8 +195,13 @@ export class DashboardComponent implements OnInit {
 
     _transform.tags = [];
 
+    if (now.diff(timestampMoment.startOf('day'), 'days') > 30) {
+      _transform.over30Days = true;
+      searchTerms.push('Needs Update');
+    }
+
     if (juliantDateDiff > 89) {
-      _transform.tags.push({ title: '90+ Days', style: 'accent' });
+      _transform.tags.push({ title: '90+ Open', style: 'accent' });
     }
 
     if (juliantDateDiff < 0) {
@@ -246,15 +252,21 @@ export class DashboardComponent implements OnInit {
 
   filter(): void {
     let mdc: ICustomMDCData[] = <ICustomMDCData[]>this.mdc.sort((a, b) => -a.Timestamp.localeCompare(b.Timestamp));
+    let once: boolean = false;
+
     if (this.searchTerms.length) {
       mdc = mdc.filter(row => every(this.searchTerms, term => row.search.indexOf(term) > -1));
     }
+
     this.metrics = {
       amber: 0,
       red: 0,
       days90: 0,
+      days30: 0,
     };
+
     mdc.forEach(job => {
+
       switch (job.CC) {
         case 'R':
           this.metrics.red++;
@@ -264,9 +276,19 @@ export class DashboardComponent implements OnInit {
           break;
         default:
       }
-      if (job.search.includes('90+ DAYS')) {
+
+      if (job.search.includes('90+ OPEN')) {
         this.metrics.days90++;
       }
+
+      if (job.over30Days) {
+        this.metrics.days30++;
+        if (!once) {
+          once = true;
+          job.firstOver30 = true;
+        }
+      }
+
     });
     this.filteredData = mdc;
   }

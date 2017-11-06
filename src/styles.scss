@@ -62,6 +62,17 @@ td-chips{
         margin: 0;
         padding: 0;
     }
+
+    mdrp-job-row.over30:before {
+        content: "⬇ Jobs Without an Update for 30+ Days";
+        display: block;
+        padding: 20px 0 10px 15px;
+        font-size: 1.5em;
+        border-bottom: 3px solid #333;
+        font-variant: small-caps;
+        background: #eee;     
+    }
+
     .mat-row, .mat-header-row {
         border-left: 10px solid transparent;
         &.R {
