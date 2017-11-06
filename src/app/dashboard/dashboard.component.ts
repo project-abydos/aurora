@@ -31,7 +31,6 @@ export class DashboardComponent implements OnInit {
 
   julianDate: string = moment().format('YYDDD');
 
-  approvalOptions: ISelectOption[] = APPROVAL_STATUS_OPTIONS;
   // delayOptions: ISelectOption[] = DELAY_CODES;
   // discoveredOptions: ISelectOption[] = WHEN_DISCOVERED_CODES;
   // downTimeOptions: ISelectOption[] = DOWN_TIME_CODES;
@@ -54,6 +53,12 @@ export class DashboardComponent implements OnInit {
   tableHeight: number = window.innerHeight - 250;
 
   debouncedFilter: Function = debounce(this.filter, 200);
+
+  metrics: {
+    red: number;
+    amber: number;
+    days90: number;
+  };
 
   constructor(
     private _dataTableService: TdDataTableService,
@@ -155,10 +160,13 @@ export class DashboardComponent implements OnInit {
       return;
     }
 
+    let searchTerms: string[] = [];
+
     const now: Moment = moment();
     const _transform: ICustomMDCData = <ICustomMDCData>cloneDeep(row);
     const discrepancyText: string = _transform.Discrepancy.toUpperCase();
     const julianDate: Moment = moment.utc(_transform.JCN.slice(0, 5), 'YYDDD').local();
+    const juliantDateDiff: number = now.diff(julianDate, 'days');
     const timestampMoment: Moment = moment.utc(row.Timestamp, 'YYDDD HH:mm:ss').local();
     const diff: string = timestampMoment.calendar(undefined, {
       sameDay: '[Today at] HH:mm',
@@ -169,7 +177,7 @@ export class DashboardComponent implements OnInit {
       sameElse: 'M-D-YYYY',
     });
 
-    _transform.ApprovalStatus = row.ApprovalStatus || '-';
+    _transform.ApprovalStatus = APPROVAL_STATUS_OPTIONS[row.ApprovalStatus] || 'Pending';
     _transform.timeStampPretty = diff;
     _transform.WhenDiscText = row.WhenDISC ? `${row.WhenDISC} - ${WHEN_DISCOVERED_CODES[row.WhenDISC]}` : '';
     _transform.DownTimeCodeText = row.DownTimeCode ? `${row.DownTimeCode} - ${DOWN_TIME_CODES[row.DownTimeCode]}` : '';
@@ -186,8 +194,14 @@ export class DashboardComponent implements OnInit {
 
     _transform.tags = [];
 
-    if (now.diff(julianDate, 'days') > 89) {
+    if (juliantDateDiff > 89) {
       _transform.tags.push({ title: '90+ Days', style: 'accent' });
+    }
+
+    if (juliantDateDiff < 0) {
+      _transform.tags.push({ title: 'Scheduled', style: 'primary' });
+    } else {
+      searchTerms.push('active job');
     }
 
     if (discrepancyText.includes('DEPLOYMENT INSPECTION')) {
@@ -198,8 +212,7 @@ export class DashboardComponent implements OnInit {
       _transform.tags.push({ title: 'PMI' });
     }
 
-
-    _transform.search = [
+    _transform.search = searchTerms.concat([
       _transform.JCN,
       _transform.CCText,
       _transform.CFPComments,
@@ -213,9 +226,9 @@ export class DashboardComponent implements OnInit {
       _transform.WhenDiscText,
       _transform.DownTimeCodeText,
       _transform.DelayCodeText,
-      _transform.tags.map(tag => tag.title).join(' '),
+      _transform.tags.map(tag => tag.search || tag.title).join(' '),
       _transform.eticDate || '',
-    ].join(' ').toUpperCase();
+    ]).join(' ').toUpperCase();
 
     if (isNaN(matchId)) {
       this.mdc.push(_transform);
@@ -236,6 +249,25 @@ export class DashboardComponent implements OnInit {
     if (this.searchTerms.length) {
       mdc = mdc.filter(row => every(this.searchTerms, term => row.search.indexOf(term) > -1));
     }
+    this.metrics = {
+      amber: 0,
+      red: 0,
+      days90: 0,
+    };
+    mdc.forEach(job => {
+      switch (job.CC) {
+        case 'R':
+          this.metrics.red++;
+          break;
+        case 'A':
+          this.metrics.amber++;
+          break;
+        default:
+      }
+      if (job.search.includes('90+ DAYS')) {
+        this.metrics.days90++;
+      }
+    });
     this.filteredData = mdc;
   }
 

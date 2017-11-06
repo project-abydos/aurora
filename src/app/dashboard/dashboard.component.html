@@ -25,6 +25,15 @@
               <div class="mat-header-cell ETIC">ETIC</div>
               <div class="mat-header-cell ApprovalStatus">Status</div>
             </div>
+            <div class="dashboard-footer mat-header-row mat-elevation-z1">
+              <div class="mat-header-cell">
+                <span *ngIf="metrics" layout="row">
+                  <span flex>{{metrics.red}} Red Jobs</span>
+                  <span flex>{{metrics.amber}} Amber Jobs</span>
+                  <span flex>{{metrics.days90}} Jobs Over 90 Days Old</span>
+                </span>
+              </div>
+            </div>
             <div class="dashboard-body">
               <ng-template ngFor let-row [ngForOf]="filteredData" [ngForTrackBy]="Id">
                 <mdrp-job-row [row]="row"></mdrp-job-row>

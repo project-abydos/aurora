@@ -1,6 +1,6 @@
 @import '~@angular/material/theming';
 @import '~animate.css/animate';
-$expand-bg-color:#555;
+$expand-bg-color:#666;
 $frost :#eee;
 // Custom style for loading elements without height
 .will-load {
@@ -53,7 +53,7 @@ td-chips{
 
 
 .dashboard {
-    height: calc(100vh - 210px)!important;
+    height: calc(100vh - 235px)!important;
     margin-top: 20px;
     overflow-y: auto;
     width: 100%;
@@ -95,24 +95,19 @@ td-chips{
             width: 70px;
         }
         &.ETIC {
-            width:100px
+            width:125px
         }
         &.Discrepancy {
-            width: calc((100% - 475px) / 2);
+            width: calc((100% - 550px) / 2);
         }
         &.LastUpdate {
-            width: calc((100% - 475px) / 2);
+            width: calc((100% - 550px) / 2);
         }
         &.ApprovalStatus {
-            width: 100px;
+            width: 150px;
         }
     }
-    .mat-cell {
-        // .td-data-table-cell-content-wrapper {
-        //     height: 20px!important;
-        // }
-    }
-    .dashboard-header {
+    .dashboard-header, .dashboard-footer {
         position: absolute;
         top: 45px;
         left: -3px;
@@ -125,6 +120,21 @@ td-chips{
         padding-right: 25px;
         .mat-header-cell {
             color: #fff;
+        }
+    }
+    .dashboard-footer {
+        top: auto;
+        bottom: -32px;
+        left: 20px;
+        right: 20px;
+        padding: 4px;
+        z-index: 0;
+        border-bottom-left-radius: 4px;
+        border-bottom-right-radius: 4px;
+        display: flex;
+        .mat-header-cell {
+            width:100%;
+            text-align: center;
         }
     }
     .dashboard-body {
@@ -171,30 +181,9 @@ td-chips{
                 span {
                     text-overflow: initial;
                     white-space: normal;
-                }
-                // .td-data-table-cell-content-wrapper {
-                //     height: auto!important;
-                // }
-                // button {
-                //     margin-top: -10px;
-                //     color: $frost;
-                //     box-shadow: 0 3px 1px -2px rgba(240, 240, 240, .2), 0 2px 2px 0 rgba(240, 240, 240, .14), 0 1px 5px 0 rgba(240, 240, 240, .12);
-                //     background-color: rgba(240, 240, 240, .2);
-                //     &:hover {
-                //         color: #333;
-                //         background-color: rgba(240, 240, 240, .7);
-                //     }
-                // }
-                .mat-select-value-text {
+                }              
+                .mat-select-value-text, .mat-select-arrow {
                     color: $frost;
-                }
-            }
-        }
-        .mat-row .ApprovalStatus {
-            mat-select {
-                padding-top: 0;
-                .mat-select-arrow, .mat-select-underline {
-                    display: none;
                 }
             }
         }

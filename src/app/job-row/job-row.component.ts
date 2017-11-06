@@ -8,7 +8,7 @@ import {
   ITdDataTableSortChangeEvent,
 } from '@covalent/core';
 import { ISharePointMDC, ICustomMDCData } from 'app/types';
-import { WHEN_DISCOVERED_CODES, DOWN_TIME_CODES, DELAY_CODES } from 'app/contanstants';
+import { WHEN_DISCOVERED_CODES, DOWN_TIME_CODES, DELAY_CODES, APPROVAL_STATUS_OPTIONS, ISelectOption } from 'app/contanstants';
 
 @Component({
   selector: 'mdrp-job-row',
@@ -21,6 +21,8 @@ export class JobRowComponent {
   @Input() row: ICustomMDCData;
   job: ICustomMDCData;
   isExpanded: boolean;
+
+  approvalOptions: ISelectOption[] = APPROVAL_STATUS_OPTIONS;
 
   toggleExpanded(row: ICustomMDCData): void {
     this.isExpanded = !this.isExpanded;

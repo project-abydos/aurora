@@ -91,12 +91,9 @@ const WHEN_DISCOVERED_CODES: ICodes = {
 };
 
 const APPROVAL_STATUS_OPTIONS: ISelectOption[] = [
-    { value: '-', label: 'None' },
-    { value: 'Approved', label: 'Approved' },
-    { value: 'Rejected', label: 'Rejected' },
-    { value: 'Processed', label: 'Processed' },
-    { value: 'Reviewed', label: 'Reviewed' },
-    { value: 'Forecast', label: 'Forecast' },
+    { value: 'Pending', label: 'Pending' },
+    { value: 'In Work', label: 'In Work' },
+    { value: 'Done', label: 'Done' },
 ];
 
 // SUBMITTED
