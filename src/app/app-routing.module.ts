@@ -6,15 +6,10 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 
 const routes: Routes = [
     {
-        path: '',
-        component: MainComponent,
-        children: [
-            {
-                component: DashboardComponent,
-                path: '',
-            },
-        ],
+        path: 'dashboard/:tokens',
+        component: DashboardComponent,
     },
+    { path: '**', redirectTo: '/dashboard/', pathMatch: 'full' },
 ];
 
 @NgModule({

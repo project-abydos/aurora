@@ -1,9 +1,6 @@
 <div class="mat-row" [ngClass]="[row.CC, isExpanded ? 'expanded' : 'collapsed']" (click)="toggleExpanded(row)">
 
-  <div class="mat-cell JCN">
-    <!-- <button mat-button mat-raised color="primary" (click)="$event.stopPropagation()">{{row.JCN}}</button> -->
-    {{row.JCN}}
-  </div>
+  <div class="mat-cell JCN"> {{row.JCN}} </div>
 
   <div class="mat-cell WorkCenter">
     <span>{{row.WorkCenter}}</span>

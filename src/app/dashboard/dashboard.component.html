@@ -11,7 +11,8 @@
       <ng-template tdLoading="mdc">
         <mat-card class="animated zoomIn" style="background: #eee">
           <div layout="row" layout-align="start center" class="pad-left-sm pad-right-sm">
-            <td-chips flex=1 placeholder="Add search terms and press enter" (add)="addSearchTerm($event)" (remove)="removeSearchTerm($event)">
+            <td-chips flex=1 placeholder="Add search terms and press enter" [items]="searchTermPresets" [(ngModel)]="searchTerms" (add)="navigateSearch()"
+              (remove)="navigateSearch()" (inputChange)="refreshSearchItems($event)">
             </td-chips>
           </div>
 
