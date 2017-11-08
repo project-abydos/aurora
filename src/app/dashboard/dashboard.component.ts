@@ -1,9 +1,9 @@
 import { IMDSService } from '../../services/imds';
 import { SharepointService } from '../../services/sharepoint';
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import * as moment from 'moment';
 import { JsonPipe } from '@angular/common';
-import { cloneDeep, concat, defaults, find, every, debounce, without } from 'lodash';
+import { cloneDeep, concat, defaults, find, every, debounce, without, sumBy, memoize, MemoizedFunction, noop } from 'lodash';
 
 import { Title } from '@angular/platform-browser';
 
@@ -20,11 +20,24 @@ import { Observable } from 'rxjs/Observable';
 import { timer } from 'rxjs/observable/timer';
 import { ActivatedRoute, Router } from '@angular/router';
 
+interface IDashboardMetrics {
+  red: number;
+  amber: number;
+  days90: number;
+  days30: number;
+}
+
+interface IFilterResults {
+  mdc: ISharePointMDC[];
+  metrics: IDashboardMetrics;
+}
+
 @Component({
   selector: 'qs-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
   viewProviders: [],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardComponent implements OnInit {
 
@@ -39,37 +52,12 @@ export class DashboardComponent implements OnInit {
     'SCHEDULED JOB',
   ];
   searchTermPresets: string[] = [];
-
   julianDate: string = moment().format('YYDDD');
-
-  // delayOptions: ISelectOption[] = DELAY_CODES;
-  // discoveredOptions: ISelectOption[] = WHEN_DISCOVERED_CODES;
-  // downTimeOptions: ISelectOption[] = DOWN_TIME_CODES;
-
   mdc: ISharePointMDC[] = [];
-
-  isLoaded: boolean;
-
-  view: any[] = [700, 400];
-
-  colorScheme: any = {
-    domain: ['#1565C0', '#2196F3', '#81D4FA', '#FF9800', '#EF6C00'],
-  };
-
   filteredData: ISharePointMDC[] = [];
-
   appTitle: string = APP_TITLE;
-
-  tableHeight: number = window.innerHeight - 250;
-
-  debouncedFilter: Function = debounce(this.filter, 200);
-
-  metrics: {
-    red: number;
-    amber: number;
-    days90: number;
-    days30: number;
-  };
+  debouncedFilter: Function = debounce(this.filterWrapper, 200);
+  metrics: IDashboardMetrics;
 
   constructor(
     private _dataTableService: TdDataTableService,
@@ -79,12 +67,13 @@ export class DashboardComponent implements OnInit {
     private _loadingService: TdLoadingService,
     private _route: ActivatedRoute,
     private _router: Router,
+    private _cd: ChangeDetectorRef,
   ) {
 
     _route.params.subscribe(({ tokens }) => {
       this.searchTerms = tokens ? tokens.toUpperCase().replace(/\-/g, ' ').split(',') : [];
       this.searchTermPresets = without(this.orignalSearchTermPresets, ...this.searchTerms);
-      this.filter();
+      this.filterWrapper();
     });
 
     _titleService.setTitle(APP_TITLE);
@@ -146,17 +135,19 @@ export class DashboardComponent implements OnInit {
   }
 
   reSyncJobs(): void {
+    console.log('resync jobs');
     this._loadingService.register('imds-380');
     this._sharePointService.getMDC().subscribe(mdc => {
       mdc.forEach(row => this.addOrUpdateJob(row, false));
-      this.filter();
+      this.filterWrapper();
       this._loadingService.resolve('mdc');
       this._loadingService.resolve('imds-380');
-      this.isLoaded = true;
     });
   }
 
   transformMDCRow(row: ISharePointMDC, matchId?: number): void {
+
+    console.log('transform');
 
     if (!row) {
       return;
@@ -184,7 +175,7 @@ export class DashboardComponent implements OnInit {
     const diffMap: CalendarSpec = {
       sameDay: '[Today at] HH:mm',
       nextDay: '[Tomorrow]',
-      nextWeek: 'M-D-YYYY',
+      nextWeek: '[Next Week]',
       lastDay: '[Yesterday]',
       lastWeek: 'M-D-YYYY',
       sameElse: 'M-D-YYYY',
@@ -197,13 +188,14 @@ export class DashboardComponent implements OnInit {
     const juliantDateDiff: number = now.diff(julianDate, 'days');
     const timestampMoment: Moment = moment.utc(row.Timestamp, 'YYDDD HH:mm:ss').local();
     const timestampDiff: string = timestampMoment.calendar(undefined, diffMap);
-    // const julianDateDiffPretty: string = timestampMoment.calendar(undefined, diffMap);
 
     _transform.ApprovalStatus = APPROVAL_STATUS_OPTIONS[row.ApprovalStatus] || 'Pending';
     _transform.timeStampPretty = timestampDiff;
     _transform.WhenDiscText = row.WhenDISC ? `${row.WhenDISC} - ${WHEN_DISCOVERED_CODES[row.WhenDISC]}` : '';
     _transform.DownTimeCodeText = row.DownTimeCode ? `${row.DownTimeCode} - ${DOWN_TIME_CODES[row.DownTimeCode]}` : '';
     _transform.DelayCodeText = row.DelayCode ? `${row.DelayCode} - ${DELAY_CODES[row.DelayCode]}` : '';
+    _transform.prettyJCN = julianDate.calendar(undefined, { ...diffMap, sameDay: '[Today]' });
+    _transform.tags = [];
     _transform.CCText = {
       A: 'Amber Job',
       R: 'Red Job',
@@ -213,8 +205,6 @@ export class DashboardComponent implements OnInit {
     if (row.ETIC) {
       _transform.eticDate = moment(row.ETIC).toDate();
     }
-
-    _transform.tags = [];
 
     if (now.diff(timestampMoment.startOf('day'), 'days') > 30) {
       _transform.over30Days = true;
@@ -227,6 +217,7 @@ export class DashboardComponent implements OnInit {
 
     if (juliantDateDiff < 0) {
       _transform.tags.push({ title: 'Scheduled', style: 'primary' });
+      searchTerms.push('scheduled job');
     } else {
       searchTerms.push('active job');
     }
@@ -241,6 +232,7 @@ export class DashboardComponent implements OnInit {
 
     _transform.search = searchTerms.concat([
       _transform.JCN,
+      _transform.prettyJCN,
       _transform.CCText,
       _transform.CFPComments,
       _transform.Discrepancy,
@@ -265,47 +257,58 @@ export class DashboardComponent implements OnInit {
     this.debouncedFilter();
   }
 
-  filter(): void {
-    let mdc: ICustomMDCData[] = <ICustomMDCData[]>cloneDeep(this.mdc).sort((a, b) => -a.Timestamp.localeCompare(b.Timestamp));
-    let once: boolean = false;
-
-    if (this.searchTerms.length) {
-      mdc = mdc.filter(row => every(this.searchTerms, term => (row.search.indexOf(term) > -1)));
-    }
-
-    this.metrics = {
-      amber: 0,
-      red: 0,
-      days90: 0,
-      days30: 0,
-    };
-
-    mdc.forEach(job => {
-
-      switch (job.CC) {
-        case 'R':
-          this.metrics.red++;
-          break;
-        case 'A':
-          this.metrics.amber++;
-          break;
-        default:
-      }
-
-      if (job.search.includes('90+ OPEN')) {
-        this.metrics.days90++;
-      }
-
-      if (job.over30Days) {
-        this.metrics.days30++;
-        if (!once) {
-          once = true;
-          job.firstOver30 = true;
-        }
-      }
-
-    });
-    this.filteredData = mdc;
+  filterWrapper(): void {
+    const results: IFilterResults = this.filterData();
+    this.filteredData = results.mdc;
+    this.metrics = results.metrics;
   }
 
+  // tslint:disable-next-line:member-ordering
+  filterData: any = memoize(
+    filterAction => {
+      console.log('filter');
+
+      let mdc: ICustomMDCData[] = <ICustomMDCData[]>cloneDeep(this.mdc).sort((a, b) => -a.Timestamp.localeCompare(b.Timestamp));
+      let once: boolean = false;
+      const metrics: IDashboardMetrics = {
+        amber: 0,
+        red: 0,
+        days90: 0,
+        days30: 0,
+      };
+
+      if (this.searchTerms.length) {
+        mdc = mdc.filter(row => every(this.searchTerms, term => (row.search.indexOf(term) > -1)));
+      }
+
+      mdc.forEach(job => {
+
+        job.CC === 'R' && metrics.red++;
+        job.CC === 'A' && metrics.amber++;
+
+        if (job.search.includes('90+ OPEN')) {
+          metrics.days90++;
+        }
+
+        if (job.over30Days) {
+          metrics.days30++;
+          if (!once) {
+            once = true;
+            job.firstOver30 = true;
+          }
+        }
+
+      });
+
+      return {
+        mdc,
+        metrics,
+      };
+    },
+    cacheTest => sumBy(this.mdc, 'Id') + this.searchTerms.join(',')
+  );
+
+  trackJobStateChange(index: number, job: ICustomMDCData): string {
+    return job.Id + job.__metadata.etag;
+  }
 }

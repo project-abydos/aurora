@@ -58,6 +58,7 @@ export interface ICustomMDCData extends ISharePointMDC {
     search: string;
     over30Days?: boolean;
     firstOver30?: boolean;
+    prettyJCN?: string;
     tags: {
         title?: string;
         search?: string;

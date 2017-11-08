@@ -1,6 +1,9 @@
 <div class="mat-row" [ngClass]="[row.CC, isExpanded ? 'expanded' : 'collapsed']" (click)="toggleExpanded(row)">
 
-  <div class="mat-cell JCN"> {{row.JCN}} </div>
+  <div class="mat-cell JCN">
+    <span>{{row.JCN}}</span>
+    <span class="small">{{row.prettyJCN}}</span>
+  </div>
 
   <div class="mat-cell WorkCenter">
     <span>{{row.WorkCenter}}</span>
