@@ -15,7 +15,7 @@ const IMDS_SYNC_HTML: string = `
                 .card {
                     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .1), 0 2px 10px 0 rgba(0, 0, 0, .07);
                     position: absolute;
-                    border-radius: 20px;
+                    border-radius: 6px;
                     position: absolute;
                     width: 80vw;
                     height: 5em;
@@ -30,9 +30,19 @@ const IMDS_SYNC_HTML: string = `
                     padding: 20px;
                     font-variant: small-caps;
                 }
+                .sync-progress {
+                    background: rgba(255, 255, 255, .1);
+                    margin-top: calc(50vh + 6em);
+                    margin-bottom: 3vh;
+                    height: auto;
+                    text-align: left;
+                    overflow-y: auto;
+                }
             </style>
             <div class="card">
                 <h1>Connected to MDRP - <em>Please do not close this window</em></h1>
+            </div>
+            <div class="card sync-progress" id="sync-log">
             </div>
         </body>
     </html>

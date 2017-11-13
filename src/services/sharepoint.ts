@@ -39,6 +39,7 @@ export class SharepointService {
 
     if (isPut) {
       url = options.body.__metadata.uri;
+      options.headers.set('X-HTTP-Method', 'MERGE');
       options.headers.set('If-Match', options.body.__metadata.etag);
       return this.http.request(url, options);
     }

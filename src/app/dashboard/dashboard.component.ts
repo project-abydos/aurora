@@ -7,11 +7,7 @@ import { cloneDeep, concat, defaults, find, every, debounce, without, sumBy, mem
 
 import { Title } from '@angular/platform-browser';
 
-import {
-  TdDataTableService,
-  TdDataTableSortingOrder, ITdDataTableColumn,
-  ITdDataTableSortChangeEvent, TdLoadingService,
-} from '@covalent/core';
+import { TdLoadingService } from '@covalent/core';
 
 import { APP_TITLE, APPROVAL_STATUS_OPTIONS, ISelectOption, DELAY_CODES, WHEN_DISCOVERED_CODES, DOWN_TIME_CODES } from '../contanstants';
 import { Moment, CalendarSpec } from 'moment';
@@ -60,7 +56,6 @@ export class DashboardComponent implements OnInit {
   metrics: IDashboardMetrics;
 
   constructor(
-    private _dataTableService: TdDataTableService,
     private _titleService: Title,
     private _imdsService: IMDSService,
     private _sharePointService: SharepointService,
@@ -113,11 +108,11 @@ export class DashboardComponent implements OnInit {
         // Job has been updated since last pull
         const matchId: number = this.mdc.indexOf(match);
         if (updateSharePoint) {
-          this._sharePointService.updateJob(match).subscribe(update => {
-            const strBase: string = match.__metadata.etag.replace(/[^\d]/g, '');
+          this._sharePointService.updateJob(job).subscribe(update => {
+            const strBase: string = job.__metadata.etag.replace(/[^\d]/g, '');
             const base: number = parseInt(strBase, 10) || 0;
-            match.__metadata.etag = `W/"${base + 1}"`;
-            this.transformMDCRow(match, matchId);
+            job.__metadata.etag = `W/"${base + 1}"`;
+            this.transformMDCRow(job, matchId);
           });
         } else {
           this.transformMDCRow(job, matchId);

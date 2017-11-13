@@ -9,14 +9,16 @@ import * as localForage from 'localforage';
 import { ISharePointMDC } from 'app/types';
 import { Utilities } from 'services/utilities';
 
+const CACHE_TIME: Date = new Date();
+
 @Injectable()
 export class HttpCacheService extends Http {
 
     constructor(backend: ConnectionBackend, defaultOptions: RequestOptions) {
         super(backend, defaultOptions);
         localForage.config({
-            name: 'HttpCache',
-            storeName: 'endpoints',
+            name: 'mdrp_db',
+            storeName: `sp_cache_${CACHE_TIME.getUTCFullYear()}_${CACHE_TIME.getUTCMonth()}`,
         });
     }
 

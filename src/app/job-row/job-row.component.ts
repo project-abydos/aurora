@@ -2,11 +2,6 @@ import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core
 import { cloneDeep, defaults, find } from 'lodash';
 import * as moment from 'moment';
 
-import {
-  TdDataTableService,
-  TdDataTableSortingOrder, ITdDataTableColumn,
-  ITdDataTableSortChangeEvent,
-} from '@covalent/core';
 import { ISharePointMDC, ICustomMDCData } from 'app/types';
 import { WHEN_DISCOVERED_CODES, DOWN_TIME_CODES, DELAY_CODES, APPROVAL_STATUS_OPTIONS, ISelectOption } from 'app/contanstants';
 

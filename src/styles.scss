@@ -105,14 +105,11 @@ td-chips{
         &.EquipID {
             width: 70px;
         }
-        &.ETIC {
-            width:125px
-        }
         &.Discrepancy {
-            width: calc((100% - 550px) / 2);
+            width: calc((100% - 525px) / 2);
         }
         &.LastUpdate {
-            width: calc((100% - 550px) / 2);
+            width: calc((100% - 525px) / 2 + 100px);
         }
         &.ApprovalStatus {
             width: 150px;
