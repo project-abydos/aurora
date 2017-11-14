@@ -23,11 +23,11 @@
               <div class="mat-header-cell EquipID">EquipID</div>
               <div class="mat-header-cell Discrepancy">Discrepancy</div>
               <div class="mat-header-cell LastUpdate">Last Update</div>
-              <div class="mat-header-cell ApprovalStatus">Status</div>
+              <div class="mat-header-cell ApprovalStatus">CFP Action</div>
             </div>
             <div class="dashboard-footer mat-header-row mat-elevation-z1">
               <div class="mat-header-cell">
-                <span *ngIf="metrics" layout="row">
+                <span *ngIf="metrics && filteredData.length > 0" layout="row">
                   <span flex>{{metrics.red}} Red Jobs</span>
                   <span flex>{{metrics.amber}} Amber Jobs</span>
                   <span flex>{{metrics.days90}} Jobs Opened 90+ Days Ago</span>
@@ -37,12 +37,12 @@
             </div>
             <div class="dashboard-body">
               <ng-template ngFor let-row [ngForOf]="filteredData" [ngForTrackBy]="trackJobStateChange">
-                <mdrp-job-row [row]="row" [ngClass]="row.firstOver30 ? 'over30': ''"></mdrp-job-row>
+                <mdrp-job-row [row]="row" [ngClass]="row.firstOver30 ? 'over30': ''" (onStatusChange)="changeJobStatus($event, row)"></mdrp-job-row>
               </ng-template>
             </div>
 
             <div class="mat-padding" *ngIf="filteredData.length < 1" layout="row" layout-align="center center">
-              <h3>No results to display.</h3>
+              <h3>Sorry, no jobs found for this search.</h3>
             </div>
           </div>
 

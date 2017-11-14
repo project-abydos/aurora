@@ -3,13 +3,13 @@ import { SharepointService } from '../../services/sharepoint';
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import * as moment from 'moment';
 import { JsonPipe } from '@angular/common';
-import { cloneDeep, concat, defaults, find, every, debounce, without, sumBy, memoize, MemoizedFunction, noop } from 'lodash';
+import { cloneDeep, concat, defaults, find, every, debounce, without, sumBy, memoize, MemoizedFunction, noop, get, findIndex } from 'lodash';
 
 import { Title } from '@angular/platform-browser';
 
 import { TdLoadingService } from '@covalent/core';
 
-import { APP_TITLE, APPROVAL_STATUS_OPTIONS, ISelectOption, DELAY_CODES, WHEN_DISCOVERED_CODES, DOWN_TIME_CODES } from '../contanstants';
+import { APP_TITLE, ISelectOption, DELAY_CODES, WHEN_DISCOVERED_CODES, DOWN_TIME_CODES } from '../contanstants';
 import { Moment, CalendarSpec } from 'moment';
 import { ISharePointMDC, ICustomMDCData } from 'app/types';
 import { Observable } from 'rxjs/Observable';
@@ -33,7 +33,6 @@ interface IFilterResults {
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
   viewProviders: [],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardComponent implements OnInit {
 
@@ -72,7 +71,10 @@ export class DashboardComponent implements OnInit {
     });
 
     _titleService.setTitle(APP_TITLE);
-    _imdsService.imds.subscribe(job => this.addOrUpdateJob(job, true));
+    _imdsService.imds.subscribe(job => {
+      this.addOrUpdateJob(job, true);
+      this.debouncedFilter();
+    });
 
   }
 
@@ -87,6 +89,23 @@ export class DashboardComponent implements OnInit {
   refreshSearchItems(test: string): void {
     this.searchTermPresets = without(this.orignalSearchTermPresets, ...this.searchTerms)
       .filter(term => (term.toUpperCase().indexOf(test.toUpperCase()) > -1));
+  }
+
+  changeJobStatus(statusUpdate: string, row: ISharePointMDC): void {
+    const job: ISharePointMDC = {
+      __metadata: row.__metadata,
+      JCN: row.JCN,
+      ApprovalStatus: statusUpdate,
+    };
+
+    this._sharePointService.updateJob(job).subscribe(update => {
+      const strBase: string = row.__metadata.etag.replace(/[^\d]/g, '');
+      const base: number = parseInt(strBase, 10) || 0;
+      row.__metadata.etag = `W/"${base + 1}"`;
+      row.ApprovalStatus = statusUpdate;
+      this.transformMDCRow(row);
+      this.filterWrapper();
+    });
   }
 
   navigateSearch(): void {
@@ -104,18 +123,18 @@ export class DashboardComponent implements OnInit {
 
     if (match) {
       // Matching job found
-      if (match.Timestamp !== job.Timestamp) {
+      if (match.Timestamp !== job.Timestamp || get(match, '__metadata.etag') !== get(job, '__metadata.etag')) {
         // Job has been updated since last pull
-        const matchId: number = this.mdc.indexOf(match);
         if (updateSharePoint) {
+          defaults(job, match);
           this._sharePointService.updateJob(job).subscribe(update => {
-            const strBase: string = job.__metadata.etag.replace(/[^\d]/g, '');
+            const strBase: string = match.__metadata.etag.replace(/[^\d]/g, '');
             const base: number = parseInt(strBase, 10) || 0;
             job.__metadata.etag = `W/"${base + 1}"`;
-            this.transformMDCRow(job, matchId);
+            this.transformMDCRow(job);
           });
         } else {
-          this.transformMDCRow(job, matchId);
+          this.transformMDCRow(job);
         }
       }
     } else {
@@ -140,7 +159,7 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  transformMDCRow(row: ISharePointMDC, matchId?: number): void {
+  transformMDCRow(row: ISharePointMDC): void {
 
     console.log('transform');
 
@@ -166,6 +185,7 @@ export class DashboardComponent implements OnInit {
     }
 
     let searchTerms: string[] = [];
+    const matchId: number = findIndex(this.mdc, { JCN: row.JCN });
 
     const diffMap: CalendarSpec = {
       sameDay: '[Today at] HH:mm',
@@ -184,7 +204,7 @@ export class DashboardComponent implements OnInit {
     const timestampMoment: Moment = moment.utc(row.Timestamp, 'YYDDD HH:mm:ss').local();
     const timestampDiff: string = timestampMoment.calendar(undefined, diffMap);
 
-    _transform.ApprovalStatus = APPROVAL_STATUS_OPTIONS[row.ApprovalStatus] || 'Pending';
+    _transform.ApprovalStatus = row.ApprovalStatus || 'Pending';
     _transform.timeStampPretty = timestampDiff;
     _transform.WhenDiscText = row.WhenDISC ? `${row.WhenDISC} - ${WHEN_DISCOVERED_CODES[row.WhenDISC]}` : '';
     _transform.DownTimeCodeText = row.DownTimeCode ? `${row.DownTimeCode} - ${DOWN_TIME_CODES[row.DownTimeCode]}` : '';
@@ -244,12 +264,11 @@ export class DashboardComponent implements OnInit {
       _transform.eticDate || '',
     ]).join(' ').toUpperCase();
 
-    if (isNaN(matchId)) {
+    if (matchId < 0) {
       this.mdc.push(_transform);
     } else {
       this.mdc[matchId] = _transform;
     }
-    this.debouncedFilter();
   }
 
   filterWrapper(): void {
@@ -300,7 +319,7 @@ export class DashboardComponent implements OnInit {
         metrics,
       };
     },
-    cacheTest => sumBy(this.mdc, 'Id') + this.searchTerms.join(',')
+    cacheTest => this.mdc.map(row => row.Id + row.__metadata.etag).join('-') + this.searchTerms.join(','),
   );
 
   trackJobStateChange(index: number, job: ICustomMDCData): string {

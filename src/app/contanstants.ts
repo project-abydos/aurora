@@ -90,15 +90,9 @@ const WHEN_DISCOVERED_CODES: ICodes = {
     'Z': 'AGM Underwing Check. N/A',
 };
 
-const APPROVAL_STATUS_OPTIONS: ISelectOption[] = [
-    { value: 'Pending', label: 'Pending' },
-    { value: 'In Work', label: 'In Work' },
-    { value: 'Done', label: 'Done' },
-];
-
 // SUBMITTED
 // IN WORK
 // REJECTED -- IS THERE AN ALTERNATIVE
 //
 
-export { APP_TITLE, DELAY_CODES, DOWN_TIME_CODES, WHEN_DISCOVERED_CODES, APPROVAL_STATUS_OPTIONS };
+export { APP_TITLE, DELAY_CODES, DOWN_TIME_CODES, WHEN_DISCOVERED_CODES };

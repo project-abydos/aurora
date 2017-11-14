@@ -27,12 +27,9 @@
   </div>
 
   <div class="mat-cell ApprovalStatus">
-    <mat-select placeholder="" [(ngModel)]="row.ApprovalStatus" name="status" (click)="$event.stopPropagation()" *ngIf="isExpanded">
-      <mat-option *ngFor="let status of approvalOptions" [value]="status.value">
-        {{status.label}}
-      </mat-option>
-    </mat-select>
-    <span *ngIf="!isExpanded">{{row.ApprovalStatus}}</span>
+    <span>
+      <button mat-button (click)="changeJobStatus($event)">{{loadingStatus ? "Updating..." : row.ApprovalStatus}}</button>
+    </span>
   </div>
 
 </div>
@@ -41,7 +38,7 @@
   <mat-card class="job-info" style="flex:1">
     <mat-card-title>Job Info</mat-card-title>
     <mat-card-content>
-        <!-- <div class="mat-cell ETIC" *ngIf="isExpanded">
+      <!-- <div class="mat-cell ETIC" *ngIf="isExpanded">
         <input matInput [matDatepicker]="picker" placeholder="Choose a date" [(ngModel)]="row.eticDate">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>

@@ -22,7 +22,7 @@ export class SharepointService {
       method: RequestMethod.Get,
     });
 
-    const isPut: boolean = (options.method === RequestMethod.Put) && options.body.__metadata;
+    const isPut: boolean = (options.method === RequestMethod.Put) && !!options.body.__metadata;
     const isPost: boolean = (options.method === RequestMethod.Post);
 
     url = `${SharepointService.CONFIG.BASE_URL}/${url}`;
@@ -39,6 +39,7 @@ export class SharepointService {
 
     if (isPut) {
       url = options.body.__metadata.uri;
+      options.method = RequestMethod.Post;
       options.headers.set('X-HTTP-Method', 'MERGE');
       options.headers.set('If-Match', options.body.__metadata.etag);
       return this.http.request(url, options);
