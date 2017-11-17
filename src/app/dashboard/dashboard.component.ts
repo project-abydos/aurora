@@ -43,6 +43,9 @@ export class DashboardComponent implements OnInit {
   orignalSearchTermPresets: string[] = [
     'ACTIVE JOB',
     'AMBER JOB',
+    'CFP PENDING',
+    'CFP IN WORK',
+    'CFP DONE',
     'NEEDS UPDATE',
     'PDI',
     'PMI',
@@ -70,10 +73,12 @@ export class DashboardComponent implements OnInit {
     _route.params.subscribe(({ tokens }) => {
       this.searchTerms = tokens ? tokens.toUpperCase().replace(/\-/g, ' ').split(',') : [];
       this.searchTermPresets = without(this.orignalSearchTermPresets, ...this.searchTerms);
+      console.log('Search tags: ' + this.searchTerms.join(', '));
       this.filterWrapper();
     });
 
     _titleService.setTitle(APP_TITLE);
+
     _imdsService.imds.subscribe(job => {
       this.addOrUpdateJob(job, true);
       this.debouncedFilter();
@@ -151,16 +156,14 @@ export class DashboardComponent implements OnInit {
 
     if (match) {
       // Matching job found
-      if (match.Timestamp !== job.Timestamp || get(match, '__metadata.etag') !== get(job, '__metadata.etag')) {
+      const timestampChange: boolean = match.Timestamp !== job.Timestamp;
+      const etagChange: boolean = job.__metadata && (match.__metadata.etag !== job.__metadata.etag);
+      if (timestampChange || etagChange) {
         // Job has been updated since last pull
         if (updateSharePoint) {
+          // Also write the changes to SharePoint
           defaults(job, match);
-          this._sharePointService.updateJob(job).subscribe(update => {
-            const strBase: string = match.__metadata.etag.replace(/[^\d]/g, '');
-            const base: number = parseInt(strBase, 10) || 0;
-            job.__metadata.etag = `W/"${base + 1}"`;
-            this.transformMDCRow(job);
-          });
+          this._sharePointService.updateJob(job).subscribe(update => this.transformMDCRow(job));
         } else {
           this.transformMDCRow(job);
         }
@@ -285,7 +288,7 @@ export class DashboardComponent implements OnInit {
       _transform.EquipID,
       _transform.NameUserID,
       _transform.DDR instanceof Array ? _transform.DDR.map(ddr => ddr.Text).join(' ') : '',
-      _transform.ApprovalStatus,
+      `CFP ${_transform.ApprovalStatus}`,
       _transform.WhenDiscText,
       _transform.DownTimeCodeText,
       _transform.DelayCodeText,

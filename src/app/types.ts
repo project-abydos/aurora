@@ -2,6 +2,7 @@
 export interface ISharePointConfig {
     BASE_URL?: string;
     JOB_FIELDS?: string[];
+    METADATA_FIELDS?: string[];
 }
 
 export interface ISharePointResponse<T> {
@@ -14,6 +15,12 @@ export interface ISharePointMetadata {
     uri: string;
     etag: string;
     type: string;
+}
+
+export interface ISharePointAppMetadata {
+    __metadata?: ISharePointMetadata;
+    Key: string;
+    Data: string;
 }
 
 export interface ISharePointMDC {
@@ -37,7 +44,7 @@ export interface ISharePointMDC {
     Location?: string;
     ApprovalStatus?: string;
     CFPComments?: string;
-    LastModifier?: string;
+    LastModified?: string;
     CS?: string;
     Id?: number;
     Modified?: string;

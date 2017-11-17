@@ -11,7 +11,6 @@ if (environment.production) {
 
 SharepointService.CONFIG.BASE_URL = 'https://cs2.eis.af.mil/sites/10383/mdrp/_vti_bin/ListData.svc';
 SharepointService.CONFIG.JOB_FIELDS = [
-  '__metadata',
   'EquipID',
   'JCN',
   'StartDate',
@@ -35,6 +34,9 @@ SharepointService.CONFIG.JOB_FIELDS = [
   'CS',
   'Id',
   'Timestamp',
+];
+SharepointService.CONFIG.METADATA_FIELDS = [
+  'Data',
 ];
 
 // tslint:disable
