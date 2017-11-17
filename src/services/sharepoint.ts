@@ -5,7 +5,7 @@ import { Http, Headers, RequestOptionsArgs, RequestOptions, RequestMethod } from
 import 'rxjs/add/operator/map';
 import { get, pick, includes } from 'lodash';
 
-import { ISharePointConfig, ISharePointMDC } from 'app/types';
+import { ISharePointConfig, ISharePointMDC, ISharePointAppMetadata, ISharePointMetadata } from 'app/types';
 
 @Injectable()
 export class SharepointService {
@@ -16,7 +16,7 @@ export class SharepointService {
 
   }
 
-  request(url: string, _options?: RequestOptionsArgs): Observable<any> {
+  request(_url: string, _options?: RequestOptionsArgs): Observable<any> {
 
     const options: RequestOptionsArgs = _options || new RequestOptions({
       method: RequestMethod.Get,
@@ -24,8 +24,9 @@ export class SharepointService {
 
     const isPut: boolean = (options.method === RequestMethod.Put) && !!options.body.__metadata;
     const isPost: boolean = (options.method === RequestMethod.Post);
+    const metadata: ISharePointMetadata = get(options, 'body.__metadata');
 
-    url = `${SharepointService.CONFIG.BASE_URL}/${url}`;
+    const url: string = `${SharepointService.CONFIG.BASE_URL}/${_url}`;
 
     options.headers = new Headers();
     options.headers.set('Accept', 'application/json');
@@ -35,24 +36,29 @@ export class SharepointService {
       if (includes(url, '/Jobs')) {
         options.body = pick(options.body, SharepointService.CONFIG.JOB_FIELDS);
       }
+      if (includes(url, '/AppMetadata')) {
+        options.body = pick(options.body, SharepointService.CONFIG.METADATA_FIELDS);
+      }
     }
 
     if (isPut) {
-      url = options.body.__metadata.uri;
       options.method = RequestMethod.Post;
       options.headers.set('X-HTTP-Method', 'MERGE');
-      options.headers.set('If-Match', options.body.__metadata.etag);
-      return this.http.request(url, options);
+      // Always overwrite changes as we are not doing complex multi-user write operations
+      options.headers.set('If-Match', '*');
+      return this.http.request(metadata.uri, options);
     }
 
-    return this.http.request(url, options).map(response => {
-      return get(response, 'd.results') || get(response, 'd') || response;
-    });
+    return this.http.request(url, options).map(response => get(response, 'd.results') || get(response, 'd') || response);
 
   }
 
   getMDC(): Observable<ISharePointMDC[]> {
     return this.request('Jobs');
+  }
+
+  getAppMetadata(key: string): Observable<ISharePointAppMetadata> {
+    return this.request(`AppMetadata?$select=Data&$filter=(Key eq '${key}')`);
   }
 
   createJob(job: ISharePointMDC): Observable<ISharePointMDC> {
@@ -62,10 +68,17 @@ export class SharepointService {
     });
   }
 
-  updateJob(job: ISharePointMDC): Observable<ISharePointMDC> {
+  updateJob(body: ISharePointMDC): Observable<void> {
     return this.request('Jobs', {
       method: RequestMethod.Put,
-      body: job,
+      body,
+    });
+  }
+
+  updateAppMetadata(body: ISharePointAppMetadata): Observable<void> {
+    return this.request('AppMetadata', {
+      method: RequestMethod.Put,
+      body,
     });
   }
 

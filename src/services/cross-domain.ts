@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 
 const IMDS_SYNC_HTML: string = `
     <html>
@@ -51,16 +51,15 @@ const IMDS_SYNC_HTML: string = `
 @Injectable()
 export class CrossDomainService {
 
-    private _connectionEnabled: Subject<boolean> = new Subject();
     private _receiveSyncData: Subject<string> = new Subject();
     private imdsWindow: Window;
 
-    readonly connectionEnabled: Observable<boolean>;
+    readonly connectionEnabled: BehaviorSubject<boolean> = new BehaviorSubject(false);
     readonly receiveSyncData: Observable<string>;
 
     constructor() {
         console.log('Connect cross-domain listener');
-        this.connectionEnabled = this._connectionEnabled.asObservable();
+
         this.receiveSyncData = this._receiveSyncData.asObservable();
         window.addEventListener('message', this.receiveMessage, false);
     }
@@ -92,8 +91,7 @@ export class CrossDomainService {
         if (!this.imdsWindow && event.source !== window) {
             this.imdsWindow = event.source;
             this.imdsWindow.postMessage({ IMDS_SYNC_HTML }, '*');
-            this._connectionEnabled.next(true);
-            this._connectionEnabled.complete();
+            this.connectionEnabled.next(true);
         }
     }
 

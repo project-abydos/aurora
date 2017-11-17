@@ -25,8 +25,8 @@ export class HttpCacheService extends Http {
     request(req: string | Request, options?: RequestOptionsArgs): Observable<Response> {
 
         const url: string = typeof req === 'string' ? req : req.url;
-        const isSharePoint: boolean = url.includes('/_vti_bin/ListData.svc/');
-        const shouldCache: boolean = isSharePoint && (options.method === RequestMethod.Get);
+        const isSharePointMDC: boolean = url.includes('/_vti_bin/ListData.svc/Jobs');
+        const shouldCache: boolean = isSharePointMDC && (options.method === RequestMethod.Get);
 
         if (!shouldCache) {
             return super

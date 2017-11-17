@@ -38,6 +38,7 @@ interface IFilterResults {
 })
 export class DashboardComponent implements OnInit {
 
+  lastIMDSSync: string;
   searchTerms: string[] = [];
   orignalSearchTermPresets: string[] = [
     'ACTIVE JOB',
@@ -78,14 +79,21 @@ export class DashboardComponent implements OnInit {
       this.debouncedFilter();
     });
 
+    const SECOND: number = 1000;
+
+    timer(15 * SECOND, 300 * SECOND).subscribe(() =>
+      _imdsService.syncTimestamp.subscribe(response => {
+        const lastSync: Moment = moment(Number(get(response, '[0].Data')));
+        this.lastIMDSSync = lastSync.diff(moment(), 'minutes') < 10 ? 'a few minutes ago' : lastSync.fromNow();
+      }),
+    );
+
   }
 
   ngOnInit(): void {
     this._loadingService.register('mdc');
-    this.reSyncJobs();
-    const interval: number = 60 * 1000;
-    const ping: Observable<number> = timer(interval, interval);
-    ping.subscribe(() => this.reSyncJobs());
+    const oneMinute: number = 60 * 1000;
+    timer(0, oneMinute).subscribe(() => this.reSyncJobs());
   }
 
   refreshSearchItems(test: string): void {
@@ -176,6 +184,7 @@ export class DashboardComponent implements OnInit {
       this.filterWrapper();
       this._loadingService.resolve('mdc');
       this._loadingService.resolve('imds-380');
+      this._imdsService.initIntervalSync();
     });
   }
 

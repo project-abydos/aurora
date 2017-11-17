@@ -2,8 +2,10 @@
   <div td-toolbar-content layout="row" layout-align="center center" flex class="">
     <span class="animated fadeIn">{{appTitle}}</span>
     <span flex></span>
-    <span class="pull-right-sm start-imds-sync animated fadeInRightBig">
-      <ng-template tdLoading="imds-380" tdLoadingColor="accent"> </ng-template>
+    <span class="start-imds-sync animated fadeInRightBig">
+      <ng-template tdLoading="imds-380" tdLoadingColor="accent">
+        <span class="last-imds-sync" *ngIf="lastIMDSSync">Last IMDS Sync {{lastIMDSSync}}</span>
+      </ng-template>
     </span>
   </div>
   <div layout-gt-sm="row" tdMediaToggle="gt-xs" [mediaClasses]="['push-sm']">
