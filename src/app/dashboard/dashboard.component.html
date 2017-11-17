@@ -14,6 +14,7 @@
             <td-chips flex=1 placeholder="Add search terms and press enter" [items]="searchTermPresets" [(ngModel)]="searchTerms" (add)="navigateSearch()"
               (remove)="navigateSearch()" (inputChange)="refreshSearchItems($event)">
             </td-chips>
+            <button class="export-button" mat-icon-button (click)="exportData()"><mat-icon aria-label="Export this data">cloud_download</mat-icon></button>
           </div>
 
           <div class="dashboard mat-table">

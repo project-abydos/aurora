@@ -4,6 +4,8 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@
 import * as moment from 'moment';
 import { JsonPipe } from '@angular/common';
 import { cloneDeep, concat, defaults, find, every, debounce, without, sumBy, memoize, MemoizedFunction, noop, get, findIndex } from 'lodash';
+import * as json2csv from 'json2csv';
+import { saveAs } from 'file-saver';
 
 import { Title } from '@angular/platform-browser';
 
@@ -99,13 +101,31 @@ export class DashboardComponent implements OnInit {
     };
 
     this._sharePointService.updateJob(job).subscribe(update => {
-      const strBase: string = row.__metadata.etag.replace(/[^\d]/g, '');
-      const base: number = parseInt(strBase, 10) || 0;
-      row.__metadata.etag = `W/"${base + 1}"`;
       row.ApprovalStatus = statusUpdate;
       this.transformMDCRow(row);
       this.filterWrapper();
     });
+  }
+
+  exportData(): void {
+    const fields: string[] = [
+      'JCN',
+      'EquipID',
+      'WUC',
+      'CC',
+      'WhenDisc',
+      'WorkCenter',
+      'Discrepancy',
+      'LastUpdate',
+      'ETIC',
+      'ApprovalStatus',
+      'LastModified',
+    ];
+    const csvTextData: string = json2csv({ data: this.filteredData, fields });
+    const csvData: Blob = new Blob([csvTextData], {
+      type: 'text/csv;charset=charset=utf-8',
+    });
+    saveAs(csvData, 'MDRP Export' + (this.searchTerms.length ? ' ' + this.searchTerms.join('-') : '') + '.csv');
   }
 
   navigateSearch(): void {
