@@ -2,11 +2,16 @@
   <div td-toolbar-content layout="row" layout-align="center center" flex class="">
     <span class="animated fadeIn">{{appTitle}}</span>
     <span flex></span>
-    <span class="start-imds-sync animated fadeInRightBig">
-      <ng-template tdLoading="imds-380" tdLoadingColor="accent">
-        <span class="last-imds-sync" *ngIf="lastIMDSSync">Last IMDS Sync {{lastIMDSSync}}</span>
-      </ng-template>
-    </span>
+    <button class="export-button" mat-icon-button (click)="exportData()">
+      <mat-icon matTooltipPosition="left" matTooltip="Download a copy of the visible job data">cloud_download</mat-icon>
+    </button>
+    <!-- <button class="create-job-button" mat-icon-button (click)="openJob()">
+      <mat-icon matTooltipPosition="left" matTooltip="Open a new job">add_circle</mat-icon>
+    </button> -->
+    <span></span>
+    <button class="create-job-button" mat-mini-fab (click)="openJob()" matTooltipPosition="left" matTooltip="Open a new job">
+      <mat-icon aria-label="Open a new job">add</mat-icon>
+    </button>
   </div>
   <div layout-gt-sm="row" tdMediaToggle="gt-xs" [mediaClasses]="['push-sm']">
     <div flex-gt-sm="100">
@@ -16,7 +21,9 @@
             <td-chips flex=1 placeholder="Add search terms and press enter" [items]="searchTermPresets" [(ngModel)]="searchTerms" (add)="navigateSearch()"
               (remove)="navigateSearch()" (inputChange)="refreshSearchItems($event)">
             </td-chips>
-            <button class="export-button" mat-icon-button (click)="exportData()"><mat-icon aria-label="Export this data">cloud_download</mat-icon></button>
+            <span class="start-imds-sync animated fadeInRightBig">
+              <ng-template tdLoading="imds-380" tdLoadingColor="accent"> </ng-template>
+            </span>
           </div>
 
           <div class="dashboard mat-table">
@@ -57,7 +64,10 @@
   <td-layout-footer>
     <div layout="row" layout-align="start center">
       <span class="mat-caption">Developed by the 5 CBCSS/SCS, Robins AFB, GA.</span>
-      <span flex class="mat-caption text-center" style="color:#bbb; font-style:italic">This app updates in the background automatically</span>
+      <span flex class="mat-caption text-center" style="color:#888; font-style:italic">
+        <span *ngIf="!lastIMDSSync">Checking for last IMDS sync time...</span>
+        <span *ngIf="lastIMDSSync">Last IMDS Sync {{lastIMDSSync}}</span>
+      </span>
       <span class="julian-date animated fadeInRightBig">Julian Date: {{julianDate}}</span>
     </div>
   </td-layout-footer>

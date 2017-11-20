@@ -17,6 +17,8 @@ import { ISharePointMDC, ICustomMDCData } from 'app/types';
 import { Observable } from 'rxjs/Observable';
 import { timer } from 'rxjs/observable/timer';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatDialog, MatDialogRef } from '@angular/material';
+import { CreateJobComponent } from 'app/create-job/create-job.component';
 
 interface IDashboardMetrics {
   red: number;
@@ -68,8 +70,9 @@ export class DashboardComponent implements OnInit {
     private _route: ActivatedRoute,
     private _router: Router,
     private _cd: ChangeDetectorRef,
+    private _dialog: MatDialog,
   ) {
-
+    this.openJob();
     _route.params.subscribe(({ tokens }) => {
       this.searchTerms = tokens ? tokens.toUpperCase().replace(/\-/g, ' ').split(',') : [];
       this.searchTermPresets = without(this.orignalSearchTermPresets, ...this.searchTerms);
@@ -139,6 +142,16 @@ export class DashboardComponent implements OnInit {
       type: 'text/csv;charset=charset=utf-8',
     });
     saveAs(csvData, 'MDRP Export' + (this.searchTerms.length ? ' ' + this.searchTerms.join('-') : '') + '.csv');
+  }
+
+  openJob(): void {
+    const dialogRef: MatDialogRef<CreateJobComponent> = this._dialog.open(CreateJobComponent, {
+      width: '70vw',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+    });
   }
 
   navigateSearch(): void {

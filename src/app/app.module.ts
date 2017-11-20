@@ -41,6 +41,7 @@ import { routedComponents, AppRoutingModule } from './app-routing.module';
 import { SharedModule } from './shared/shared.module';
 import { JobRowComponent } from './job-row/job-row.component';
 import { HttpCacheService } from 'services/http-cache';
+import { CreateJobComponent } from './create-job/create-job.component';
 
 // tslint:disable-next-line:typedef
 export function httpCacheService(backend: ConnectionBackend, defaultOptions: RequestOptions) {
@@ -52,6 +53,7 @@ export function httpCacheService(backend: ConnectionBackend, defaultOptions: Req
     AppComponent,
     routedComponents,
     JobRowComponent,
+    CreateJobComponent,
   ],
   imports: [
     AppRoutingModule,
@@ -98,7 +100,9 @@ export function httpCacheService(backend: ConnectionBackend, defaultOptions: Req
       useFactory: httpCacheService,
     },
   ], // additional providers needed for this module
-  entryComponents: [],
+  entryComponents: [
+    CreateJobComponent,
+  ],
   bootstrap: [AppComponent],
 })
 

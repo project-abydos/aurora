@@ -5,7 +5,15 @@
     color: #eee;
 }
 .export-button {
-    color: #555;
+    // color: #555;
+}
+.create-job-button {
+    background-color: #FFC60C;
+    margin-left: 1em;
+    mat-icon {
+        margin-top: -2px;
+        font-size: 2em;
+    }
 }
 .mat-icon-ux {
     width: 100px;
