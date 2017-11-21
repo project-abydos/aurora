@@ -1,0 +1,46 @@
+mat-form-field {
+    min-width: 3%!important;
+    width: 30%;
+    
+    &.uppercase input {
+        text-transform: uppercase;
+    }
+
+    &.w20 {
+        width: 20%;
+    }
+
+    &.w25 {
+        width: 25%;
+    }
+
+    &.w30 {
+        width: 30%;
+    }
+
+    &.w50 {
+        width: 50%;
+    }
+
+    &.w100 {
+        width: 100%;
+    }
+}
+
+.flex-group {
+    display: flex;
+    justify-content: space-between;
+}
+
+mat-option {
+    // text-align: center;
+    // font-weight: 600;
+}
+
+mat-dialog-actions {
+    justify-content: flex-end;
+}
+
+.start-time-field {
+    width: 115px;
+}

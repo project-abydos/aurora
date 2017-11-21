@@ -72,7 +72,7 @@ export class DashboardComponent implements OnInit {
     private _cd: ChangeDetectorRef,
     private _dialog: MatDialog,
   ) {
-    this.openJob();
+    // this.openJob();
     _route.params.subscribe(({ tokens }) => {
       this.searchTerms = tokens ? tokens.toUpperCase().replace(/\-/g, ' ').split(',') : [];
       this.searchTermPresets = without(this.orignalSearchTermPresets, ...this.searchTerms);
@@ -146,7 +146,7 @@ export class DashboardComponent implements OnInit {
 
   openJob(): void {
     const dialogRef: MatDialogRef<CreateJobComponent> = this._dialog.open(CreateJobComponent, {
-      width: '70vw',
+      width: '50vw',
     });
 
     dialogRef.afterClosed().subscribe(result => {

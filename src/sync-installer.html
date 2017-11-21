@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>MDRP IMDS Sync Tool Installer</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+</head>
+
+<body>
+    <style>
+        body {
+            background: #333;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .card {
+            cursor: move;
+            display: block;
+            box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .1), 0 2px 10px 0 rgba(0, 0, 0, .07);
+            position: absolute;
+            border-radius: 20px;
+            position: absolute;
+            width: 80vw;
+            height: 3em;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+            margin-top: 5vh;
+            text-align: center;
+            background: #1976d2;
+            color: white!important;
+            text-decoration: none;
+            padding: 20px;
+            transition: all ease .25s;
+        }
+
+        .card:hover {
+            background: #3228D8;
+        }
+
+        a.card {
+            background: transparent;
+        }
+
+        .card:focus {
+            background: #0AD58D;
+        }
+
+        .card h1 {
+            margin-top: -.25em;
+        }
+
+        .card em {
+            display: block;
+            font-size: .75em;
+            font-weight: 100;
+        }
+    </style>
+    <div class="card">
+        <h1>
+            <b>&nbsp;</b>
+            <em>Drag to your Chrome bookmarks bar (CTRL + SHIFT + B to show)</em>
+        </h1>
+    </div>
+    <a class="card" href="javascript:void%20function(){function%20e(){function%20e(){c%3Fconsole.log(%22app%20initialized%22):(console.log(%22wait%20for%20activation...%22),s({ACTIVATE:!0}),setTimeout(e,250))}function%20t(e){console.log(e),e=e.data||{};var%20n=Object.keys(e)[0],o=e[n];if(!n||!o)return%20void%20console.error(%22unknown%20post%20message%22);switch(n){case%22IMDS_SYNC_HTML%22:c=!0,document.body.innerHTML=o;break;case%22START_SYNC%22:i(o)}}function%20s(e){a.postMessage(e,%22*%22)}function%20i(e){var%20n=%22/txl/TtwTxn%22,o=%22R0_C0_L0_Y=GDMD%22+e.toUpperCase(),t=new%20XMLHttpRequest,i=document.getElementById(%22sync-log%22);i.innerHTML+=%22%3Cp%3E%22+(new%20Date).toLocaleString()+%22%20-%20Syncing%20%22+e+%22%3C/p%3E%22,t.open(%22POST%22,n,!0),t.onload=function(){if(4===t.readyState%26%26t.responseXML)s({IMDS_RECEIVE_380_XML:t.responseText});else{var%20e=t.responseText.match(/replace\(\%22(.*)\%22\)/)[1],n=new%20XMLHttpRequest;n.open(%22GET%22,e,!0),n.onload=function(){4===n.readyState%26%26s({IMDS_RECEIVE_380_XML:n.responseText})},n.send(),console.log(e)}},t.send(o)}n.onclick=null;var%20c=!1,a=window.open();a.location=o,window.popup=a,window.addEventListener(%22message%22,t,!1),e()}var%20n=document.getElementById(%22div1%22),o=%22https://cs2.eis.af.mil/sites/10383/MDRP/assets/index.html%22;n%3F(document.body.style.background=%22%23333%22,document.body.style.borderRadius=%228px%22,n.innerHTML='%3Ch1%20style=%22text-align:center;%20color:white%22%3EClick%20here%20to%20load%20MDRP.%3C/h1%3E',n.style.background=%22%231976d2%22,n.style.cursor=%22pointer%22,n.onclick=e):window.location.href=o}();">
+        <h1>
+            <b>Launch MDRP</b>
+        </h1>
+    </a>
+
+</body>
+
+</html>

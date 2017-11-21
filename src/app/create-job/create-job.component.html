@@ -1,0 +1,86 @@
+<h2 mat-dialog-title>Create a New Job</h2>
+
+<mat-dialog-content>
+  <form class="new-job-form" autocomplete="true">
+
+    <br>
+
+    <div class="td-dynamic-element-wrapper">
+      <mat-radio-group required>
+        <mat-radio-button value="A">Amber</mat-radio-button>
+        <mat-radio-button value="R">Red</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <br>
+
+    <div class="td-dynamic-element-wrapper flex-group">
+
+      <mat-form-field class="w20">
+        <mat-select placeholder="Workcenter" required>
+          <mat-option *ngFor="let key of keys(whenDiscovered)" [value]="key">
+            <strong>{{key}}</strong>&nbsp;&nbsp;{{ whenDiscovered[key] }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="w20 uppercase">
+        <input matInput maxlength="8" placeholder="Equipment ID" [formControl]="equipmentIdControl" required>
+        <mat-error>Please use only letters and numbers.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="w50">
+        <mat-select placeholder="When Discovered" required>
+          <mat-option *ngFor="let key of keys(whenDiscovered)" [value]="key">
+            <strong>{{key}}</strong>&nbsp;&nbsp;{{ whenDiscovered[key] }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <br>
+
+    <div class="td-dynamic-element-wrapper flex-group">
+
+      <mat-form-field class="w20">
+        <input matInput [matDatepicker]="startdate" placeholder="Start Date">
+        <mat-datepicker-toggle matSuffix [for]="startdate"></mat-datepicker-toggle>
+        <mat-datepicker #startdate></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field class="w20 start-time-field">
+        <mat-select placeholder="Start Time">
+          <mat-option *ngFor="let time of timePicker" [value]="time">
+            {{ time }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="w25 uppercase">
+        <input matInput maxlength="8" placeholder="Work Unit Code" [formControl]="workUnitCodeControl" required>
+        <mat-error>Please use only letters and numbers.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="w20">
+        <input matInput [matDatepicker]="etic" placeholder="ETIC Date">
+        <mat-datepicker-toggle matSuffix [for]="etic"></mat-datepicker-toggle>
+        <mat-datepicker #etic></mat-datepicker>
+      </mat-form-field>
+
+    </div>
+
+    <br>
+
+    <div class="td-dynamic-element-wrapper">
+      <mat-form-field class="w100">
+        <textarea matInput placeholder="Discrepancy" matTextareaAutosize matAutosizeMinRows="1" matAutosizeMaxRows="7"></textarea>
+      </mat-form-field>
+    </div>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button [mat-dialog-close]="true">Continue</button>
+</mat-dialog-actions>
