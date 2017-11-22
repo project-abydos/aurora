@@ -58,7 +58,7 @@ export class SharepointService {
   }
 
   getAppMetadata(key: string): Observable<ISharePointAppMetadata> {
-    return this.request(`AppMetadata?$select=Data&$filter=(Key eq '${key}')`);
+    return this.request(`AppMetadata?$select=Data&$filter=(Key eq '${key}')`).share();
   }
 
   createJob(job: ISharePointMDC): Observable<ISharePointMDC> {

@@ -16,10 +16,10 @@
 
     <div class="td-dynamic-element-wrapper flex-group">
 
-      <mat-form-field class="w20">
-        <mat-select placeholder="Workcenter" required>
-          <mat-option *ngFor="let key of keys(whenDiscovered)" [value]="key">
-            <strong>{{key}}</strong>&nbsp;&nbsp;{{ whenDiscovered[key] }}
+      <mat-form-field class="w20 uppercase">
+        <mat-select placeholder="Workcenter" required panelClass="workcenter">
+          <mat-option *ngFor="let workcenter of workcenters|async" [value]="workcenter">
+            {{workcenter}}
           </mat-option>
         </mat-select>
       </mat-form-field>
@@ -43,13 +43,13 @@
     <div class="td-dynamic-element-wrapper flex-group">
 
       <mat-form-field class="w20">
-        <input matInput [matDatepicker]="startdate" placeholder="Start Date">
+        <input matInput [matDatepicker]="startdate" placeholder="Start Date" required>
         <mat-datepicker-toggle matSuffix [for]="startdate"></mat-datepicker-toggle>
         <mat-datepicker #startdate></mat-datepicker>
       </mat-form-field>
 
       <mat-form-field class="w20 start-time-field">
-        <mat-select placeholder="Start Time">
+        <mat-select placeholder="Start Time" required panelClass="start-time">
           <mat-option *ngFor="let time of timePicker" [value]="time">
             {{ time }}
           </mat-option>
@@ -62,7 +62,7 @@
       </mat-form-field>
 
       <mat-form-field class="w20">
-        <input matInput [matDatepicker]="etic" placeholder="ETIC Date">
+        <input matInput [matDatepicker]="etic" placeholder="ETIC Date" required>
         <mat-datepicker-toggle matSuffix [for]="etic"></mat-datepicker-toggle>
         <mat-datepicker #etic></mat-datepicker>
       </mat-form-field>
@@ -73,7 +73,7 @@
 
     <div class="td-dynamic-element-wrapper">
       <mat-form-field class="w100">
-        <textarea matInput placeholder="Discrepancy" matTextareaAutosize matAutosizeMinRows="1" matAutosizeMaxRows="7"></textarea>
+        <textarea matInput placeholder="Discrepancy" matTextareaAutosize matAutosizeMinRows="1" matAutosizeMaxRows="7" required></textarea>
       </mat-form-field>
     </div>
 

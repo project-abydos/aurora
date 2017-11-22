@@ -202,7 +202,14 @@ md-basic-chip {
     text-transform: uppercase;
 }
 
-.mat-form-field {
-    max-width: 100% !important;
-    min-width: 30%!important;
+.start-time mat-option, 
+.workcenter mat-option {
+    text-transform: uppercase;
+    text-align: center;
+    font-weight: 600;
+    letter-spacing: .15em;
+}
+
+.uppercase {
+    text-transform: uppercase;
 }

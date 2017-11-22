@@ -23,21 +23,21 @@ export class IMDSService {
     private _updateIMDSSyncTimestamp: Function = throttle(() => {
         if (this._syncTimestampValue) {
             this._syncTimestampValue.Data = (new Date()).getTime().toString();
-            this.syncTimestamp
             this._sharePointService.updateAppMetadata(this._syncTimestampValue).subscribe();
         }
     }, 2 * 60 * 1000);
 
     readonly imds: Observable<ISharePointMDC> = this._imds.asObservable();
     readonly syncTimestamp: Observable<ISharePointAppMetadata> = this._sharePointService.getAppMetadata('imds_sync_timestamp');
+    readonly workcenters: Observable<string[]> = this._sharePointService
+        .getAppMetadata('imds_workcenter_list')
+        .map(response => (get(response, '[0].Data') || '').split('\n'));
 
     initIntervalSync: Function = once(() => {
         this._crossDomainService.connectionEnabled.subscribe(enabled => {
             console.log('IMDS Sync check, enabled: ' + enabled);
             if (enabled) {
-                const tenMinutes: number = 10 * 60 * 1000;
-                this.syncTimestamp.subscribe(response => this._syncTimestampValue = response[0]);
-                timer(0, tenMinutes).subscribe(() => this.fetch380());
+                this.fetch380();
             }
         });
     });
@@ -55,13 +55,12 @@ export class IMDSService {
     }
 
     fetch380(): void {
-        this._sharePointService
-            .getAppMetadata('imds_workcenter_list')
-            .subscribe(response =>
-                (get(response, '[0].Data') || '')
-                    .split('\n')
-                    .forEach((workcenter, index) =>
-                        setTimeout(() => this._crossDomainService.peformSyncOperation(workcenter), 10 * 1000 * index)),
+        const tenMinutes: number = 10 * 60 * 1000;
+        this.syncTimestamp.subscribe(response => this._syncTimestampValue = response[0]);
+        this.workcenters.subscribe(workcenters =>
+            timer(0, tenMinutes).subscribe(() =>
+                workcenters.forEach((workcenter, index) =>
+                    setTimeout(() => this._crossDomainService.peformSyncOperation(workcenter), 10 * 1000 * index))),
         );
     }
 

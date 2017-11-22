@@ -3,6 +3,8 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { FormControl, Validators } from '@angular/forms';
 import { WHEN_DISCOVERED_CODES, ICodes } from 'app/contanstants';
 import { keys } from 'lodash';
+import { IMDSService } from 'services';
+import { Observable } from 'rxjs/Observable';
 
 const TEXT_ONLY: RegExp = /^\w+$/i;
 const TIME_INPUT: RegExp = /^\d+$/i;
@@ -43,6 +45,7 @@ export class CreateJobComponent {
   timePicker: string[] = [];
 
   whenDiscovered: ICodes = WHEN_DISCOVERED_CODES;
+  workcenters: Observable<string[]>;
 
   keys: any = keys;
 
@@ -51,10 +54,12 @@ export class CreateJobComponent {
   constructor(
     public dialogRef: MatDialogRef<CreateJobComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
+    _imds: IMDSService,
   ) {
 
     this.hours.map(hour => this.minutes.map(mins => this.timePicker.push(`${hour}:${mins}`)));
 
+    this.workcenters = _imds.workcenters;
   }
 
   onNoClick(): void {
