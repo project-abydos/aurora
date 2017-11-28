@@ -26,7 +26,7 @@ export interface ISharePointAppMetadata {
 export interface ISharePointMDC {
     __metadata?: ISharePointMetadata;
     EquipID?: string;
-    JCN: string;
+    JCN?: string;
     StartDate?: string;
     StartTime?: string;
     StopDate?: string;

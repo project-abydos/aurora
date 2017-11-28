@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Create a New Job</h2>
+<h2 mat-dialog-title [ngClass]="job.CC.value">Create a New {{job.CC.value === 'R' ? 'Red' : 'Amber'}} Job</h2>
 
 <mat-dialog-content>
   <form class="new-job-form" autocomplete="true">
@@ -6,9 +6,10 @@
     <br>
 
     <div class="td-dynamic-element-wrapper">
-      <mat-radio-group required>
-        <mat-radio-button value="A">Amber</mat-radio-button>
-        <mat-radio-button value="R">Red</mat-radio-button>
+      <mat-radio-group required [formControl]="job.CC">
+        <mat-radio-button value="A">AMBER JOB</mat-radio-button>
+        &nbsp;&nbsp;
+        <mat-radio-button value="R">RED JOB</mat-radio-button>
       </mat-radio-group>
     </div>
 
@@ -17,7 +18,7 @@
     <div class="td-dynamic-element-wrapper flex-group">
 
       <mat-form-field class="w20 uppercase">
-        <mat-select placeholder="Workcenter" required panelClass="workcenter">
+        <mat-select placeholder="Workcenter" required panelClass="workcenter" [formControl]="job.WorkCenter">
           <mat-option *ngFor="let workcenter of workcenters|async" [value]="workcenter">
             {{workcenter}}
           </mat-option>
@@ -25,12 +26,12 @@
       </mat-form-field>
 
       <mat-form-field class="w20 uppercase">
-        <input matInput maxlength="8" placeholder="Equipment ID" [formControl]="equipmentIdControl" required>
+        <input matInput maxlength="8" placeholder="Equipment ID" [formControl]="job.EquipID" required>
         <mat-error>Please use only letters and numbers.</mat-error>
       </mat-form-field>
 
       <mat-form-field class="w50">
-        <mat-select placeholder="When Discovered" required>
+        <mat-select placeholder="When Discovered" required [formControl]="job.WhenDISC">
           <mat-option *ngFor="let key of keys(whenDiscovered)" [value]="key">
             <strong>{{key}}</strong>&nbsp;&nbsp;{{ whenDiscovered[key] }}
           </mat-option>
@@ -43,13 +44,13 @@
     <div class="td-dynamic-element-wrapper flex-group">
 
       <mat-form-field class="w20">
-        <input matInput [matDatepicker]="startdate" placeholder="Start Date" required>
+        <input matInput [matDatepicker]="startdate" placeholder="Start Date" required [formControl]="job.StartDate">
         <mat-datepicker-toggle matSuffix [for]="startdate"></mat-datepicker-toggle>
         <mat-datepicker #startdate></mat-datepicker>
       </mat-form-field>
 
       <mat-form-field class="w20 start-time-field">
-        <mat-select placeholder="Start Time" required panelClass="start-time">
+        <mat-select placeholder="Start Time" required panelClass="start-time" [formControl]="job.StartTime">
           <mat-option *ngFor="let time of timePicker" [value]="time">
             {{ time }}
           </mat-option>
@@ -57,12 +58,12 @@
       </mat-form-field>
 
       <mat-form-field class="w25 uppercase">
-        <input matInput maxlength="8" placeholder="Work Unit Code" [formControl]="workUnitCodeControl" required>
+        <input matInput maxlength="8" placeholder="Work Unit Code" [formControl]="job.WUC" required>
         <mat-error>Please use only letters and numbers.</mat-error>
       </mat-form-field>
 
       <mat-form-field class="w20">
-        <input matInput [matDatepicker]="etic" placeholder="ETIC Date" required>
+        <input matInput [matDatepicker]="etic" placeholder="ETIC Date" required [formControl]="job.ETIC">
         <mat-datepicker-toggle matSuffix [for]="etic"></mat-datepicker-toggle>
         <mat-datepicker #etic></mat-datepicker>
       </mat-form-field>
@@ -82,5 +83,5 @@
 
 <mat-dialog-actions>
   <button mat-button mat-dialog-close>Cancel</button>
-  <button mat-button [mat-dialog-close]="true">Continue</button>
+  <button mat-raised-button color="primary" [mat-dialog-close]="true">Continue</button>
 </mat-dialog-actions>

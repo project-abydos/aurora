@@ -72,6 +72,7 @@ export class DashboardComponent implements OnInit {
     private _cd: ChangeDetectorRef,
     private _dialog: MatDialog,
   ) {
+
     // this.openJob();
     _route.params.subscribe(({ tokens }) => {
       this.searchTerms = tokens ? tokens.toUpperCase().replace(/\-/g, ' ').split(',') : [];
@@ -88,10 +89,11 @@ export class DashboardComponent implements OnInit {
     });
 
     const SECOND: number = 1000;
+    const MINUTE: number = 60 * SECOND;
 
-    timer(15 * SECOND, 300 * SECOND).subscribe(() =>
+    timer(15 * SECOND, 5 * MINUTE).subscribe(() =>
       _imdsService.syncTimestamp.subscribe(response => {
-        const lastSync: Moment = moment(Number(get(response, '[0].Data')));
+        const lastSync: Moment = moment(Number(response.Data));
         this.lastIMDSSync = lastSync.diff(moment(), 'minutes') < 10 ? 'a few minutes ago' : lastSync.fromNow();
       }),
     );

@@ -3,7 +3,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Http, Headers, RequestOptionsArgs, RequestOptions, RequestMethod } from '@angular/http';
 import 'rxjs/add/operator/map';
-import { get, pick, includes } from 'lodash';
+import { get, pick, includes, find } from 'lodash';
 
 import { ISharePointConfig, ISharePointMDC, ISharePointAppMetadata, ISharePointMetadata } from 'app/types';
 
@@ -58,7 +58,9 @@ export class SharepointService {
   }
 
   getAppMetadata(key: string): Observable<ISharePointAppMetadata> {
-    return this.request(`AppMetadata?$select=Data&$filter=(Key eq '${key}')`).share();
+    return this.request('AppMetadata').map((response = []) =>
+      response.find(test => test.Key === key),
+    ).share();
   }
 
   createJob(job: ISharePointMDC): Observable<ISharePointMDC> {

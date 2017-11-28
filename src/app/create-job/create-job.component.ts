@@ -5,9 +5,18 @@ import { WHEN_DISCOVERED_CODES, ICodes } from 'app/contanstants';
 import { keys } from 'lodash';
 import { IMDSService } from 'services';
 import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import * as moment from 'moment';
+import { ISharePointMDC } from 'app/types';
+import { Moment } from 'moment';
+
+interface IJobForm {
+  [key: string]: FormControl;
+}
 
 const TEXT_ONLY: RegExp = /^\w+$/i;
 const TIME_INPUT: RegExp = /^\d+$/i;
+const NOW: Moment = moment();
 
 @Component({
   selector: 'mdrp-create-job',
@@ -15,21 +24,6 @@ const TIME_INPUT: RegExp = /^\d+$/i;
   styleUrls: ['./create-job.component.scss'],
 })
 export class CreateJobComponent {
-
-  equipmentIdControl: FormControl = new FormControl('', [
-    Validators.required,
-    Validators.pattern(TEXT_ONLY),
-  ]);
-
-  workUnitCodeControl: FormControl = new FormControl('', [
-    Validators.required,
-    Validators.pattern(TEXT_ONLY),
-  ]);
-
-  startTimeControl: FormControl = new FormControl('', [
-    Validators.required,
-    Validators.pattern(TIME_INPUT),
-  ]);
 
   hours: string[] = [
     '00', '01', '02', '03', '04', '05', '06', '07', '08', '09',
@@ -42,24 +36,39 @@ export class CreateJobComponent {
     '40', '45', '50', '55',
   ];
 
-  timePicker: string[] = [];
-
   whenDiscovered: ICodes = WHEN_DISCOVERED_CODES;
-  workcenters: Observable<string[]>;
-
+  timePicker: string[] = [];
+  workcenters: BehaviorSubject<string[]> = this._imds.workcenters;
   keys: any = keys;
-
   conditionCode: string;
+
+  job: { [key: string]: FormControl } = {
+    CC: new FormControl('R'),
+    WUC: new FormControl('', [
+      Validators.required,
+      Validators.pattern(TEXT_ONLY),
+    ]),
+    WhenDISC: new FormControl(''),
+    WorkCenter: new FormControl(''),
+    EquipID: new FormControl('', [
+      Validators.required,
+      Validators.pattern(TEXT_ONLY),
+    ]),
+    StartDate: new FormControl(NOW.toDate()),
+    StartTime: new FormControl('07:30', [
+      Validators.required,
+      Validators.pattern(TIME_INPUT),
+    ]),
+    ETIC: new FormControl(NOW.add(4, 'weeks').toDate()),
+  };
 
   constructor(
     public dialogRef: MatDialogRef<CreateJobComponent>,
+    private _imds: IMDSService,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    _imds: IMDSService,
   ) {
-
     this.hours.map(hour => this.minutes.map(mins => this.timePicker.push(`${hour}:${mins}`)));
-
-    this.workcenters = _imds.workcenters;
+    console.log(this.job);
   }
 
   onNoClick(): void {

@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { Http, ConnectionBackend, Headers, Request, RequestOptions, Response, RequestOptionsArgs, RequestMethod } from '@angular/http';
 import { Observable, Subscriber } from 'rxjs';
 
-import { orderBy, isEqual, findIndex } from 'lodash';
+import { orderBy, isEqual, findIndex, cloneDeep } from 'lodash';
 import * as localForage from 'localforage';
 import { ISharePointMDC } from 'app/types';
 import { Utilities } from 'services/utilities';
@@ -25,7 +25,7 @@ export class HttpCacheService extends Http {
     request(req: string | Request, options?: RequestOptionsArgs): Observable<Response> {
 
         const url: string = typeof req === 'string' ? req : req.url;
-        const isSharePointMDC: boolean = url.includes('/_vti_bin/ListData.svc/Jobs');
+        const isSharePointMDC: boolean = url.includes('/_vti_bin/ListData.svc/');
         const shouldCache: boolean = isSharePointMDC && (options.method === RequestMethod.Get);
 
         if (!shouldCache) {
@@ -40,6 +40,7 @@ export class HttpCacheService extends Http {
                 .fromPromise(localForage.getItem(url))
                 .subscribe((localData: any) => {
 
+                    let request: string | Request = cloneDeep(req);
                     localData = localData || [];
 
                     if (localData.length) {
@@ -49,15 +50,15 @@ export class HttpCacheService extends Http {
                         const lastModified: Date = Utilities.convertDate(latest.Modified);
                         const urlAppend: string = `?$filter=Modified gt datetime'${lastModified.toISOString()}'`;
 
-                        if (typeof req === 'string') {
-                            req += urlAppend;
+                        if (typeof request === 'string') {
+                            request += urlAppend;
                         } else {
-                            req.url += urlAppend;
+                            request.url += urlAppend;
                         }
                     }
 
                     super
-                        .request(req, options)
+                        .request(request, options)
                         .map(resp => (typeof resp === 'object') ? resp.json() : resp)
                         .subscribe((remoteData: any) => {
 
