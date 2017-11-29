@@ -43,9 +43,35 @@ mat-dialog-actions {
 .mat-dialog-title {
     font-variant: small-caps;
     &.A {
-        border-bottom: 7px solid #ff9339
+        border-bottom: 7px solid #ff9339;
     }
     &.R {
-        border-bottom: 7px solid #c60000
+        border-bottom: 7px solid #c60000;
     }
+}
+
+.mat-button-toggle-group {
+    box-shadow: none!important;
+}
+
+mat-button-toggle {
+    background: none;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    &.amber {
+        color:#ff9339!important;
+    }   
+    &.red {
+        color: #c60000!important;
+    }
+    &.mat-button-toggle-checked {
+        &.amber {
+            background-color: #ff933910;
+            border-color: #ff9339;
+        }   
+        &.red {
+            background-color: #c6000010;
+            border-color: #c60000;
+        }
+   }
 }

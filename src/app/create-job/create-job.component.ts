@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { FormControl, Validators } from '@angular/forms';
-import { WHEN_DISCOVERED_CODES, ICodes } from 'app/contanstants';
+import { WHEN_DISCOVERED_CODES, ICodes, DOWN_TIME_CODES } from 'app/contanstants';
 import { keys } from 'lodash';
 import { IMDSService } from 'services';
 import { Observable } from 'rxjs/Observable';
@@ -30,6 +30,7 @@ export class CreateJobComponent {
     '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
     '20', '21', '22', '23',
   ];
+
   minutes: string[] = [
     '00', '05', '10', '15',
     '20', '25', '30', '35',
@@ -37,6 +38,7 @@ export class CreateJobComponent {
   ];
 
   whenDiscovered: ICodes = WHEN_DISCOVERED_CODES;
+  downTimeCodes: ICodes = DOWN_TIME_CODES;
   timePicker: string[] = [];
   workcenters: BehaviorSubject<string[]> = this._imds.workcenters;
   keys: any = keys;
@@ -49,16 +51,14 @@ export class CreateJobComponent {
       Validators.pattern(TEXT_ONLY),
     ]),
     WhenDISC: new FormControl(''),
+    DownTimeCode: new FormControl(''),
     WorkCenter: new FormControl(''),
     EquipID: new FormControl('', [
       Validators.required,
       Validators.pattern(TEXT_ONLY),
     ]),
     StartDate: new FormControl(NOW.toDate()),
-    StartTime: new FormControl('07:30', [
-      Validators.required,
-      Validators.pattern(TIME_INPUT),
-    ]),
+    StartTime: new FormControl('07:30'),
     ETIC: new FormControl(NOW.add(4, 'weeks').toDate()),
   };
 
@@ -68,7 +68,6 @@ export class CreateJobComponent {
     @Inject(MAT_DIALOG_DATA) public data: any,
   ) {
     this.hours.map(hour => this.minutes.map(mins => this.timePicker.push(`${hour}:${mins}`)));
-    console.log(this.job);
   }
 
   onNoClick(): void {

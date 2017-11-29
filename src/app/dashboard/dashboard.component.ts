@@ -148,7 +148,7 @@ export class DashboardComponent implements OnInit {
 
   openJob(): void {
     const dialogRef: MatDialogRef<CreateJobComponent> = this._dialog.open(CreateJobComponent, {
-      width: '50vw',
+      width: '65vw',
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -196,12 +196,12 @@ export class DashboardComponent implements OnInit {
 
   reSyncJobs(): void {
     console.log('resync jobs');
-    this._loadingService.register('imds-380');
+    // this._loadingService.register('imds-380');
     this._sharePointService.getMDC().subscribe(mdc => {
       mdc.forEach(row => this.addOrUpdateJob(row, false));
       this.filterWrapper();
       this._loadingService.resolve('mdc');
-      this._loadingService.resolve('imds-380');
+      // this._loadingService.resolve('imds-380');
       this._imdsService.initIntervalSync();
     });
   }

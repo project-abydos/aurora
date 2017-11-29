@@ -1,18 +1,20 @@
-<h2 mat-dialog-title [ngClass]="job.CC.value">Create a New {{job.CC.value === 'R' ? 'Red' : 'Amber'}} Job</h2>
+<h2 mat-dialog-title [ngClass]="job.CC.value">Create a New Job</h2>
 
 <mat-dialog-content>
   <form class="new-job-form" autocomplete="true">
 
-    <br>
-
     <div class="td-dynamic-element-wrapper">
-      <mat-radio-group required [formControl]="job.CC">
-        <mat-radio-button value="A">AMBER JOB</mat-radio-button>
-        &nbsp;&nbsp;
-        <mat-radio-button value="R">RED JOB</mat-radio-button>
-      </mat-radio-group>
+      <mat-button-toggle-group [formControl]="job.CC">
+        <mat-button-toggle value="A" class="amber">
+          Amber Job
+        </mat-button-toggle>
+        <mat-button-toggle value="R" class="red">
+          Red Job
+        </mat-button-toggle>
+      </mat-button-toggle-group>
     </div>
 
+    <br>
     <br>
 
     <div class="td-dynamic-element-wrapper flex-group">
@@ -26,11 +28,18 @@
       </mat-form-field>
 
       <mat-form-field class="w20 uppercase">
-        <input matInput maxlength="8" placeholder="Equipment ID" [formControl]="job.EquipID" required>
+        <input autocomplete="true" spellcheck="false" matInput maxlength="8" placeholder="Equipment ID" [formControl]="job.EquipID"
+          required>
         <mat-error>Please use only letters and numbers.</mat-error>
       </mat-form-field>
 
-      <mat-form-field class="w50">
+      <mat-form-field class="w20 uppercase">
+        <input autocomplete="true" spellcheck="false" matInput maxlength="8" placeholder="Work Unit Code" [formControl]="job.WUC"
+          required>
+        <mat-error>Please use only letters and numbers.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="w30">
         <mat-select placeholder="When Discovered" required [formControl]="job.WhenDISC">
           <mat-option *ngFor="let key of keys(whenDiscovered)" [value]="key">
             <strong>{{key}}</strong>&nbsp;&nbsp;{{ whenDiscovered[key] }}
@@ -57,24 +66,27 @@
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field class="w25 uppercase">
-        <input matInput maxlength="8" placeholder="Work Unit Code" [formControl]="job.WUC" required>
-        <mat-error>Please use only letters and numbers.</mat-error>
-      </mat-form-field>
-
       <mat-form-field class="w20">
         <input matInput [matDatepicker]="etic" placeholder="ETIC Date" required [formControl]="job.ETIC">
         <mat-datepicker-toggle matSuffix [for]="etic"></mat-datepicker-toggle>
         <mat-datepicker #etic></mat-datepicker>
       </mat-form-field>
 
+      <mat-form-field class="w30">
+        <mat-select placeholder="Down Time Code" required [formControl]="job.DownTimeCode">
+          <mat-option *ngFor="let key of keys(downTimeCodes)" [value]="key">
+            <strong>{{key}}</strong>&nbsp;&nbsp;{{ downTimeCodes[key] }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
 
     <br>
 
     <div class="td-dynamic-element-wrapper">
       <mat-form-field class="w100">
-        <textarea matInput placeholder="Discrepancy" matTextareaAutosize matAutosizeMinRows="1" matAutosizeMaxRows="7" required></textarea>
+        <textarea spellcheck="true" matInput placeholder="Discrepancy" matTextareaAutosize matAutosizeMinRows="1" matAutosizeMaxRows="7"
+          required></textarea>
       </mat-form-field>
     </div>
 

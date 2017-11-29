@@ -40,11 +40,10 @@ const DELAY_CODES: ICodes = {
 };
 
 const DOWN_TIME_CODES: ICodes = {
-    '-': 'None',
     'A': 'Retrofit Or Modification ',
     'B': 'Depot Maintenance Scheduled',
-    'C': 'Test [Orientation Or Other]',
-    'D': 'Reserved For [Scheduled Maintenance]',
+    'C': 'Test (Orientation Or Other)',
+    'D': 'Reserved For (Scheduled Maintenance)',
     'E': 'Preventive Maintenance ',
     'F': 'Failed Flight Check Or Operational Systems Check ',
     'G': 'Vehicle Out Of Commission',
@@ -89,10 +88,5 @@ const WHEN_DISCOVERED_CODES: ICodes = {
     'Y': 'Recipt/Withdrawl From Supply',
     'Z': 'AGM Underwing Check. N/A',
 };
-
-// SUBMITTED
-// IN WORK
-// REJECTED -- IS THERE AN ALTERNATIVE
-//
 
 export { APP_TITLE, DELAY_CODES, DOWN_TIME_CODES, WHEN_DISCOVERED_CODES };
