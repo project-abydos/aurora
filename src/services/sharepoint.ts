@@ -25,6 +25,7 @@ export class SharepointService {
     const isPut: boolean = (options.method === RequestMethod.Put) && !!options.body.__metadata;
     const isPost: boolean = (options.method === RequestMethod.Post);
     const metadata: ISharePointMetadata = get(options, 'body.__metadata');
+    const { body } = options;
 
     const url: string = `${SharepointService.CONFIG.BASE_URL}/${_url}`;
 
@@ -32,12 +33,12 @@ export class SharepointService {
     options.headers.set('Accept', 'application/json');
     options.headers.set('Content-Type', 'application/json');
 
-    if (options.body) {
+    if (body) {
       if (includes(url, '/Jobs')) {
-        options.body = pick(options.body, SharepointService.CONFIG.JOB_FIELDS);
+        options.body = pick(body, SharepointService.CONFIG.JOB_FIELDS);
       }
       if (includes(url, '/AppMetadata')) {
-        options.body = pick(options.body, SharepointService.CONFIG.METADATA_FIELDS);
+        options.body = pick(body, SharepointService.CONFIG.METADATA_FIELDS);
       }
     }
 
@@ -46,7 +47,11 @@ export class SharepointService {
       options.headers.set('X-HTTP-Method', 'MERGE');
       // Always overwrite changes as we are not doing complex multi-user write operations
       options.headers.set('If-Match', '*');
-      return this.http.request(metadata.uri, options);
+      return this.http.request(metadata.uri, options).map(response => {
+        // Tick the etag field for view updates (ignored by SharePoint)
+        body.__metadata.etag = Math.random().toString();
+        return body;
+      });
     }
 
     return this.http.request(url, options).map(response => get(response, 'd.results') || get(response, 'd') || response);

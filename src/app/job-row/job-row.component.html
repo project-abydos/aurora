@@ -1,4 +1,4 @@
-<div class="mat-row" [ngClass]="[row.CC, isExpanded ? 'expanded' : 'collapsed']" (click)="toggleExpanded(row)">
+<div class="mat-row" [ngClass]="[row.CC, isExpanded ? 'expanded' : 'collapsed']" (click)="toggleExpanded(row)" *ngIf="row.JCN">
 
   <div class="mat-cell JCN">
     <span>{{row.JCN}}</span>
@@ -60,5 +60,54 @@
 
     </mat-card-content>
   </mat-card>
+
+</div>
+
+<div class="mat-row expanded newJob" [ngClass]="[row.CC]" *ngIf="!row.JCN">
+
+  <div class="mat-cell JCN">
+    <span>
+      <mat-chip class="tag mat-chip mat-yellow mat-chip-selected">New Job</mat-chip>
+    </span>
+  </div>
+
+  <div class="mat-cell WorkCenter">
+    <span>{{row.WorkCenter}}</span>
+  </div>
+
+  <div class="mat-cell EquipID">
+    <span>{{row.EquipID}}</span>
+  </div>
+
+  <div class="mat-cell Discrepancy">
+    <span>
+      <mat-chip *ngFor="let tag of row.tags" class="tag" [selected]="!!tag.style" [color]="tag.style">{{tag.title}}</mat-chip>
+      {{row.Discrepancy}}</span>
+  </div>
+
+  <div class="mat-cell LastUpdate">
+    <p>
+      <span>Start Date</span>
+      <span>{{row.timeStampPretty}}</span>
+    </p>
+    <p>
+      <span>WUC</span>
+      <span>{{row.WUC}}</span>
+    </p>
+    <p>
+      <span>WD</span>
+      <span>{{row.WhenDiscText}}</span>
+    </p>
+    <p>
+      <span>DTC</span>
+      <span>{{row.DownTimeCodeText}}</span>
+    </p>
+  </div>
+
+  <div class="mat-cell ApprovalStatus">
+    <span>
+      <button mat-button (click)="changeJobStatus($event)">{{loadingStatus ? "Updating..." : row.ApprovalStatus}}</button>
+    </span>
+  </div>
 
 </div>

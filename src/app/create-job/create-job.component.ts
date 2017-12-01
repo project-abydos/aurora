@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, Validators, FormBuilder } from '@angular/forms';
 import { WHEN_DISCOVERED_CODES, ICodes, DOWN_TIME_CODES } from 'app/contanstants';
 import { keys } from 'lodash';
 import { IMDSService } from 'services';
@@ -9,6 +9,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import * as moment from 'moment';
 import { ISharePointMDC } from 'app/types';
 import { Moment } from 'moment';
+import { FormGroup } from '@angular/forms/src/model';
 
 interface IJobForm {
   [key: string]: FormControl;
@@ -44,13 +45,13 @@ export class CreateJobComponent {
   keys: any = keys;
   conditionCode: string;
 
-  job: { [key: string]: FormControl } = {
+  job: FormGroup = this._fb.group({
     CC: new FormControl('R'),
     WUC: new FormControl('', [
       Validators.required,
       Validators.pattern(TEXT_ONLY),
     ]),
-    WhenDISC: new FormControl(''),
+    WhenDiscovered: new FormControl(''),
     DownTimeCode: new FormControl(''),
     WorkCenter: new FormControl(''),
     EquipID: new FormControl('', [
@@ -59,12 +60,14 @@ export class CreateJobComponent {
     ]),
     StartDate: new FormControl(NOW.toDate()),
     StartTime: new FormControl('07:30'),
-    ETIC: new FormControl(NOW.add(4, 'weeks').toDate()),
-  };
+    ETIC: new FormControl(NOW.clone().add(4, 'weeks').toDate()),
+    Discrepancy: new FormControl(''),
+  });
 
   constructor(
     public dialogRef: MatDialogRef<CreateJobComponent>,
     private _imds: IMDSService,
+    private _fb: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: any,
   ) {
     this.hours.map(hour => this.minutes.map(mins => this.timePicker.push(`${hour}:${mins}`)));
@@ -72,6 +75,14 @@ export class CreateJobComponent {
 
   onNoClick(): void {
     this.dialogRef.close();
+  }
+
+  createJob(): void {
+    const { value } = this.job;
+    value.StartDate.setHours(parseInt(value.StartTime.slice(0, 2), 10));
+    value.StartDate.setMinutes(parseInt(value.StartTime.slice(3, 5), 10));
+    value.Timestamp = NOW.format('YYDDD HH:mm:ss');
+    this.dialogRef.close(value);
   }
 
 }

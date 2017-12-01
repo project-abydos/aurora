@@ -34,7 +34,7 @@ export interface ISharePointMDC {
     DownTimeCode?: string;
     WUC?: string;
     CC?: string;
-    WhenDISC?: string;
+    WhenDiscovered?: string;
     NameUserID?: string;
     DelayCode?: string;
     WorkCenter?: string;

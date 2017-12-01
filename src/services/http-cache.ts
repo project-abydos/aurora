@@ -48,12 +48,12 @@ export class HttpCacheService extends Http {
 
                         const latest: ISharePointMDC = orderBy(localData, ['Modified'], ['desc'])[0];
                         const lastModified: Date = Utilities.convertDate(latest.Modified);
-                        const urlAppend: string = `?$filter=Modified gt datetime'${lastModified.toISOString()}'`;
+                        const urlAppend: string = `$filter=Modified gt datetime'${lastModified.toISOString()}'`;
 
                         if (typeof request === 'string') {
-                            request += urlAppend;
+                            request += request.includes('?') ? '' : '?' + urlAppend;
                         } else {
-                            request.url += urlAppend;
+                            request.url += request.url.includes('?') ? '' : '?' + urlAppend;
                         }
                     }
 

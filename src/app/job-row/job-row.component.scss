@@ -64,3 +64,27 @@
     border-radius: 16px;
     margin-right: 5px;
 }
+
+.newJob {
+    .LastUpdate {           
+        display: inline-block!important;
+        p { 
+            span {
+                display: inline-block;                
+                vertical-align: top;
+                &:first-child {
+                    width: 5em;
+                    padding-right: 1%;
+                    text-align: right
+                }
+                &:last-child {
+                    width: calc(96% - 5em);
+                    padding-left: 1%;   
+                    text-align: left;     
+                    border-left: 1px solid white;     
+                    font-weight: 600;   
+                }
+            }
+        }
+    }
+}

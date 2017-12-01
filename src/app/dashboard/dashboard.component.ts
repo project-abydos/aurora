@@ -1,24 +1,23 @@
 import { IMDSService } from '../../services/imds';
 import { SharepointService } from '../../services/sharepoint';
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import * as moment from 'moment';
 import { JsonPipe } from '@angular/common';
 import { cloneDeep, concat, defaults, find, every, debounce, without, sumBy, memoize, MemoizedFunction, noop, get, findIndex } from 'lodash';
+import * as moment from 'moment';
 import * as json2csv from 'json2csv';
 import { saveAs } from 'file-saver';
-
 import { Title } from '@angular/platform-browser';
-
 import { TdLoadingService } from '@covalent/core';
-
-import { APP_TITLE, ISelectOption, DELAY_CODES, WHEN_DISCOVERED_CODES, DOWN_TIME_CODES } from '../contanstants';
-import { Moment, CalendarSpec } from 'moment';
-import { ISharePointMDC, ICustomMDCData } from 'app/types';
 import { Observable } from 'rxjs/Observable';
 import { timer } from 'rxjs/observable/timer';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Moment, CalendarSpec } from 'moment';
 import { MatDialog, MatDialogRef } from '@angular/material';
+
+import { APP_TITLE, ISelectOption, DELAY_CODES, WHEN_DISCOVERED_CODES, DOWN_TIME_CODES } from '../contanstants';
+import { ISharePointMDC, ICustomMDCData } from 'app/types';
 import { CreateJobComponent } from 'app/create-job/create-job.component';
+import { Utilities } from 'services/utilities';
 
 interface IDashboardMetrics {
   red: number;
@@ -49,6 +48,7 @@ export class DashboardComponent implements OnInit {
     'CFP IN WORK',
     'CFP DONE',
     'NEEDS UPDATE',
+    'NEW JOB',
     'PDI',
     'PMI',
     'RED JOB',
@@ -73,7 +73,6 @@ export class DashboardComponent implements OnInit {
     private _dialog: MatDialog,
   ) {
 
-    // this.openJob();
     _route.params.subscribe(({ tokens }) => {
       this.searchTerms = tokens ? tokens.toUpperCase().replace(/\-/g, ' ').split(',') : [];
       this.searchTermPresets = without(this.orignalSearchTermPresets, ...this.searchTerms);
@@ -147,13 +146,13 @@ export class DashboardComponent implements OnInit {
   }
 
   openJob(): void {
-    const dialogRef: MatDialogRef<CreateJobComponent> = this._dialog.open(CreateJobComponent, {
-      width: '65vw',
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
-    });
+    this._dialog
+      .open(CreateJobComponent, { width: '65vw' })
+      .afterClosed()
+      .subscribe(job => {
+        console.log(job);
+        this.addOrUpdateJob(job, true);
+      });
   }
 
   navigateSearch(): void {
@@ -196,12 +195,10 @@ export class DashboardComponent implements OnInit {
 
   reSyncJobs(): void {
     console.log('resync jobs');
-    // this._loadingService.register('imds-380');
     this._sharePointService.getMDC().subscribe(mdc => {
       mdc.forEach(row => this.addOrUpdateJob(row, false));
       this.filterWrapper();
       this._loadingService.resolve('mdc');
-      // this._loadingService.resolve('imds-380');
       this._imdsService.initIntervalSync();
     });
   }
@@ -245,15 +242,17 @@ export class DashboardComponent implements OnInit {
 
     const now: Moment = moment();
     const _transform: ICustomMDCData = <ICustomMDCData>cloneDeep(row);
+    const newJob: boolean = !_transform.JCN;
+    const startDate: Moment = newJob ? moment.utc(Utilities.convertDate(_transform.StartDate)) : undefined;
     const discrepancyText: string = _transform.Discrepancy.toUpperCase();
-    const julianDate: Moment = moment.utc(_transform.JCN.slice(0, 5), 'YYDDD').local();
+    const julianDate: Moment = newJob ? startDate : moment.utc(_transform.JCN.slice(0, 5), 'YYDDDD').local();
     const juliantDateDiff: number = now.diff(julianDate, 'days');
-    const timestampMoment: Moment = moment.utc(row.Timestamp, 'YYDDD HH:mm:ss').local();
+    const timestampMoment: Moment = moment.utc(row.Timestamp, 'YYDDDD HH:mm:ss').local();
     const timestampDiff: string = timestampMoment.calendar(undefined, diffMap);
 
     _transform.ApprovalStatus = row.ApprovalStatus || 'Pending';
-    _transform.timeStampPretty = timestampDiff;
-    _transform.WhenDiscText = row.WhenDISC ? `${row.WhenDISC} - ${WHEN_DISCOVERED_CODES[row.WhenDISC]}` : '';
+    _transform.timeStampPretty = newJob ? startDate.format('YYDDDD [at] HH:mm') : timestampDiff;
+    _transform.WhenDiscText = row.WhenDiscovered ? `${row.WhenDiscovered} - ${WHEN_DISCOVERED_CODES[row.WhenDiscovered]}` : '';
     _transform.DownTimeCodeText = row.DownTimeCode ? `${row.DownTimeCode} - ${DOWN_TIME_CODES[row.DownTimeCode]}` : '';
     _transform.DelayCodeText = row.DelayCode ? `${row.DelayCode} - ${DELAY_CODES[row.DelayCode]}` : '';
     _transform.prettyJCN = julianDate.calendar(undefined, { ...diffMap, sameDay: '[Today]' });
@@ -288,8 +287,12 @@ export class DashboardComponent implements OnInit {
       _transform.tags.push({ title: 'PDI' });
     }
 
-    if (_transform.JCN.match(/\d+[A-Z]\d+/)) {
+    if (!newJob && _transform.JCN.match(/\d+[A-Z]\d+/)) {
       _transform.tags.push({ title: 'PMI' });
+    }
+
+    if (newJob) {
+      searchTerms.push('new job');
     }
 
     _transform.search = searchTerms.concat([
@@ -366,7 +369,7 @@ export class DashboardComponent implements OnInit {
         metrics,
       };
     },
-    cacheTest => this.mdc.map(row => row.Id + row.__metadata.etag).join('-') + this.searchTerms.join(','),
+    cacheTest => this.mdc.map(row => row.Id + row.__metadata.etag).join('\n') + this.searchTerms.join(','),
   );
 
   trackJobStateChange(index: number, job: ICustomMDCData): string {

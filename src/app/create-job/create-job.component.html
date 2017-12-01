@@ -1,10 +1,10 @@
-<h2 mat-dialog-title [ngClass]="job.CC.value">Create a New Job</h2>
+<h2 mat-dialog-title [ngClass]="job.value.CC">Create a New Job</h2>
 
 <mat-dialog-content>
-  <form class="new-job-form" autocomplete="true">
+  <form [formGroup]="job" autocomplete="true">
 
     <div class="td-dynamic-element-wrapper">
-      <mat-button-toggle-group [formControl]="job.CC">
+      <mat-button-toggle-group formControlName="CC">
         <mat-button-toggle value="A" class="amber">
           Amber Job
         </mat-button-toggle>
@@ -20,7 +20,7 @@
     <div class="td-dynamic-element-wrapper flex-group">
 
       <mat-form-field class="w20 uppercase">
-        <mat-select placeholder="Workcenter" required panelClass="workcenter" [formControl]="job.WorkCenter">
+        <mat-select placeholder="Workcenter" required panelClass="workcenter" formControlName="WorkCenter">
           <mat-option *ngFor="let workcenter of workcenters|async" [value]="workcenter">
             {{workcenter}}
           </mat-option>
@@ -28,19 +28,18 @@
       </mat-form-field>
 
       <mat-form-field class="w20 uppercase">
-        <input autocomplete="true" spellcheck="false" matInput maxlength="8" placeholder="Equipment ID" [formControl]="job.EquipID"
+        <input autocomplete="true" spellcheck="false" matInput maxlength="8" placeholder="Equipment ID" formControlName="EquipID"
           required>
         <mat-error>Please use only letters and numbers.</mat-error>
       </mat-form-field>
 
       <mat-form-field class="w20 uppercase">
-        <input autocomplete="true" spellcheck="false" matInput maxlength="8" placeholder="Work Unit Code" [formControl]="job.WUC"
-          required>
+        <input autocomplete="true" spellcheck="false" matInput maxlength="8" placeholder="Work Unit Code" formControlName="WUC" required>
         <mat-error>Please use only letters and numbers.</mat-error>
       </mat-form-field>
 
       <mat-form-field class="w30">
-        <mat-select placeholder="When Discovered" required [formControl]="job.WhenDISC">
+        <mat-select placeholder="When Discovered" required formControlName="WhenDiscovered">
           <mat-option *ngFor="let key of keys(whenDiscovered)" [value]="key">
             <strong>{{key}}</strong>&nbsp;&nbsp;{{ whenDiscovered[key] }}
           </mat-option>
@@ -53,13 +52,13 @@
     <div class="td-dynamic-element-wrapper flex-group">
 
       <mat-form-field class="w20">
-        <input matInput [matDatepicker]="startdate" placeholder="Start Date" required [formControl]="job.StartDate">
+        <input matInput [matDatepicker]="startdate" placeholder="Start Date" required formControlName="StartDate">
         <mat-datepicker-toggle matSuffix [for]="startdate"></mat-datepicker-toggle>
         <mat-datepicker #startdate></mat-datepicker>
       </mat-form-field>
 
       <mat-form-field class="w20 start-time-field">
-        <mat-select placeholder="Start Time" required panelClass="start-time" [formControl]="job.StartTime">
+        <mat-select placeholder="Start Time" required panelClass="start-time" formControlName="StartTime">
           <mat-option *ngFor="let time of timePicker" [value]="time">
             {{ time }}
           </mat-option>
@@ -67,13 +66,13 @@
       </mat-form-field>
 
       <mat-form-field class="w20">
-        <input matInput [matDatepicker]="etic" placeholder="ETIC Date" required [formControl]="job.ETIC">
+        <input matInput [matDatepicker]="etic" placeholder="ETIC Date" required formControlName="ETIC">
         <mat-datepicker-toggle matSuffix [for]="etic"></mat-datepicker-toggle>
         <mat-datepicker #etic></mat-datepicker>
       </mat-form-field>
 
       <mat-form-field class="w30">
-        <mat-select placeholder="Down Time Code" required [formControl]="job.DownTimeCode">
+        <mat-select placeholder="Down Time Code" required formControlName="DownTimeCode">
           <mat-option *ngFor="let key of keys(downTimeCodes)" [value]="key">
             <strong>{{key}}</strong>&nbsp;&nbsp;{{ downTimeCodes[key] }}
           </mat-option>
@@ -85,8 +84,8 @@
 
     <div class="td-dynamic-element-wrapper">
       <mat-form-field class="w100">
-        <textarea spellcheck="true" matInput placeholder="Discrepancy" matTextareaAutosize matAutosizeMinRows="1" matAutosizeMaxRows="7"
-          required></textarea>
+        <textarea spellcheck="true" matInput formControlName="Discrepancy" placeholder="Discrepancy" matTextareaAutosize matAutosizeMinRows="1"
+          matAutosizeMaxRows="7" required></textarea>
       </mat-form-field>
     </div>
 
@@ -95,5 +94,5 @@
 
 <mat-dialog-actions>
   <button mat-button mat-dialog-close>Cancel</button>
-  <button mat-raised-button color="primary" [mat-dialog-close]="true">Continue</button>
+  <button [disabled]="job.invalid" mat-raised-button color="primary" (click)="createJob()">Continue</button>
 </mat-dialog-actions>
