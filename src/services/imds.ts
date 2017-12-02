@@ -5,7 +5,7 @@ import { Subject, Subscription } from 'rxjs';
 import { defaults, find, get, isArray, once, memoize, debounce, throttle } from 'lodash';
 
 import { CrossDomainService } from './cross-domain';
-import { ISharePointMDC, IParsed380, IParsedEventDataRow, ISharePointAppMetadata } from 'app/types';
+import { ISharePointMDC, IParsedIMDSXML, IParsedEventDataRow, ISharePointAppMetadata } from 'app/types';
 import { timer } from 'rxjs/observable/timer';
 import { SharepointService } from './sharepoint';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -32,13 +32,18 @@ export class IMDSService {
     readonly syncTimestamp: Observable<ISharePointAppMetadata> = this._sharePointService.getAppMetadata('imds_sync_timestamp');
     readonly workcenters: BehaviorSubject<string[]> = new BehaviorSubject([]);
 
-    initIntervalSync: Function = once(() => {
-        this._crossDomainService.connectionEnabled.subscribe(enabled => {
-            console.log('IMDS Sync check, enabled: ' + enabled);
-            if (enabled) {
-                this.fetch380();
-            }
-        });
+    fetch380: Function = once(() => {
+        const SECOND: number = 1000;
+        const MINUTE: number = 60 * SECOND;
+
+        if (this._crossDomainService.imdsWindow) {
+            this.syncTimestamp.subscribe(response => this._syncTimestampValue = response);
+            this.workcenters.subscribe(workcenters =>
+                timer(0, 10 * MINUTE).subscribe(() =>
+                    workcenters.forEach((workcenter, index) =>
+                        setTimeout(() => this._crossDomainService.peform380SyncOperation(workcenter), 10 * SECOND * index))),
+            );
+        }
     });
 
     constructor(
@@ -57,42 +62,44 @@ export class IMDSService {
         return item instanceof Array ? item.join(' ') : String(item);
     }
 
-    fetch380(): void {
-        const tenMinutes: number = 10 * 60 * 1000;
-        this.syncTimestamp.subscribe(response => this._syncTimestampValue = response);
-        this.workcenters.subscribe(workcenters =>
-            timer(0, tenMinutes).subscribe(() =>
-                workcenters.forEach((workcenter, index) =>
-                    setTimeout(() => this._crossDomainService.peformSyncOperation(workcenter), 10 * 1000 * index))),
-        );
+    fetchDDR(jcn: string): void {
+        this._crossDomainService.peformDDRSyncOperation(jcn);
     }
 
     private _processXML(xml: string): void {
 
         this._updateIMDSSyncTimestamp();
 
-        this._parser.parseString(xml, (err, result: IParsed380) => {
+        this._parser.parseString(xml, (err, result: IParsedIMDSXML) => {
 
-            const workcenter: string = get(result, 'EquipmentDataRow.Workcenter');
-            let { EventDataRow } = result.EquipmentDataRow;
+            if (result.EquipmentDataRow) {
 
-            // handle nulls and single-job 380s
-            EventDataRow = isArray(EventDataRow) ? EventDataRow :
-                (EventDataRow ? [<any>EventDataRow] : []);
+                const workcenter: string = get(result, 'EquipmentDataRow.Workcenter');
+                let { EventDataRow } = result.EquipmentDataRow;
 
-            console.log(EventDataRow);
+                // handle nulls and single-job 380s
+                EventDataRow = isArray(EventDataRow) ? EventDataRow :
+                    (EventDataRow ? [<any>EventDataRow] : []);
 
-            EventDataRow.forEach((row, index) =>
-                this._imds.next({
-                    JCN: row.EventId,
-                    CC: row.EventSymbol,
-                    Discrepancy: this.flatten(row, 'DiscrepancyNarrativeRow.DiscrepancyNarrative'),
-                    WorkCenter: workcenter,
-                    Timestamp: row.EventDateTimeStamp,
-                    EquipID: row.WorkcenterEventDataRow.EquipmentIdOrPartNumber,
-                    DelayCode: row.DeferCode,
-                    LastUpdate: this.flatten(row, 'WorkcenterEventDataRow.WorkcenterEventNarrativeRow.WorkcenterEventNarrative'),
-                }));
+                console.log(EventDataRow);
+
+                EventDataRow.forEach((row, index) =>
+                    this._imds.next({
+                        JCN: row.EventId,
+                        CC: row.EventSymbol,
+                        Discrepancy: this.flatten(row, 'DiscrepancyNarrativeRow.DiscrepancyNarrative'),
+                        WorkCenter: workcenter,
+                        Timestamp: row.EventDateTimeStamp,
+                        EquipID: row.WorkcenterEventDataRow.EquipmentIdOrPartNumber,
+                        DelayCode: row.DeferCode,
+                        LastUpdate: this.flatten(row, 'WorkcenterEventDataRow.WorkcenterEventNarrativeRow.WorkcenterEventNarrative'),
+                    }));
+
+            }
+
+            if (result.EventDataRow) {
+                console.log(result.EventDataRow);
+            }
 
         });
     }

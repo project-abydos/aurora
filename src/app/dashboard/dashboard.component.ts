@@ -18,6 +18,7 @@ import { APP_TITLE, ISelectOption, DELAY_CODES, WHEN_DISCOVERED_CODES, DOWN_TIME
 import { ISharePointMDC, ICustomMDCData } from 'app/types';
 import { CreateJobComponent } from 'app/create-job/create-job.component';
 import { Utilities } from 'services/utilities';
+import { setTimeout } from 'timers';
 
 interface IDashboardMetrics {
   red: number;
@@ -93,7 +94,7 @@ export class DashboardComponent implements OnInit {
     timer(15 * SECOND, 5 * MINUTE).subscribe(() =>
       _imdsService.syncTimestamp.subscribe(response => {
         const lastSync: Moment = moment(Number(response.Data));
-        this.lastIMDSSync = lastSync.diff(moment(), 'minutes') < 10 ? 'a few minutes ago' : lastSync.fromNow();
+        this.lastIMDSSync = lastSync.diff(moment(), 'minutes') > -10 ? 'a few minutes ago' : lastSync.fromNow();
       }),
     );
 
@@ -150,8 +151,9 @@ export class DashboardComponent implements OnInit {
       .open(CreateJobComponent, { width: '65vw' })
       .afterClosed()
       .subscribe(job => {
-        console.log(job);
-        this.addOrUpdateJob(job, true);
+        if (job && job.Discrepancy) {
+          this.addOrUpdateJob(job, true);
+        }
       });
   }
 
@@ -172,7 +174,12 @@ export class DashboardComponent implements OnInit {
       // Matching job found
       const timestampChange: boolean = match.Timestamp !== job.Timestamp;
       const etagChange: boolean = job.__metadata && (match.__metadata.etag !== job.__metadata.etag);
-      if (timestampChange || etagChange) {
+      if (timestampChange) {
+        // Detected timestamp change, send a request to update DDR and skip for now
+        this._imdsService.fetchDDR(match.JCN);
+        return;
+      }
+      if (etagChange) {
         // Job has been updated since last pull
         if (updateSharePoint) {
           // Also write the changes to SharePoint
@@ -186,6 +193,7 @@ export class DashboardComponent implements OnInit {
       // New job
       if (updateSharePoint) {
         this._sharePointService.createJob(job).subscribe(update => this.transformMDCRow(update));
+        this._imdsService.fetchDDR(job.JCN);
       } else {
         this.transformMDCRow(job);
       }
@@ -199,7 +207,7 @@ export class DashboardComponent implements OnInit {
       mdc.forEach(row => this.addOrUpdateJob(row, false));
       this.filterWrapper();
       this._loadingService.resolve('mdc');
-      this._imdsService.initIntervalSync();
+      setTimeout(() => this._imdsService.fetch380(), 15 * 1000);
     });
   }
 
@@ -229,7 +237,7 @@ export class DashboardComponent implements OnInit {
     }
 
     let searchTerms: string[] = [];
-    const matchId: number = findIndex(this.mdc, { JCN: row.JCN });
+    const matchId: number = findIndex(this.mdc, { Id: row.Id }) || findIndex(this.mdc, { JCN: row.JCN });
 
     const diffMap: CalendarSpec = {
       sameDay: '[Today at] HH:mm',

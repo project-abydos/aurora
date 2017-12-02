@@ -48,13 +48,16 @@ const IMDS_SYNC_HTML: string = `
     </html>
 `;
 
+const IMDS_CODE_380: string = 'GDMD';
+const IMDS_CODE_DDR: string = 'GMSD';
+
 @Injectable()
 export class CrossDomainService {
 
     private _receiveSyncData: Subject<string> = new Subject();
-    private imdsWindow: Window;
 
-    readonly connectionEnabled: BehaviorSubject<boolean> = new BehaviorSubject(false);
+    imdsWindow: Window;
+
     readonly receiveSyncData: Observable<string>;
 
     constructor() {
@@ -77,13 +80,22 @@ export class CrossDomainService {
             case 'IMDS_RECEIVE_380_XML':
                 return this._receiveSyncData.next(data);
 
+            case 'IMDS_RECEIVE_DDR_XML':
+                return this._receiveSyncData.next(data);
+
             default:
         }
     }
 
-    peformSyncOperation = (org: string): void => {
+    peform380SyncOperation = (org: string): void => {
         if (this.imdsWindow) {
-            this.imdsWindow.postMessage({ START_SYNC: org }, '*');
+            this.imdsWindow.postMessage({ SYNC_380: IMDS_CODE_380 + org }, '*');
+        }
+    }
+
+    peformDDRSyncOperation = (jcn: string): void => {
+        if (this.imdsWindow) {
+            this.imdsWindow.postMessage({ SYNC_DDR: IMDS_CODE_DDR + jcn }, '*');
         }
     }
 
@@ -91,7 +103,6 @@ export class CrossDomainService {
         if (!this.imdsWindow && event.source !== window) {
             this.imdsWindow = event.source;
             this.imdsWindow.postMessage({ IMDS_SYNC_HTML }, '*');
-            this.connectionEnabled.next(true);
         }
     }
 

@@ -139,7 +139,27 @@ export interface IParsedEventDataRow {
     WorkcenterEventDataRow: IParsedWorkcenterEventDataRow;
 }
 
-export interface IParsed380 {
+export interface IParseDDREventDataRow {
+    WorkcenterEvent: number;
+    PerformingWorkcenter: string;
+    EquipmentId: string;
+    WorkUnitCode: string;
+    WorkUnitCodeNarrative: string;
+    JobFollowingIndicator: string;
+    WorkcenterEventSymbol: string;
+    StandardReportingDesignator: string;
+    Inshop: string;
+    WorkcenterEventStatus: string;
+    WorkcenterEventStatusDate: string;
+    DeferCode: string;
+    DeferMessage: string;
+    WorkcenterEventNarrativeRow: string;
+    WorkcenterEventNarrative: string;
+    EmbedTransaction2: string;
+    DDRInformationDataRow: IParsedDDRDataRow[];
+}
+
+export interface IParsedIMDSXML {
     $: {
         elc: string;
         program_id: string;
@@ -152,6 +172,27 @@ export interface IParsed380 {
     EquipmentDataRow: {
         EventDataRow: IParsedEventDataRow[];
         Workcenter: string;
+    };
+    EventDataRow: {
+        Database: string;
+        EventId: string;
+        EquipmentId: string;
+        UnitId: string;
+        StandardReportingDesignator: string;
+        WorkUnitCode: string;
+        WorkUnitCodeNarrative: string;
+        WhenDiscoveredCode: string;
+        RepeatRecurFlag: string;
+        EventSymbol: string;
+        MaintenanceRepairPriority: string;
+        EventStatus: string;
+        EventStatusDate: string;
+        DeferCode: string;
+        DeferMessage: string;
+        DiscrepancyNarrativeRow: {
+            DiscrepancyNarrative: string[];
+        };
+        WorkcenterEventDataRow: IParseDDREventDataRow;
     };
     ReportAsOf: string;
     ReportOptions: string;
