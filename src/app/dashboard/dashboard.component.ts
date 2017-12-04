@@ -2,7 +2,7 @@ import { IMDSService } from '../../services/imds';
 import { SharepointService } from '../../services/sharepoint';
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { JsonPipe } from '@angular/common';
-import { cloneDeep, concat, defaults, find, every, debounce, without, sumBy, memoize, MemoizedFunction, noop, get, findIndex } from 'lodash';
+import { cloneDeep, concat, defaults, find, every, debounce, without, sumBy, memoize, MemoizedFunction, noop, get, findIndex, assignIn } from 'lodash';
 import * as moment from 'moment';
 import * as json2csv from 'json2csv';
 import { saveAs } from 'file-saver';
@@ -83,8 +83,15 @@ export class DashboardComponent implements OnInit {
 
     _titleService.setTitle(APP_TITLE);
 
+    const imdsCache: { [jcn: string]: ISharePointMDC } = {};
+
     _imdsService.imds.subscribe(job => {
-      this.addOrUpdateJob(job, true);
+      if (job.Timestamp) {
+        imdsCache[job.JCN] = job;
+      } else {
+        assignIn(imdsCache[job.JCN], job);
+      }
+      this.addOrUpdateJob(imdsCache[job.JCN], true);
       this.debouncedFilter();
     });
 
@@ -174,12 +181,12 @@ export class DashboardComponent implements OnInit {
       // Matching job found
       const timestampChange: boolean = match.Timestamp !== job.Timestamp;
       const etagChange: boolean = job.__metadata && (match.__metadata.etag !== job.__metadata.etag);
-      if (timestampChange) {
+      if (timestampChange && !job.DDR) {
         // Detected timestamp change, send a request to update DDR and skip for now
         this._imdsService.fetchDDR(match.JCN);
         return;
       }
-      if (etagChange) {
+      if (timestampChange || etagChange) {
         // Job has been updated since last pull
         if (updateSharePoint) {
           // Also write the changes to SharePoint
@@ -264,6 +271,7 @@ export class DashboardComponent implements OnInit {
     _transform.DownTimeCodeText = row.DownTimeCode ? `${row.DownTimeCode} - ${DOWN_TIME_CODES[row.DownTimeCode]}` : '';
     _transform.DelayCodeText = row.DelayCode ? `${row.DelayCode} - ${DELAY_CODES[row.DelayCode]}` : '';
     _transform.prettyJCN = julianDate.calendar(undefined, { ...diffMap, sameDay: '[Today]' });
+    _transform.parsedDDR = JSON.parse(row.DDR);
     _transform.tags = [];
     _transform.CCText = {
       A: 'Amber Job',
@@ -313,7 +321,7 @@ export class DashboardComponent implements OnInit {
       _transform.WorkCenter,
       _transform.EquipID,
       _transform.NameUserID,
-      _transform.DDR instanceof Array ? _transform.DDR.map(ddr => ddr.Text).join(' ') : '',
+      // _transform.DDR instanceof Array ? _transform.DDR.map(ddr => ddr.Text).join(' ') : '',
       `CFP ${_transform.ApprovalStatus}`,
       _transform.WhenDiscText,
       _transform.DownTimeCodeText,

@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Parser } from 'xml2js';
 import { Subject, Subscription } from 'rxjs';
-import { defaults, find, get, isArray, once, memoize, debounce, throttle } from 'lodash';
+import { defaults, find, get, isArray, once, memoize, debounce, throttle, last } from 'lodash';
 
 import { CrossDomainService } from './cross-domain';
-import { ISharePointMDC, IParsedIMDSXML, IParsedEventDataRow, ISharePointAppMetadata } from 'app/types';
+import { ISharePointMDC, IParsedIMDSXML, IParsedEventDataRow, ISharePointAppMetadata, IParsedDDRDataRow, IParsedDDRInformationRow } from 'app/types';
 import { timer } from 'rxjs/observable/timer';
 import { SharepointService } from './sharepoint';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -57,7 +57,7 @@ export class IMDSService {
             .subscribe(response => this.workcenters.next(response));
     }
 
-    flatten(row: IParsedEventDataRow, path: string): string {
+    flatten(row: any, path: string): string {
         const item: string[] | string = get(row, path);
         return item instanceof Array ? item.join(' ') : String(item);
     }
@@ -98,7 +98,23 @@ export class IMDSService {
             }
 
             if (result.EventDataRow) {
+
                 console.log(result.EventDataRow);
+
+                let { EventDataRow } = result;
+                const { WorkcenterEventDataRow } = EventDataRow;
+                const ddrInformationDataRow: IParsedDDRInformationRow[] = get(EventDataRow, 'WorkcenterEventDataRow.DDRInformationDataRow') || [{}];
+                const lastUpdate: IParsedDDRDataRow = last(ddrInformationDataRow).DDRDataRow;
+
+                if (lastUpdate) {
+                    this._imds.next({
+                        JCN: EventDataRow.EventId,
+                        DelayCode: EventDataRow.DeferCode,
+                        LastUpdate: this.flatten(lastUpdate, 'CorrectiveActionNarrativeRow.CorrectiveActionNarrative'),
+                        DDR: JSON.stringify(ddrInformationDataRow),
+                    });
+                }
+
             }
 
         });

@@ -30,6 +30,7 @@ SharepointService.CONFIG.JOB_FIELDS = [
   'LastModifier',
   'Id',
   'Timestamp',
+  'DDR',
 ];
 SharepointService.CONFIG.METADATA_FIELDS = [
   'Data',

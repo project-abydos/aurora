@@ -29,8 +29,6 @@ export interface ISharePointMDC {
     JCN?: string;
     StartDate?: string;
     StartTime?: string;
-    StopDate?: string;
-    StopTime?: string;
     DownTimeCode?: string;
     WUC?: string;
     CC?: string;
@@ -50,6 +48,7 @@ export interface ISharePointMDC {
     Modified?: string;
     ModifiedById?: number;
     Timestamp?: string;
+    DDR?: string;
 }
 
 export interface ICustomMDCData extends ISharePointMDC {
@@ -71,10 +70,7 @@ export interface ICustomMDCData extends ISharePointMDC {
         search?: string;
         style?: string;
     }[];
-    DDR: {
-        Date: string;
-        Text: string;
-    }[];
+    parsedDDR?: any;
 }
 
 export interface IParsedDDRDataRow {
@@ -139,6 +135,10 @@ export interface IParsedEventDataRow {
     WorkcenterEventDataRow: IParsedWorkcenterEventDataRow;
 }
 
+export interface IParsedDDRInformationRow {
+    DDRDataRow: IParsedDDRDataRow;
+}
+
 export interface IParseDDREventDataRow {
     WorkcenterEvent: number;
     PerformingWorkcenter: string;
@@ -156,7 +156,7 @@ export interface IParseDDREventDataRow {
     WorkcenterEventNarrativeRow: string;
     WorkcenterEventNarrative: string;
     EmbedTransaction2: string;
-    DDRInformationDataRow: IParsedDDRDataRow[];
+    DDRInformationDataRow: IParsedDDRInformationRow[];
 }
 
 export interface IParsedIMDSXML {
