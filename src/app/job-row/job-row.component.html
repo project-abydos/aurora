@@ -34,30 +34,36 @@
 
 </div>
 
-<div class="mat-row expanded-row {{row.CC}}" *ngIf="isExpanded">
-  <mat-card class="job-info" style="flex:1">
-    <mat-card-title>Job Info</mat-card-title>
+<div class="mat-row job-details expanded-row {{row.CC}}" *ngIf="isExpanded">
+  <mat-card class="job-info">
     <mat-card-content>
-      <!-- <div class="mat-cell ETIC" *ngIf="isExpanded">
+      <div class="mat-cell ETIC" *ngIf="isExpanded">
         <input matInput [matDatepicker]="picker" placeholder="Choose a date" [(ngModel)]="row.eticDate">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
-        </div> -->
-      <!-- <dl>
+      </div>
+      <dl>
         <dt>When Discovered</dt>
         <dd>{{row.WhenDiscText}}</dd>
         <dt>Delay Code</dt>
         <dd>{{row.DelayCodeText}}</dd>
         <dt>Down Time</dt>
         <dd>{{row.DownTimeCodeText}}</dd>
-      </dl> -->
+      </dl>
     </mat-card-content>
   </mat-card>
 
-  <mat-card class="job-history" style="flex:3">
-    <mat-card-title>History</mat-card-title>
+  <mat-card class="job-history">
     <mat-card-content>
-      <pre>{{row.parsedDDR|json}}</pre>
+      <!-- <pre>{{row.parsedDDR[0]._all|json}}</pre> -->
+      <div class="ddr-row" *ngFor="let row of row.parsedDDR">
+        <div class="ddr">{{row.DDR}}</div>
+        <div class="data">
+          <h3>{{row.StartDate}}: {{row.StartTime}} - {{row.StopTime}}</h3>
+          <p> {{row.Text}} </p>
+          <small> {{row.User}} </small>
+        </div>
+      </div>
     </mat-card-content>
   </mat-card>
 

@@ -15,7 +15,7 @@ import { Moment, CalendarSpec } from 'moment';
 import { MatDialog, MatDialogRef } from '@angular/material';
 
 import { APP_TITLE, ISelectOption, DELAY_CODES, WHEN_DISCOVERED_CODES, DOWN_TIME_CODES } from '../contanstants';
-import { ISharePointMDC, ICustomMDCData } from 'app/types';
+import { ISharePointMDC, ICustomMDCData, IParsedDDRDataRow } from 'app/types';
 import { CreateJobComponent } from 'app/create-job/create-job.component';
 import { Utilities } from 'services/utilities';
 import { setTimeout } from 'timers';
@@ -271,13 +271,25 @@ export class DashboardComponent implements OnInit {
     _transform.DownTimeCodeText = row.DownTimeCode ? `${row.DownTimeCode} - ${DOWN_TIME_CODES[row.DownTimeCode]}` : '';
     _transform.DelayCodeText = row.DelayCode ? `${row.DelayCode} - ${DELAY_CODES[row.DelayCode]}` : '';
     _transform.prettyJCN = julianDate.calendar(undefined, { ...diffMap, sameDay: '[Today]' });
-    _transform.parsedDDR = JSON.parse(row.DDR);
     _transform.tags = [];
+
     _transform.CCText = {
       A: 'Amber Job',
       R: 'Red Job',
       G: 'Green Job',
     }[_transform.CC];
+
+    _transform.parsedDDR = (JSON.parse(row.DDR) || [])
+      .map(({ DDRDataRow }) => ({
+        DDR: DDRDataRow.DDR,
+        StartDate: DDRDataRow.StatusDateTimeRow.Date,
+        StartTime: DDRDataRow.StatusDateTimeRow.StartTime,
+        StopTime: DDRDataRow.StatusDateTimeRow.StopTime,
+        Text: Utilities.flatten(DDRDataRow, 'CorrectiveActionNarrativeRow.CorrectiveActionNarrative'),
+        User: (<IParsedDDRDataRow>DDRDataRow).CorrectedByIMDSCDBUserId,
+        _all: DDRDataRow,
+      }))
+      .sort((a, b) => b.DDR - a.DDR);
 
     if (row.ETIC) {
       _transform.eticDate = moment(row.ETIC).toDate();

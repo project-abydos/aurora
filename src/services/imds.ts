@@ -1,3 +1,4 @@
+import { Utilities } from './utilities';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Parser } from 'xml2js';
@@ -57,11 +58,6 @@ export class IMDSService {
             .subscribe(response => this.workcenters.next(response));
     }
 
-    flatten(row: any, path: string): string {
-        const item: string[] | string = get(row, path);
-        return item instanceof Array ? item.join(' ') : String(item);
-    }
-
     fetchDDR(jcn: string): void {
         this._crossDomainService.peformDDRSyncOperation(jcn);
     }
@@ -87,12 +83,12 @@ export class IMDSService {
                     this._imds.next({
                         JCN: row.EventId,
                         CC: row.EventSymbol,
-                        Discrepancy: this.flatten(row, 'DiscrepancyNarrativeRow.DiscrepancyNarrative'),
+                        Discrepancy: Utilities.flatten(row, 'DiscrepancyNarrativeRow.DiscrepancyNarrative'),
                         WorkCenter: workcenter,
                         Timestamp: row.EventDateTimeStamp,
                         EquipID: row.WorkcenterEventDataRow.EquipmentIdOrPartNumber,
                         DelayCode: row.DeferCode,
-                        LastUpdate: this.flatten(row, 'WorkcenterEventDataRow.WorkcenterEventNarrativeRow.WorkcenterEventNarrative'),
+                        LastUpdate: Utilities.flatten(row, 'WorkcenterEventDataRow.WorkcenterEventNarrativeRow.WorkcenterEventNarrative'),
                     }));
 
             }
@@ -110,7 +106,7 @@ export class IMDSService {
                     this._imds.next({
                         JCN: EventDataRow.EventId,
                         DelayCode: EventDataRow.DeferCode,
-                        LastUpdate: this.flatten(lastUpdate, 'CorrectiveActionNarrativeRow.CorrectiveActionNarrative'),
+                        LastUpdate: Utilities.flatten(lastUpdate, 'CorrectiveActionNarrativeRow.CorrectiveActionNarrative'),
                         DDR: JSON.stringify(ddrInformationDataRow),
                     });
                 }

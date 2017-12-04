@@ -70,7 +70,11 @@ export interface ICustomMDCData extends ISharePointMDC {
         search?: string;
         style?: string;
     }[];
-    parsedDDR?: any;
+    parsedDDR?: ICustomDDR[];
+}
+
+export interface ICustomDDR {
+    DDR: number;
 }
 
 export interface IParsedDDRDataRow {
@@ -80,7 +84,9 @@ export interface IParsedDDRDataRow {
     ChangeDate: string;
     ChangeTime: string;
     CorrectedByIMDSCDBUserId: string;
-    CorrectiveActionNarrativeRow: string | string[];
+    CorrectiveActionNarrativeRow: {
+        CorrectiveActionNarrative: string | string[];
+    };
     CrewSize: string;
     DDR: string;
     HowMalfunctionCode: string;
