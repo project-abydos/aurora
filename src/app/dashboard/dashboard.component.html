@@ -1,12 +1,13 @@
 <td-layout-nav>
-  <div td-toolbar-content layout="row" layout-align="center center" flex class="">
+  <div td-toolbar-content layout="row" layout-align="center center" flex class="animated slideInDown">
+    <span class="af-logo animated fadeInLeftBig"></span>
     <span class="animated fadeIn">{{appTitle}}</span>
     <span flex></span>
-    <button class="export-button" mat-icon-button (click)="exportData()">
+    <button class="export-button animated fadeInRightBig" mat-icon-button (click)="exportData()">
       <mat-icon matTooltipPosition="left" matTooltip="Download a copy of the visible job data">cloud_download</mat-icon>
     </button>
     <span></span>
-    <button class="create-job-button" mat-mini-fab (click)="openJob()" matTooltipPosition="left" matTooltip="Open a new job">
+    <button class="create-job-button animated fadeInRightBig" mat-mini-fab (click)="openJob()" matTooltipPosition="left" matTooltip="Open a new job">
       <mat-icon aria-label="Open a new job">add</mat-icon>
     </button>
   </div>
@@ -60,6 +61,7 @@
   </div>
   <td-layout-footer>
     <div layout="row" layout-align="start center">
+      <span class="gator-logo"></span>
       <span class="mat-caption">Developed by the 5 CBCSS/SCS, Robins AFB, GA.</span>
       <span flex class="mat-caption text-center" style="color:#888; font-style:italic">
         <span *ngIf="!lastIMDSSync">Checking for last IMDS sync time...</span>

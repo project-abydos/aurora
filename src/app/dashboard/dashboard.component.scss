@@ -4,9 +4,11 @@
     text-align: center;
     color: #eee;
 }
+
 .export-button {
     // color: #555;
 }
+
 .create-job-button {
     background-color: #FFC60C;
     margin-left: 1em;
@@ -15,6 +17,7 @@
         font-size: 2em;
     }
 }
+
 .mat-icon-ux {
     width: 100px;
 }
@@ -39,4 +42,22 @@
 .JCN button {
     padding: 0;
     margin-left: -10px;
+}
+
+.gator-logo {
+    display: inline-block;
+    background-image: url("../../assets/gator-sm.png");
+    width: 3em;
+    height: 2em;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.af-logo {
+    display: inline-block;
+    background-image: url("../../assets/af-white.png");
+    width: 3em;
+    height: 2em;
+    background-size: contain;
+    background-repeat: no-repeat;
 }
