@@ -281,13 +281,15 @@ export class DashboardComponent implements OnInit {
 
     _transform.parsedDDR = (JSON.parse(row.DDR) || [])
       .map(({ DDRDataRow }) => ({
-        DDR: DDRDataRow.DDR,
+        ...DDRDataRow,
+        DDR: parseInt(DDRDataRow.DDR, 10),
         StartDate: DDRDataRow.StatusDateTimeRow.Date,
         StartTime: DDRDataRow.StatusDateTimeRow.StartTime,
         StopTime: DDRDataRow.StatusDateTimeRow.StopTime,
         Text: Utilities.flatten(DDRDataRow, 'CorrectiveActionNarrativeRow.CorrectiveActionNarrative'),
-        User: (<IParsedDDRDataRow>DDRDataRow).CorrectedByIMDSCDBUserId,
-        _all: DDRDataRow,
+        User: DDRDataRow.CorrectedByIMDSCDBUserId,
+        // DeferCode:(<IParsedDDRDataRow>DDRDataRow).
+        Closed: parseInt(DDRDataRow.UnitsProduced, 10) === 1,
       }))
       .sort((a, b) => b.DDR - a.DDR);
 
