@@ -15,7 +15,7 @@ import { Moment, CalendarSpec } from 'moment';
 import { MatDialog, MatDialogRef } from '@angular/material';
 
 import { APP_TITLE, ISelectOption, DELAY_CODES, WHEN_DISCOVERED_CODES, DOWN_TIME_CODES } from '../contanstants';
-import { ISharePointMDC, ICustomMDCData, IParsedDDRDataRow } from 'app/types';
+import { ISharePointMDC, ICustomMDCData, IParsedDDRDataRow, IParsedDDRInformationRow } from 'app/types';
 import { CreateJobComponent } from 'app/create-job/create-job.component';
 import { Utilities } from 'services/utilities';
 import { setTimeout } from 'timers';
@@ -181,7 +181,7 @@ export class DashboardComponent implements OnInit {
       // Matching job found
       const timestampChange: boolean = match.Timestamp !== job.Timestamp;
       const etagChange: boolean = job.__metadata && (match.__metadata.etag !== job.__metadata.etag);
-      if (timestampChange && !job.DDR) {
+      if (timestampChange && !job.DDR && job.JCN) {
         // Detected timestamp change, send a request to update DDR and skip for now
         this._imdsService.fetchDDR(match.JCN);
         return;
@@ -190,8 +190,9 @@ export class DashboardComponent implements OnInit {
         // Job has been updated since last pull
         if (updateSharePoint) {
           // Also write the changes to SharePoint
-          defaults(job, match);
-          this._sharePointService.updateJob(job).subscribe(update => this.transformMDCRow(job));
+          assignIn(match, job);
+          job.__metadata = match.__metadata;
+          this._sharePointService.updateJob(job).subscribe(update => this.transformMDCRow(match));
         } else {
           this.transformMDCRow(job);
         }
@@ -279,7 +280,9 @@ export class DashboardComponent implements OnInit {
       G: 'Green Job',
     }[_transform.CC];
 
-    _transform.parsedDDR = (JSON.parse(row.DDR) || [])
+    const parsedData: IParsedDDRInformationRow | IParsedDDRInformationRow[] = (JSON.parse(row.DDR) || []);
+
+    _transform.parsedDDR = (parsedData instanceof Array ? parsedData : [parsedData])
       .map(({ DDRDataRow }) => ({
         ...DDRDataRow,
         DDR: parseInt(DDRDataRow.DDR, 10),
@@ -362,7 +365,7 @@ export class DashboardComponent implements OnInit {
     filterAction => {
       console.log('filter');
 
-      let mdc: ICustomMDCData[] = <ICustomMDCData[]>cloneDeep(this.mdc).sort((a, b) => -a.Timestamp.localeCompare(b.Timestamp));
+      let mdc: ICustomMDCData[] = <ICustomMDCData[]>cloneDeep(this.mdc).sort((a, b) => -(a.Timestamp || '').localeCompare(b.Timestamp));
       let once: boolean = false;
       const metrics: IDashboardMetrics = {
         amber: 0,

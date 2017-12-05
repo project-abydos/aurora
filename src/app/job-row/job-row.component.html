@@ -34,49 +34,29 @@
 
 </div>
 
-<div class="mat-row job-details expanded-row mat-elevation-z10 {{row.CC}}" *ngIf="isExpanded">
-  <mat-card class="job-info">
+<div class="mat-row job-details expanded-row {{row.CC}}" *ngIf="isExpanded">
+  <mat-card class="job-history">
     <mat-card-content>
-      <div class="mat-cell ETIC" *ngIf="isExpanded">
-        <input matInput [matDatepicker]="picker" placeholder="Choose a date" [(ngModel)]="row.eticDate">
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-      </div>
-      <dl>
-        <dt>When Discovered</dt>
-        <dd>{{row.WhenDiscText}}</dd>
-        <dt>Delay Code</dt>
-        <dd>{{row.DelayCodeText}}</dd>
-        <dt>Down Time</dt>
-        <dd>{{row.DownTimeCodeText}}</dd>
-      </dl>
-    </mat-card-content>
-  </mat-card>
-
-  <mat-card class="job-history mat-elevation-z1">
-    <mat-card-content>
-      <pre>{{row.parsedDDR[0]|json}}</pre>
       <div class="ddr-row {{row.Symbol}}" *ngFor="let row of row.parsedDDR">
         <div class="ddr">{{row.DDR}}</div>
         <div class="data">
           <h3>
             <span>{{row.StartDate}}: {{row.StartTime}} - {{row.StopTime}}</span>
             <span>WUC: {{row.WorkUnitCode}}</span>
-            <span *ngIf="row.ActionTakenCode">Action Taken: {{row.ActionTakenCode}}</span>
-            <span *ngIf="row.DeferCode">Action Taken: {{row.DeferCode}}</span>
+            <span *ngIf="row.DeferCode">Defer Code: {{row.DeferCode}}</span>
+            <span>User: {{row.User}}</span>
           </h3>
           <p>{{row.Text}}</p>
           <small>
             <span *ngIf="row.WhenDiscoveredCode">When Disc: {{row.WhenDiscoveredCode}}</span>
             <span *ngIf="row.HowMalfunctionCode">How Mal: {{row.HowMalfunctionCode}}</span>
+            <span *ngIf="row.ActionTakenCode">Action Taken: {{row.ActionTakenCode}}</span>
             <span *ngIf="row.CrewSize">Crew Size: {{row.CrewSize}}</span>
-            <span>User: {{row.User}}</span>
           </small>
         </div>
       </div>
     </mat-card-content>
   </mat-card>
-
 </div>
 
 <div class="mat-row expanded newJob" [ngClass]="[row.CC]" *ngIf="!row.JCN">

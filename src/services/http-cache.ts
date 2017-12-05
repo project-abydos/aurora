@@ -57,32 +57,32 @@ export class HttpCacheService extends Http {
                         }
                     }
 
-                    // super
-                    //     .request(request, options)
-                    //     .map(resp => (typeof resp === 'object') ? resp.json() : resp)
-                    //     .subscribe((remoteData: any) => {
+                    super
+                        .request(request, options)
+                        .map(resp => (typeof resp === 'object') ? resp.json() : resp)
+                        .subscribe((remoteData: any) => {
 
-                    //         const data: ISharePointMDC[] = remoteData.d.results || remoteData.d || [];
+                            const data: ISharePointMDC[] = remoteData.d.results || remoteData.d || [];
 
-                    //         if (data.length) {
-                    //             data.forEach(row => {
-                    //                 const match: number = findIndex(localData, { Id: row.Id });
-                    //                 if (match > -1) {
-                    //                     localData[match] = row;
-                    //                 } else {
-                    //                     localData.push(row);
-                    //                 }
-                    //             });
-                    //             Observable.fromPromise(localForage.setItem(url, localData)).subscribe((saved) => {
-                    //                 subscriber.next({ d: { results: localData } });
-                    //                 subscriber.complete();
-                    //             });
-                    //         } else {
-                    //             subscriber.next({ d: { results: localData } });
-                    //             subscriber.complete();
-                    //         }
+                            if (data.length) {
+                                data.forEach(row => {
+                                    const match: number = findIndex(localData, { Id: row.Id });
+                                    if (match > -1) {
+                                        localData[match] = row;
+                                    } else {
+                                        localData.push(row);
+                                    }
+                                });
+                                Observable.fromPromise(localForage.setItem(url, localData)).subscribe((saved) => {
+                                    subscriber.next({ d: { results: localData } });
+                                    subscriber.complete();
+                                });
+                            } else {
+                                subscriber.next({ d: { results: localData } });
+                                subscriber.complete();
+                            }
 
-                    //     });
+                        });
 
                 });
         });

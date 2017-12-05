@@ -99,15 +99,16 @@ export class IMDSService {
 
                 let { EventDataRow } = result;
                 const { WorkcenterEventDataRow } = EventDataRow;
-                const ddrInformationDataRow: IParsedDDRInformationRow[] = get(EventDataRow, 'WorkcenterEventDataRow.DDRInformationDataRow') || [{}];
-                const lastUpdate: IParsedDDRDataRow = last(ddrInformationDataRow).DDRDataRow;
+                const ddrInfoRow: IParsedDDRInformationRow | IParsedDDRInformationRow[] =
+                    get(EventDataRow, 'WorkcenterEventDataRow.DDRInformationDataRow') || [{}];
+                const lastUpdate: IParsedDDRDataRow = ddrInfoRow instanceof Array ? last(ddrInfoRow).DDRDataRow : ddrInfoRow.DDRDataRow;
 
                 if (lastUpdate) {
                     this._imds.next({
                         JCN: EventDataRow.EventId,
                         DelayCode: EventDataRow.DeferCode,
                         LastUpdate: Utilities.flatten(lastUpdate, 'CorrectiveActionNarrativeRow.CorrectiveActionNarrative'),
-                        DDR: JSON.stringify(ddrInformationDataRow),
+                        DDR: JSON.stringify(ddrInfoRow),
                     });
                 }
 

@@ -93,7 +93,7 @@
         width: 30%;
     }
     .job-history {
-        width: 70%;
+        width: 100%;
         mat-card-content {
             display: flex;
             flex-direction: column;
@@ -101,7 +101,7 @@
                 flex-direction: row;
                 display: flex;
                 .ddr {
-                    width: 1.5em;
+                    width: 2em;
                     text-align: center;
                     font-size: 4em;
                     color: #ccc;
@@ -123,6 +123,7 @@
                     padding-bottom: 2em;
                     margin-bottom: 2em;
                     border-bottom: 3px solid #ddd;
+                    margin-right: 2em;
                     flex: 1;
                     h3 {
                         margin: .5em 0;
@@ -134,9 +135,9 @@
                         content: "\2022";
                         position: absolute;
                         padding: 0;
-                        font-size: 3em;
+                        font-size: 3.5em;
                         line-height: .35em;
-                        margin-left: -.35em;
+                        margin-left: -.4em;
                     }
                     p {
                         font-style: italic;
