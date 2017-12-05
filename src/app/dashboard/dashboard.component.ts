@@ -178,14 +178,17 @@ export class DashboardComponent implements OnInit {
     }
 
     if (match) {
+
       // Matching job found
       const timestampChange: boolean = match.Timestamp !== job.Timestamp;
       const etagChange: boolean = job.__metadata && (match.__metadata.etag !== job.__metadata.etag);
+
       if (timestampChange && !job.DDR && job.JCN) {
         // Detected timestamp change, send a request to update DDR and skip for now
         this._imdsService.fetchDDR(match.JCN);
         return;
       }
+
       if (timestampChange || etagChange) {
         // Job has been updated since last pull
         if (updateSharePoint) {
@@ -197,6 +200,7 @@ export class DashboardComponent implements OnInit {
           this.transformMDCRow(job);
         }
       }
+
     } else {
       // New job
       if (updateSharePoint) {

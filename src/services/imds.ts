@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { Parser } from 'xml2js';
 import { Subject, Subscription } from 'rxjs';
 import { defaults, find, get, isArray, once, memoize, debounce, throttle, last } from 'lodash';
+import * as moment from 'moment';
 
 import { CrossDomainService } from './cross-domain';
 import { ISharePointMDC, IParsedIMDSXML, IParsedEventDataRow, ISharePointAppMetadata, IParsedDDRDataRow, IParsedDDRInformationRow } from 'app/types';
@@ -102,6 +103,7 @@ export class IMDSService {
                 const ddrInfoRow: IParsedDDRInformationRow | IParsedDDRInformationRow[] =
                     get(EventDataRow, 'WorkcenterEventDataRow.DDRInformationDataRow') || [{}];
                 const lastUpdate: IParsedDDRDataRow = ddrInfoRow instanceof Array ? last(ddrInfoRow).DDRDataRow : ddrInfoRow.DDRDataRow;
+                const { StatusDateTimeRow } = lastUpdate;
 
                 if (lastUpdate) {
                     this._imds.next({
@@ -109,6 +111,8 @@ export class IMDSService {
                         DelayCode: EventDataRow.DeferCode,
                         LastUpdate: Utilities.flatten(lastUpdate, 'CorrectiveActionNarrativeRow.CorrectiveActionNarrative'),
                         DDR: JSON.stringify(ddrInfoRow),
+                        WUC: lastUpdate.WorkUnitCode,
+                        WhenDiscovered: lastUpdate.WhenDiscoveredCode,
                     });
                 }
 
