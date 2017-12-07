@@ -37,7 +37,8 @@
 <div class="mat-row job-details expanded-row {{row.CC}}" *ngIf="isExpanded">
   <mat-card class="job-history">
     <mat-card-content>
-      <div class="ddr-row {{row.Symbol}}" *ngFor="let row of row.parsedDDR">
+      <h4 *ngIf="!ddr" class="mat-progress-bar-secondary mat-progress-bar-fill mat-progress-bar-element">Loading data...</h4>
+      <div class="ddr-row {{row.Symbol}}" *ngFor="let row of ddr">
         <div class="ddr">{{row.DDR}}</div>
         <div class="data">
           <h3>

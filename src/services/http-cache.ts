@@ -18,7 +18,7 @@ export class HttpCacheService extends Http {
         super(backend, defaultOptions);
         localForage.config({
             name: 'mdrp_db',
-            storeName: `sp_cache_${CACHE_TIME.getUTCFullYear()}_${CACHE_TIME.getUTCMonth()}`,
+            storeName: `sp_cache`,
         });
     }
 
@@ -26,12 +26,16 @@ export class HttpCacheService extends Http {
 
         const url: string = typeof req === 'string' ? req : req.url;
         const isSharePointMDC: boolean = url.includes('/_vti_bin/ListData.svc/');
-        const shouldCache: boolean = isSharePointMDC && (options.method === RequestMethod.Get);
+        const shouldCache: boolean = isSharePointMDC && (options.method === RequestMethod.Get) && !/ListData\.svc\/\w+\(\d+\)/.test(url);
 
         if (!shouldCache) {
             return super
                 .request(req, options)
                 .map(resp => (typeof resp === 'object') ? resp.json() : resp);
+        }
+
+        function addQMark(test: string): string {
+            return test.includes('?') ? '&' : '?';
         }
 
         return new Observable((subscriber: Subscriber<any>) => {
@@ -51,10 +55,11 @@ export class HttpCacheService extends Http {
                         const urlAppend: string = `$filter=Modified gt datetime'${lastModified.toISOString()}'`;
 
                         if (typeof request === 'string') {
-                            request += request.includes('?') ? '' : '?' + urlAppend;
+                            request += addQMark(request) + urlAppend;
                         } else {
-                            request.url += request.url.includes('?') ? '' : '?' + urlAppend;
+                            request.url += addQMark(request.url) + urlAppend;
                         }
+
                     }
 
                     super
@@ -62,9 +67,9 @@ export class HttpCacheService extends Http {
                         .map(resp => (typeof resp === 'object') ? resp.json() : resp)
                         .subscribe((remoteData: any) => {
 
-                            const data: ISharePointMDC[] = remoteData.d.results || remoteData.d || [];
+                            const data: any = remoteData.d.results || remoteData.d || [];
 
-                            if (data.length) {
+                            if (data instanceof Array) {
                                 data.forEach(row => {
                                     const match: number = findIndex(localData, { Id: row.Id });
                                     if (match > -1) {

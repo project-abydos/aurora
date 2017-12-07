@@ -15,7 +15,7 @@ import { Moment, CalendarSpec } from 'moment';
 import { MatDialog, MatDialogRef } from '@angular/material';
 
 import { APP_TITLE, ISelectOption, DELAY_CODES, WHEN_DISCOVERED_CODES, DOWN_TIME_CODES } from '../contanstants';
-import { ISharePointMDC, ICustomMDCData, IParsedDDRDataRow, IParsedDDRInformationRow } from 'app/types';
+import { ISharePointMDC, ICustomMDCData } from 'app/types';
 import { CreateJobComponent } from 'app/create-job/create-job.component';
 import { Utilities } from 'services/utilities';
 import { setTimeout } from 'timers';
@@ -284,22 +284,6 @@ export class DashboardComponent implements OnInit {
       G: 'Green Job',
     }[_transform.CC];
 
-    const parsedData: IParsedDDRInformationRow | IParsedDDRInformationRow[] = (JSON.parse(row.DDR) || []);
-
-    _transform.parsedDDR = (parsedData instanceof Array ? parsedData : [parsedData])
-      .map(({ DDRDataRow }) => ({
-        ...DDRDataRow,
-        DDR: parseInt(DDRDataRow.DDR, 10),
-        StartDate: DDRDataRow.StatusDateTimeRow.Date,
-        StartTime: DDRDataRow.StatusDateTimeRow.StartTime,
-        StopTime: DDRDataRow.StatusDateTimeRow.StopTime,
-        Text: Utilities.flatten(DDRDataRow, 'CorrectiveActionNarrativeRow.CorrectiveActionNarrative'),
-        User: DDRDataRow.CorrectedByIMDSCDBUserId,
-        // DeferCode:(<IParsedDDRDataRow>DDRDataRow).
-        Closed: parseInt(DDRDataRow.UnitsProduced, 10) === 1,
-      }))
-      .sort((a, b) => b.DDR - a.DDR);
-
     if (row.ETIC) {
       _transform.eticDate = moment(row.ETIC).toDate();
     }
@@ -342,7 +326,6 @@ export class DashboardComponent implements OnInit {
       _transform.WorkCenter,
       _transform.EquipID,
       _transform.NameUserID,
-      // _transform.DDR instanceof Array ? _transform.DDR.map(ddr => ddr.Text).join(' ') : '',
       `CFP ${_transform.ApprovalStatus}`,
       _transform.WhenDiscText,
       _transform.DownTimeCodeText,

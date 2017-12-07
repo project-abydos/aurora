@@ -1,24 +1,60 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
-import { cloneDeep, defaults, find } from 'lodash';
+import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { cloneDeep, defaults, find, get } from 'lodash';
 import * as moment from 'moment';
 
-import { ISharePointMDC, ICustomMDCData } from 'app/types';
+import { ISharePointMDC, ICustomMDCData, IParsedDDRInformationRow, ICustomDDR } from 'app/types';
 import { WHEN_DISCOVERED_CODES, DOWN_TIME_CODES, DELAY_CODES, ISelectOption } from 'app/contanstants';
+import { Utilities } from 'services/utilities';
+import { SharepointService } from 'services';
+import { OnChanges } from '@angular/core/src/metadata/lifecycle_hooks';
 
 @Component({
   selector: 'mdrp-job-row',
   templateUrl: './job-row.component.html',
   styleUrls: ['./job-row.component.scss'],
 })
-export class JobRowComponent {
+export class JobRowComponent implements OnChanges {
 
   @Input() row: ICustomMDCData;
   @Output() onStatusChange: EventEmitter<string> = new EventEmitter<string>();
   loadingStatus: boolean;
   isExpanded: boolean;
+  ddr: ICustomDDR[];
+
+  constructor(private _sharePoint: SharepointService) {
+
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    this.ddr = undefined;
+  }
 
   toggleExpanded(row: ICustomMDCData): void {
     this.isExpanded = !this.isExpanded;
+
+    if (this.isExpanded && !this.ddr) {
+
+      this._sharePoint.getJobDDR(this.row.Id).subscribe((response = {}) => {
+
+        const parsedData: IParsedDDRInformationRow | IParsedDDRInformationRow[] = JSON.parse(response.DDR || '[]');
+
+        this.ddr = (parsedData instanceof Array ? parsedData : [parsedData])
+          .map(({ DDRDataRow }) => ({
+            ...DDRDataRow,
+            DDR: parseInt(DDRDataRow.DDR, 10),
+            StartDate: DDRDataRow.StatusDateTimeRow.Date,
+            StartTime: DDRDataRow.StatusDateTimeRow.StartTime,
+            StopTime: DDRDataRow.StatusDateTimeRow.StopTime,
+            Text: Utilities.flatten(DDRDataRow, 'CorrectiveActionNarrativeRow.CorrectiveActionNarrative'),
+            User: DDRDataRow.CorrectedByIMDSCDBUserId,
+            // DeferCode:(<IParsedDDRDataRow>DDRDataRow).
+            Closed: parseInt(DDRDataRow.UnitsProduced, 10) === 1,
+          }))
+          .sort((a, b) => b.DDR - a.DDR);
+
+      });
+
+    }
+
   }
 
   changeJobStatus($event: MouseEvent): void {

@@ -59,7 +59,36 @@ export class SharepointService {
   }
 
   getMDC(): Observable<ISharePointMDC[]> {
-    return this.request('Jobs');
+    const SELECT: string[] = [
+      'ApprovalStatus',
+      'CC',
+      'CFPComments',
+      'Created',
+      'DDR',
+      'DelayCode',
+      'Discrepancy',
+      'DownTimeCode',
+      'ETIC',
+      'EquipID',
+      'Id',
+      'JCN',
+      'LastUpdate',
+      'Modified',
+      'StartDate',
+      'Timestamp',
+      'WUC',
+      'WhenDiscovered',
+      'WorkCenter',
+    ];
+    return this.request(`Jobs?$select=${SELECT}`);
+  }
+
+  getJobDDR(id: number): Observable<ISharePointMDC> {
+    const SELECT: string[] = [
+      'DDR',
+      'Modified',
+    ];
+    return this.request(`Jobs(${id})?$select=${SELECT}`);
   }
 
   getAppMetadata(key: string): Observable<ISharePointAppMetadata> {
