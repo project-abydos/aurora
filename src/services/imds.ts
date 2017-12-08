@@ -11,6 +11,7 @@ import { ISharePointMDC, IParsedIMDSXML, IParsedEventDataRow, ISharePointAppMeta
 import { timer } from 'rxjs/observable/timer';
 import { SharepointService } from './sharepoint';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Moment } from 'moment';
 
 @Injectable()
 export class IMDSService {
@@ -39,14 +40,27 @@ export class IMDSService {
         const MINUTE: number = 60 * SECOND;
 
         if (this._crossDomainService.imdsWindow) {
+
             this.syncTimestamp.subscribe(response => this._syncTimestampValue = response);
             this.workcenters.subscribe(workcenters =>
                 timer(0, 10 * MINUTE).subscribe(() =>
                     workcenters.forEach((workcenter, index) =>
                         setTimeout(() => this._crossDomainService.peform380SyncOperation(workcenter), 10 * SECOND * index))),
             );
+            timer(MINUTE, 10 * MINUTE).subscribe(() =>
+                this._sharePointService.getMDC().subscribe(jobs =>
+                    jobs.forEach((job, index) => {
+                        const over15Mins: boolean = Utilities.convertJobTimestamp(job.Timestamp).diff(moment(), 'minutes') > -10;
+                        if (over15Mins) {
+                            this.fetchDDR(job.JCN);
+                        }
+                    })),
+            );
         }
     });
+
+    // Prevent running more than once every second
+    fetchDDR: Function = debounce((jcn: string) => this._crossDomainService.peformDDRSyncOperation(jcn), 1000);
 
     constructor(
         private _crossDomainService: CrossDomainService,
@@ -59,9 +73,6 @@ export class IMDSService {
             .subscribe(response => this.workcenters.next(response));
     }
 
-    fetchDDR(jcn: string): void {
-        this._crossDomainService.peformDDRSyncOperation(jcn);
-    }
 
     private _processXML(xml: string): void {
 
@@ -103,15 +114,14 @@ export class IMDSService {
                 const ddrInfoRow: IParsedDDRInformationRow | IParsedDDRInformationRow[] =
                     get(EventDataRow, 'WorkcenterEventDataRow.DDRInformationDataRow') || [{}];
                 const lastUpdate: IParsedDDRDataRow = ddrInfoRow instanceof Array ? last(ddrInfoRow).DDRDataRow : ddrInfoRow.DDRDataRow;
-                const { StatusDateTimeRow } = lastUpdate;
 
                 if (lastUpdate) {
                     this._imds.next({
                         JCN: EventDataRow.EventId,
-                        DelayCode: EventDataRow.DeferCode,
+                        DelayCode: WorkcenterEventDataRow.DeferCode,
                         LastUpdate: Utilities.flatten(lastUpdate, 'CorrectiveActionNarrativeRow.CorrectiveActionNarrative'),
-                        DDR: JSON.stringify(ddrInfoRow),
-                        WUC: lastUpdate.WorkUnitCode,
+                        DDR: JSON.stringify(WorkcenterEventDataRow instanceof Array ? WorkcenterEventDataRow : [WorkcenterEventDataRow]),
+                        WUC: WorkcenterEventDataRow.WorkUnitCode,
                         WhenDiscovered: lastUpdate.WhenDiscoveredCode,
                     });
                 }

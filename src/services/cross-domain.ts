@@ -73,7 +73,6 @@ export class CrossDomainService {
         const data: any = _event[state];
 
         switch (state) {
-
             case 'ACTIVATE':
                 return this._bindWindow(event);
 

@@ -251,31 +251,21 @@ export class DashboardComponent implements OnInit {
     let searchTerms: string[] = [];
     const matchId: number = findIndex(this.mdc, { Id: row.Id }) || findIndex(this.mdc, { JCN: row.JCN });
 
-    const diffMap: CalendarSpec = {
-      sameDay: '[Today at] HH:mm',
-      nextDay: '[Tomorrow]',
-      nextWeek: '[Next Week]',
-      lastDay: '[Yesterday]',
-      lastWeek: 'M-D-YYYY',
-      sameElse: 'M-D-YYYY',
-    };
-
     const now: Moment = moment();
     const _transform: ICustomMDCData = <ICustomMDCData>cloneDeep(row);
     const newJob: boolean = !_transform.JCN;
     const startDate: Moment = newJob ? moment.utc(Utilities.convertDate(_transform.StartDate)) : undefined;
     const discrepancyText: string = _transform.Discrepancy.toUpperCase();
-    const julianDate: Moment = newJob ? startDate : moment.utc(_transform.JCN.slice(0, 5), 'YYDDDD').local();
+    const julianDate: Moment = newJob ? startDate : Utilities.parseJCN(_transform.JCN);
     const juliantDateDiff: number = now.diff(julianDate, 'days');
-    const timestampMoment: Moment = moment.utc(row.Timestamp, 'YYDDDD HH:mm:ss').local();
-    const timestampDiff: string = timestampMoment.calendar(undefined, diffMap);
+    const timestampMoment: Moment = Utilities.convertJobTimestamp(row.Timestamp);
 
     _transform.ApprovalStatus = row.ApprovalStatus || 'Pending';
-    _transform.timeStampPretty = newJob ? startDate.format('YYDDDD [at] HH:mm') : timestampDiff;
+    _transform.timeStampPretty = newJob ? startDate.format('YYDDDD [at] HH:mm') : Utilities.prettyTimeDiff(timestampMoment);
     _transform.WhenDiscText = row.WhenDiscovered ? `${row.WhenDiscovered} - ${WHEN_DISCOVERED_CODES[row.WhenDiscovered]}` : '';
     _transform.DownTimeCodeText = row.DownTimeCode ? `${row.DownTimeCode} - ${DOWN_TIME_CODES[row.DownTimeCode]}` : '';
     _transform.DelayCodeText = row.DelayCode ? `${row.DelayCode} - ${DELAY_CODES[row.DelayCode]}` : '';
-    _transform.prettyJCN = julianDate.calendar(undefined, { ...diffMap, sameDay: '[Today]' });
+    _transform.prettyJCN = Utilities.prettyTimeDiff(julianDate, { sameDay: '[Today]' });
     _transform.tags = [];
 
     _transform.CCText = {

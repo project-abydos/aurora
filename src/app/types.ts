@@ -74,7 +74,18 @@ export interface ICustomMDCData extends ISharePointMDC {
 }
 
 export interface ICustomDDR {
-    DDR: number;
+    DeferCode: string;
+    DeferText: string;
+    Narrative: string;
+    DDR: {
+        DDR: number;
+        StartDate: string;
+        StartTime: string;
+        StopTime: string;
+        Text: string;
+        User: string;
+        Closed: boolean;
+    }[];
 }
 
 export interface IParsedDDRDataRow {
