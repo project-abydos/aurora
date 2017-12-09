@@ -2,7 +2,16 @@ import { get, defaults } from 'lodash';
 import * as moment from 'moment';
 import { Moment, CalendarSpec } from 'moment';
 
+const DELAY: number = 2000;
+
+const imdsDelay: Function[] = [];
+setInterval(() => imdsDelay.length && imdsDelay.pop()(), DELAY);
+
 export class Utilities {
+
+    static imdsTick(callback: Function): void {
+        imdsDelay.push(callback);
+    }
 
     static convertDate(text: string): Date {
         return new Date(parseInt(text.replace(/[^\d]/g, ''), 10));

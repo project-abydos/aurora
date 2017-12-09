@@ -12,6 +12,7 @@ import { timer } from 'rxjs/observable/timer';
 import { SharepointService } from './sharepoint';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Moment } from 'moment';
+import { setTimeout } from 'timers';
 
 @Injectable()
 export class IMDSService {
@@ -45,22 +46,11 @@ export class IMDSService {
             this.workcenters.subscribe(workcenters =>
                 timer(0, 10 * MINUTE).subscribe(() =>
                     workcenters.forEach((workcenter, index) =>
-                        setTimeout(() => this._crossDomainService.peform380SyncOperation(workcenter), 10 * SECOND * index))),
-            );
-            timer(MINUTE, 10 * MINUTE).subscribe(() =>
-                this._sharePointService.getMDC().subscribe(jobs =>
-                    jobs.forEach((job, index) => {
-                        const over15Mins: boolean = Utilities.convertJobTimestamp(job.Timestamp).diff(moment(), 'minutes') > -10;
-                        if (over15Mins) {
-                            this.fetchDDR(job.JCN);
-                        }
-                    })),
-            );
+                        Utilities.imdsTick(() => this._crossDomainService.perform380SyncOperation(workcenter)),
+                    )));
+
         }
     });
-
-    // Prevent running more than once every second
-    fetchDDR: Function = debounce((jcn: string) => this._crossDomainService.peformDDRSyncOperation(jcn), 1000);
 
     constructor(
         private _crossDomainService: CrossDomainService,
@@ -73,6 +63,10 @@ export class IMDSService {
             .subscribe(response => this.workcenters.next(response));
     }
 
+    // Prevent running more than once every second
+    fetchDDR(jcn: string): void {
+        this._crossDomainService.performDDRSyncOperation(jcn);
+    }
 
     private _processXML(xml: string): void {
 
@@ -103,6 +97,13 @@ export class IMDSService {
                         LastUpdate: Utilities.flatten(row, 'WorkcenterEventDataRow.WorkcenterEventNarrativeRow.WorkcenterEventNarrative'),
                     }));
 
+                this._sharePointService.getMDC().subscribe(jobs =>
+                    jobs.forEach((job, index) => {
+                        if (!find(EventDataRow, { JCN: job.JCN })) {
+                            Utilities.imdsTick(() => this.fetchDDR(job.JCN));
+                        }
+                    }));
+
             }
 
             if (result.EventDataRow) {
@@ -115,16 +116,15 @@ export class IMDSService {
                     get(EventDataRow, 'WorkcenterEventDataRow.DDRInformationDataRow') || [{}];
                 const lastUpdate: IParsedDDRDataRow = ddrInfoRow instanceof Array ? last(ddrInfoRow).DDRDataRow : ddrInfoRow.DDRDataRow;
 
-                if (lastUpdate) {
-                    this._imds.next({
-                        JCN: EventDataRow.EventId,
-                        DelayCode: WorkcenterEventDataRow.DeferCode,
-                        LastUpdate: Utilities.flatten(lastUpdate, 'CorrectiveActionNarrativeRow.CorrectiveActionNarrative'),
-                        DDR: JSON.stringify(WorkcenterEventDataRow instanceof Array ? WorkcenterEventDataRow : [WorkcenterEventDataRow]),
-                        WUC: WorkcenterEventDataRow.WorkUnitCode,
-                        WhenDiscovered: lastUpdate.WhenDiscoveredCode,
-                    });
-                }
+                this._imds.next({
+                    Closed: lastUpdate ? parseInt(lastUpdate.UnitsProduced, 10) > 0 : false,
+                    JCN: EventDataRow.EventId,
+                    DelayCode: WorkcenterEventDataRow.DeferCode,
+                    LastUpdate: Utilities.flatten(lastUpdate, 'CorrectiveActionNarrativeRow.CorrectiveActionNarrative') || WorkcenterEventDataRow.WorkcenterEventNarrative,
+                    DDR: JSON.stringify(WorkcenterEventDataRow instanceof Array ? WorkcenterEventDataRow : [WorkcenterEventDataRow]),
+                    WUC: WorkcenterEventDataRow.WorkUnitCode,
+                    WhenDiscovered: String(get(lastUpdate, 'WhenDiscoveredCode') || ''),
+                });
 
             }
 

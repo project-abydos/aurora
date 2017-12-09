@@ -134,6 +134,7 @@ export class DashboardComponent implements OnInit {
 
   exportData(): void {
     const fields: string[] = [
+      'Closed',
       'JCN',
       'EquipID',
       'WUC',
@@ -185,7 +186,8 @@ export class DashboardComponent implements OnInit {
 
       if (timestampChange && !job.DDR && job.JCN) {
         // Detected timestamp change, send a request to update DDR and skip for now
-        this._imdsService.fetchDDR(match.JCN);
+        Utilities.imdsTick(() => this._imdsService.fetchDDR(match.JCN));
+
         return;
       }
 
@@ -205,7 +207,7 @@ export class DashboardComponent implements OnInit {
       // New job
       if (updateSharePoint) {
         this._sharePointService.createJob(job).subscribe(update => this.transformMDCRow(update));
-        this._imdsService.fetchDDR(job.JCN);
+        Utilities.imdsTick(() => this._imdsService.fetchDDR(job.JCN));
       } else {
         this.transformMDCRow(job);
       }

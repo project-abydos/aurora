@@ -24,6 +24,7 @@ export class JobRowComponent implements OnChanges {
   constructor(private _sharePoint: SharepointService) {
 
   }
+
   ngOnChanges(changes: SimpleChanges): void {
     this.ddr = undefined;
   }

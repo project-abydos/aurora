@@ -11,6 +11,7 @@ if (environment.production) {
 
 SharepointService.CONFIG.BASE_URL = 'https://cs2.eis.af.mil/sites/10383/mdrp/_vti_bin/ListData.svc';
 SharepointService.CONFIG.JOB_FIELDS = [
+  'Closed',
   'EquipID',
   'JCN',
   'StartDate',

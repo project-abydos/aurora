@@ -86,13 +86,13 @@ export class CrossDomainService {
         }
     }
 
-    peform380SyncOperation = (org: string): void => {
+    perform380SyncOperation = (org: string): void => {
         if (this.imdsWindow) {
             this.imdsWindow.postMessage({ SYNC_380: IMDS_CODE_380 + org }, '*');
         }
     }
 
-    peformDDRSyncOperation = (jcn: string): void => {
+    performDDRSyncOperation = (jcn: string): void => {
         if (this.imdsWindow) {
             this.imdsWindow.postMessage({ SYNC_DDR: IMDS_CODE_DDR + jcn }, '*');
         }
