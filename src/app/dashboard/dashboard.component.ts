@@ -89,6 +89,7 @@ export class DashboardComponent implements OnInit {
       if (job.Timestamp) {
         imdsCache[job.JCN] = job;
       } else {
+        imdsCache[job.JCN] = imdsCache[job.JCN] || cloneDeep(find(this.mdc, { JCN: job.JCN }));
         assignIn(imdsCache[job.JCN], job);
       }
       this.addOrUpdateJob(imdsCache[job.JCN], true);
@@ -184,10 +185,9 @@ export class DashboardComponent implements OnInit {
       const timestampChange: boolean = match.Timestamp !== job.Timestamp;
       const etagChange: boolean = job.__metadata && (match.__metadata.etag !== job.__metadata.etag);
 
-      if (timestampChange && !job.DDR && job.JCN) {
+      if (updateSharePoint && timestampChange && !job.DDR && job.JCN) {
         // Detected timestamp change, send a request to update DDR and skip for now
         Utilities.imdsTick(() => this._imdsService.fetchDDR(match.JCN));
-
         return;
       }
 
@@ -251,7 +251,7 @@ export class DashboardComponent implements OnInit {
     }
 
     let searchTerms: string[] = [];
-    const matchId: number = findIndex(this.mdc, { Id: row.Id }) || findIndex(this.mdc, { JCN: row.JCN });
+    const matchId: number = row && findIndex(this.mdc, { Id: row.Id }) || findIndex(this.mdc, { JCN: row.JCN });
 
     const now: Moment = moment();
     const _transform: ICustomMDCData = <ICustomMDCData>cloneDeep(row);

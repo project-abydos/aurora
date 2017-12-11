@@ -52,7 +52,7 @@ export class JobRowComponent implements OnChanges {
   }
 
   convertDDR(ddr: IParsedDDRInformationRow | IParsedDDRInformationRow[]): ICustomDDR[] {
-    return (ddr instanceof Array ? ddr : [ddr])
+    return (ddr ? (ddr instanceof Array ? ddr : [ddr]) : [])
       .map(({ DDRDataRow }) => ({
         ...DDRDataRow,
         ddr: parseInt(DDRDataRow.DDR, 10),

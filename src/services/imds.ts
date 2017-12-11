@@ -85,21 +85,22 @@ export class IMDSService {
 
                 console.log(EventDataRow);
 
-                EventDataRow.forEach((row, index) =>
+                EventDataRow.forEach((job, index) =>
                     this._imds.next({
-                        JCN: row.EventId,
-                        CC: row.EventSymbol,
-                        Discrepancy: Utilities.flatten(row, 'DiscrepancyNarrativeRow.DiscrepancyNarrative'),
+                        JCN: job.EventId,
+                        CC: job.EventSymbol,
+                        Discrepancy: Utilities.flatten(job, 'DiscrepancyNarrativeRow.DiscrepancyNarrative'),
                         WorkCenter: workcenter,
-                        Timestamp: row.EventDateTimeStamp,
-                        EquipID: row.WorkcenterEventDataRow.EquipmentIdOrPartNumber,
-                        DelayCode: row.DeferCode,
-                        LastUpdate: Utilities.flatten(row, 'WorkcenterEventDataRow.WorkcenterEventNarrativeRow.WorkcenterEventNarrative'),
+                        Timestamp: job.EventDateTimeStamp,
+                        EquipID: job.WorkcenterEventDataRow.EquipmentIdOrPartNumber,
+                        DelayCode: job.DeferCode,
+                        LastUpdate: Utilities.flatten(job, 'WorkcenterEventDataRow.WorkcenterEventNarrativeRow.WorkcenterEventNarrative'),
                     }));
 
-                this._sharePointService.getMDC().subscribe(jobs =>
-                    jobs.forEach((job, index) => {
-                        if (!find(EventDataRow, { JCN: job.JCN })) {
+                this._sharePointService.getMDC().subscribe(jobs => jobs
+                    .filter(job => workcenter === job.WorkCenter)
+                    .forEach((job, index) => {
+                        if (!find(EventDataRow, { EventId: job.JCN })) {
                             Utilities.imdsTick(() => this.fetchDDR(job.JCN));
                         }
                     }));
