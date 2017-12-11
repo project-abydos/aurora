@@ -93,7 +93,14 @@
         width: 30%;
     }
     .job-history {
-        width: 100%;
+        width: 95%;
+        margin: 50px auto;
+        mat-card-header mat-card-title {
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: .05em;
+            color: #555;
+        }
         mat-card-content {
             display: flex;
             flex-direction: column;

@@ -35,24 +35,30 @@
 </div>
 
 <div class="mat-row job-details expanded-row {{row.CC}}" *ngIf="isExpanded">
-  <mat-card class="job-history">
+  <mat-card class="job-history" *ngFor="let wce of jobData">
+    <mat-card-header>
+      <mat-card-title>{{wce.Narrative}}</mat-card-title>
+    </mat-card-header>
     <mat-card-content>
-      <h4 *ngIf="!ddr" class="mat-progress-bar-secondary mat-progress-bar-fill mat-progress-bar-element">Loading data...</h4>
-      <div class="ddr-row {{row.Symbol}}" *ngFor="let row of ddr">
-        <div class="ddr">{{row.DDR}}</div>
+      <h4 *ngIf="!wce" class="mat-progress-bar-secondary mat-progress-bar-fill mat-progress-bar-element">Loading data...</h4>
+      <div class="ddr-row {{ddr.Symbol}}" *ngFor="let ddr of wce.DDR">
+        <div class="ddr">
+          {{ddr.ddr}}
+          <mat-chip class="tag" selected="true" color="primary" *ngIf="ddr.Closed">Closed</mat-chip>
+        </div>
         <div class="data">
           <h3>
-            <span>{{row.StartDate}}: {{row.StartTime}} - {{row.StopTime}}</span>
-            <span>WUC: {{row.WorkUnitCode}}</span>
-            <span *ngIf="row.DeferCode">Defer Code: {{row.DeferCode}}</span>
-            <span>User: {{row.User}}</span>
+            <span>{{ddr.StartDate}}: {{ddr.StartTime}} - {{ddr.StopTime}}</span>
+            <span>WUC: {{ddr.WorkUnitCode}}</span>
+            <span *ngIf="ddr.DeferCode">Defer Code: {{ddr.DeferCode}}</span>
+            <span>User: {{ddr.User}}</span>
           </h3>
-          <p>{{row.Text}}</p>
+          <p>{{ddr.Text}}</p>
           <small>
-            <span *ngIf="row.WhenDiscoveredCode">When Disc: {{row.WhenDiscoveredCode}}</span>
-            <span *ngIf="row.HowMalfunctionCode">How Mal: {{row.HowMalfunctionCode}}</span>
-            <span *ngIf="row.ActionTakenCode">Action Taken: {{row.ActionTakenCode}}</span>
-            <span *ngIf="row.CrewSize">Crew Size: {{row.CrewSize}}</span>
+            <span *ngIf="ddr.WhenDiscoveredCode">When Disc: {{ddr.WhenDiscoveredCode}}</span>
+            <span *ngIf="ddr.HowMalfunctionCode">How Mal: {{ddr.HowMalfunctionCode}}</span>
+            <span *ngIf="ddr.ActionTakenCode">Action Taken: {{ddr.ActionTakenCode}}</span>
+            <span *ngIf="ddr.CrewSize">Crew Size: {{ddr.CrewSize}}</span>
           </small>
         </div>
       </div>

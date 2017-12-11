@@ -32,11 +32,12 @@ td-layout-manage-list .mat-toolbar {
     font-weight: 400;
 }
 
-td-search-box, .td-search-box {
-    height:50px;
+td-search-box,
+.td-search-box {
+    height: 50px;
 }
 
-td-chips{
+td-chips {
     .mat-input-infix {
         padding-top: 0!important;
     }
@@ -51,18 +52,15 @@ td-chips{
     }
 }
 
-
 .dashboard {
     height: calc(100vh - 235px)!important;
     margin-top: 20px;
     overflow-y: auto;
     width: 100%;
-
     div {
         margin: 0;
         padding: 0;
-    }    
-
+    }
     mdrp-job-row.over30:before {
         content: "⬇ Jobs Without an Update for 30+ Days";
         display: block;
@@ -70,10 +68,10 @@ td-chips{
         font-size: 1.5em;
         border-bottom: 3px solid #333;
         font-variant: small-caps;
-        background: #eee;     
+        background: #eee;
     }
-
-    .mat-row, .mat-header-row {
+    .mat-row,
+    .mat-header-row {
         border-left: 10px solid transparent;
         &.R {
             border-left-color: #c60000;
@@ -95,8 +93,7 @@ td-chips{
         display: inline-block;
         box-sizing: border-box;
         margin: 0;
-        vertical-align: middle;        
-
+        vertical-align: middle;
         &.JCN {
             width: 100px;
         }
@@ -116,10 +113,15 @@ td-chips{
             width: 150px;
         }
         .tag.mat-chip.mat-yellow {
-            background:#FFC60C;
+            background: #FFC60C;
+        }
+        .tag.mat-chip.mat-red {
+            color: white;
+            background: rgb(255, 69, 12);
         }
     }
-    .dashboard-header, .dashboard-footer {
+    .dashboard-header,
+    .dashboard-footer {
         position: absolute;
         top: 45px;
         left: -3px;
@@ -145,7 +147,7 @@ td-chips{
         border-bottom-right-radius: 4px;
         display: flex;
         .mat-header-cell {
-            width:100%;
+            width: 100%;
             text-align: center;
         }
     }
@@ -153,7 +155,7 @@ td-chips{
         .mat-row {
             cursor: pointer;
         }
-        .ellipses {            
+        .ellipses {
             text-overflow: ellipsis;
             white-space: nowrap;
             overflow: hidden;
@@ -162,8 +164,7 @@ td-chips{
             background: $expand-bg-color;
             margin-top: -1em;
             color: $frost;
-        }
-        // .td-data-table-cell-content-wrapper {
+        } // .td-data-table-cell-content-wrapper {
         //     float: left;
         // }
         .mat-row {
@@ -177,13 +178,14 @@ td-chips{
             }
         }
         .mat-row.expanded-row {
-            display: flex;                    
+            display: flex;
         }
-        .mat-row.expanded, .mat-row.expanded-row {    
+        .mat-row.expanded,
+        .mat-row.expanded-row {
             background-color: $expand-bg-color!important;
             border-bottom: none;
             height: auto;
-            .ellipses {                
+            .ellipses {
                 line-height: 2em;
             }
             .mat-cell {
@@ -192,8 +194,9 @@ td-chips{
                 span {
                     text-overflow: initial;
                     white-space: normal;
-                }              
-                .mat-select-value-text, .mat-select-arrow {
+                }
+                .mat-select-value-text,
+                .mat-select-arrow {
                     color: $frost;
                 }
             }
@@ -205,7 +208,7 @@ md-basic-chip {
     text-transform: uppercase;
 }
 
-.start-time mat-option, 
+.start-time mat-option,
 .workcenter mat-option {
     text-transform: uppercase;
     text-align: center;

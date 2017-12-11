@@ -74,19 +74,20 @@ export interface ICustomMDCData extends ISharePointMDC {
     parsedDDR?: ICustomDDR[];
 }
 
-export interface ICustomDDR {
+export interface ICustomDDR extends IParsedDDRDataRow {
+    ddr: number;
+    StartDate: string;
+    StartTime: string;
+    StopTime: string;
+    Text: string;
+    User: string;
+    Closed: boolean;
+}
+export interface ICustomDDRWCE {
     DeferCode: string;
     DeferText: string;
     Narrative: string;
-    DDR: {
-        DDR: number;
-        StartDate: string;
-        StartTime: string;
-        StopTime: string;
-        Text: string;
-        User: string;
-        Closed: boolean;
-    }[];
+    DDR: ICustomDDR[];
 }
 
 export interface IParsedDDRDataRow {
@@ -174,7 +175,7 @@ export interface IParseDDREventDataRow {
     WorkcenterEventNarrativeRow: string;
     WorkcenterEventNarrative: string;
     EmbedTransaction2: string;
-    DDRInformationDataRow: IParsedDDRInformationRow[];
+    DDRInformationDataRow: IParsedDDRInformationRow | IParsedDDRInformationRow[];
 }
 
 export interface IParsedIMDSXML {

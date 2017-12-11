@@ -262,6 +262,7 @@ export class DashboardComponent implements OnInit {
     const juliantDateDiff: number = now.diff(julianDate, 'days');
     const timestampMoment: Moment = Utilities.convertJobTimestamp(row.Timestamp);
 
+    _transform.LastUpdate = row.LastUpdate === 'undefined' ? 'New Job' : row.LastUpdate;
     _transform.ApprovalStatus = row.ApprovalStatus || 'Pending';
     _transform.timeStampPretty = newJob ? startDate.format('YYDDDD [at] HH:mm') : Utilities.prettyTimeDiff(timestampMoment);
     _transform.WhenDiscText = row.WhenDiscovered ? `${row.WhenDiscovered} - ${WHEN_DISCOVERED_CODES[row.WhenDiscovered]}` : '';
@@ -306,6 +307,10 @@ export class DashboardComponent implements OnInit {
 
     if (newJob) {
       searchTerms.push('new job');
+    }
+
+    if (row.Closed) {
+      _transform.tags.push({ title: 'Closed', style: 'red' });
     }
 
     _transform.search = searchTerms.concat([
