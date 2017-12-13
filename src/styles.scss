@@ -200,10 +200,10 @@ td-chips {
 .tag.mat-chip.mat-yellow {
     background: #FFC60C;
 }
+
 .tag.mat-chip.mat-dark {
     color: white;
-    background: #444;
-    // padding-left: 1.5em;
+    background: #444; // padding-left: 1.5em;
     // padding-right: 1.5em;
 }
 
@@ -221,4 +221,8 @@ md-basic-chip {
 
 .uppercase {
     text-transform: uppercase;
+}
+
+.mat-card-header-text {
+    flex: 1;
 }

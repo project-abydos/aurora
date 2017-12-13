@@ -219,3 +219,7 @@ export interface IParsedIMDSXML {
     Transaction: string;
     TypeOutput: string;
 }
+export interface IStatusChange {
+    status?: string;
+    jcn?: string;
+}

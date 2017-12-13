@@ -4,8 +4,8 @@
   "private": true,
   "description": "",
   "scripts": {
-    "start": "ng serve",
-    "hmr": "ng serve --hmr -e=hmr",
+    "start": "ng serve  --proxy-config proxy.conf.json",
+    "hmr": "ng serve --hmr -e=hmr  --proxy-config proxy.conf.json",
     "lint": "ng lint",
     "build": "ng build --prod"
   },

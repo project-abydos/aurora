@@ -28,7 +28,7 @@
 
   <div class="mat-cell ApprovalStatus">
     <span>
-      <button mat-button (click)="changeJobStatus($event)">{{loadingStatus ? "Updating..." : row.ApprovalStatus}}</button>
+      <mdt-update-job [job]="row" (onStatusChange)="onStatusChange.next($event)"></mdt-update-job>
     </span>
   </div>
 
@@ -37,7 +37,10 @@
 <div class="mat-row job-details expanded-row {{row.CC}}" *ngIf="isExpanded">
   <mat-card class="job-history" *ngFor="let wce of jobData">
     <mat-card-header>
-      <mat-card-title>{{wce.Narrative}}</mat-card-title>
+      <mat-card-title>
+        <span>{{wce.Narrative}}</span>
+        <span class="defer-code" *ngIf="wce.DeferCode">Defer Code: {{wce.DeferCode}}</span>
+      </mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <h4 *ngIf="!wce" class="mat-progress-bar-secondary mat-progress-bar-fill mat-progress-bar-element">Loading data...</h4>
@@ -50,7 +53,6 @@
           <h3>
             <span>{{ddr.StartDate}}: {{ddr.StartTime}} - {{ddr.StopTime}}</span>
             <span>WUC: {{ddr.WorkUnitCode}}</span>
-            <span *ngIf="ddr.DeferCode">Defer Code: {{ddr.DeferCode}}</span>
             <span>User: {{ddr.User}}</span>
           </h3>
           <p>{{ddr.Text}}</p>
@@ -94,6 +96,10 @@
       <span>{{row.timeStampPretty}}</span>
     </p>
     <p>
+      <span>ETIC</span>
+      <span>{{etic}}</span>
+    </p>
+    <p>
       <span>WUC</span>
       <span>{{row.WUC}}</span>
     </p>
@@ -109,7 +115,7 @@
 
   <div class="mat-cell ApprovalStatus">
     <span>
-      <button mat-button (click)="changeJobStatus($event)">{{loadingStatus ? "Updating..." : row.ApprovalStatus}}</button>
+      <mdt-update-job [job]="row" (onStatusChange)="onStatusChange.next($event)"></mdt-update-job>
     </span>
   </div>
 

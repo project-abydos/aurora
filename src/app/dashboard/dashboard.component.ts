@@ -122,15 +122,21 @@ export class DashboardComponent implements OnInit {
       .filter(term => (term.toUpperCase().indexOf(test.toUpperCase()) > -1));
   }
 
-  changeJobStatus(statusUpdate: string, row: ISharePointMDC): void {
+  changeJobStatus(update: { status: string, jcn: string }, row: ISharePointMDC): void {
     const job: ISharePointMDC = {
       __metadata: row.__metadata,
-      JCN: row.JCN,
-      ApprovalStatus: statusUpdate,
     };
 
-    this._sharePointService.updateJob(job).subscribe(update => {
-      row.ApprovalStatus = statusUpdate;
+    if (update.status) {
+      job.ApprovalStatus = update.status;
+    }
+
+    if (update.jcn) {
+      job.JCN = update.jcn;
+    }
+
+    this._sharePointService.updateJob(job).subscribe(response => {
+      row.ApprovalStatus = job.ApprovalStatus;
       this.transformMDCRow(row);
       this.filterWrapper();
     });
@@ -225,7 +231,7 @@ export class DashboardComponent implements OnInit {
       mdc.forEach(row => this.addOrUpdateJob(row, false));
       this.filterWrapper();
       this._loadingService.resolve('mdc');
-      setTimeout(() => this._imdsService.fetch380(), 15 * 1000);
+      setTimeout(() => this._imdsService.fetch380(), 5 * 1000);
     });
   }
 

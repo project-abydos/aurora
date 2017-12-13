@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter
 import { cloneDeep, defaults, find, get } from 'lodash';
 import * as moment from 'moment';
 
-import { ISharePointMDC, ICustomMDCData, IParsedDDRInformationRow, ICustomDDR, IParseDDREventDataRow, ICustomDDRWCE } from 'app/types';
+import { ISharePointMDC, ICustomMDCData, IParsedDDRInformationRow, ICustomDDR, IParseDDREventDataRow, ICustomDDRWCE, IStatusChange } from 'app/types';
 import { WHEN_DISCOVERED_CODES, DOWN_TIME_CODES, DELAY_CODES, ISelectOption } from 'app/contanstants';
 import { Utilities } from 'services/utilities';
 import { SharepointService } from 'services';
@@ -16,9 +16,9 @@ import { OnChanges } from '@angular/core/src/metadata/lifecycle_hooks';
 export class JobRowComponent implements OnChanges {
 
   @Input() row: ICustomMDCData;
-  @Output() onStatusChange: EventEmitter<string> = new EventEmitter<string>();
-  loadingStatus: boolean;
+  @Output() onStatusChange: EventEmitter<IStatusChange> = new EventEmitter<IStatusChange>();
   isExpanded: boolean;
+  etic: string;
   jobData: ICustomDDRWCE[];
 
   constructor(private _sharePoint: SharepointService) {
@@ -28,6 +28,9 @@ export class JobRowComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (get(changes, 'row.currentValue.__metadata.etag') !== get(changes, 'row.previousValue.__metadata.etag')) {
       this.jobData = undefined;
+      if (!this.row.JCN) {
+        this.etic = moment(this.row.eticDate).format('YYDDDD');
+      }
     }
   }
 
@@ -66,25 +69,6 @@ export class JobRowComponent implements OnChanges {
         Closed: parseInt(DDRDataRow.UnitsProduced, 10) === 1,
       }))
       .sort((a, b) => b.ddr - a.ddr);
-  }
-
-  changeJobStatus($event: MouseEvent): void {
-    $event.stopImmediatePropagation();
-    let { ApprovalStatus } = this.row;
-    this.loadingStatus = true;
-    switch (ApprovalStatus) {
-      case 'In Work':
-        ApprovalStatus = 'Done';
-        break;
-
-      case 'Done':
-        ApprovalStatus = 'Pending';
-        break;
-
-      default:
-        ApprovalStatus = 'In Work';
-    }
-    this.onStatusChange.next(ApprovalStatus);
   }
 
 }
