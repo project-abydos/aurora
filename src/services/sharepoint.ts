@@ -65,7 +65,6 @@ export class SharepointService {
       'Closed',
       'CFPComments',
       'Created',
-      'DDR',
       'DelayCode',
       'Discrepancy',
       'DownTimeCode',

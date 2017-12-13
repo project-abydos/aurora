@@ -272,7 +272,7 @@ export class DashboardComponent implements OnInit {
     const juliantDateDiff: number = now.diff(julianDate, 'days');
     const timestampMoment: Moment = Utilities.convertJobTimestamp(row.Timestamp);
 
-    _transform.LastUpdate = row.LastUpdate === 'undefined' ? 'New Job' : row.LastUpdate;
+    _transform.LastUpdate = row.LastUpdate === 'undefined' ? 'First IMDS Sync' : row.LastUpdate;
     _transform.ApprovalStatus = row.ApprovalStatus || 'Pending';
     _transform.timeStampPretty = newJob ? startDate.format('YYDDDD [at] HH:mm') : Utilities.prettyTimeDiff(timestampMoment);
     _transform.WhenDiscText = row.WhenDiscovered ? `${row.WhenDiscovered} - ${WHEN_DISCOVERED_CODES[row.WhenDiscovered]}` : '';
