@@ -44,7 +44,7 @@
       <div class="ddr-row {{ddr.Symbol}}" *ngFor="let ddr of wce.DDR">
         <div class="ddr">
           {{ddr.ddr}}
-          <mat-chip class="tag" selected="true" color="primary" *ngIf="ddr.Closed">Closed</mat-chip>
+          <mat-chip class="tag" selected="true" color="dark" *ngIf="ddr.Closed">Closed</mat-chip>
         </div>
         <div class="data">
           <h3>

@@ -9,7 +9,7 @@ import { SharepointService } from 'services';
 import { OnChanges } from '@angular/core/src/metadata/lifecycle_hooks';
 
 @Component({
-  selector: 'mdrp-job-row',
+  selector: 'mdt-job-row',
   templateUrl: './job-row.component.html',
   styleUrls: ['./job-row.component.scss'],
 })
@@ -26,7 +26,9 @@ export class JobRowComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.jobData = undefined;
+    if (get(changes, 'row.currentValue.__metadata.etag') !== get(changes, 'row.previousValue.__metadata.etag')) {
+      this.jobData = undefined;
+    }
   }
 
   toggleExpanded(row: ICustomMDCData): void {

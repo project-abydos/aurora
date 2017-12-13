@@ -41,14 +41,12 @@ export class IMDSService {
         const MINUTE: number = 60 * SECOND;
 
         if (this._crossDomainService.imdsWindow) {
-
             this.syncTimestamp.subscribe(response => this._syncTimestampValue = response);
             this.workcenters.subscribe(workcenters =>
                 timer(0, 10 * MINUTE).subscribe(() =>
                     workcenters.forEach((workcenter, index) =>
                         Utilities.imdsTick(() => this._crossDomainService.perform380SyncOperation(workcenter)),
                     )));
-
         }
     });
 
@@ -75,7 +73,6 @@ export class IMDSService {
         this._parser.parseString(xml, (err, result: IParsedIMDSXML) => {
 
             if (result.EquipmentDataRow) {
-
                 const workcenter: string = get(result, 'EquipmentDataRow.Workcenter');
                 let { EventDataRow } = result.EquipmentDataRow;
 
@@ -83,33 +80,31 @@ export class IMDSService {
                 EventDataRow = isArray(EventDataRow) ? EventDataRow :
                     (EventDataRow ? [<any>EventDataRow] : []);
 
-                console.log(EventDataRow);
+                console.log('380', EventDataRow);
 
-                EventDataRow.forEach((job, index) =>
-                    this._imds.next({
-                        JCN: job.EventId,
-                        CC: job.EventSymbol,
-                        Discrepancy: Utilities.flatten(job, 'DiscrepancyNarrativeRow.DiscrepancyNarrative'),
-                        WorkCenter: workcenter,
-                        Timestamp: job.EventDateTimeStamp,
-                        EquipID: job.WorkcenterEventDataRow.EquipmentIdOrPartNumber,
-                        DelayCode: job.DeferCode,
-                        LastUpdate: Utilities.flatten(job, 'WorkcenterEventDataRow.WorkcenterEventNarrativeRow.WorkcenterEventNarrative'),
-                    }));
+                EventDataRow.forEach(job => this._imds.next({
+                    JCN: job.EventId,
+                    CC: job.EventSymbol,
+                    Discrepancy: Utilities.flatten(job, 'DiscrepancyNarrativeRow.DiscrepancyNarrative'),
+                    WorkCenter: workcenter,
+                    Timestamp: job.EventDateTimeStamp,
+                    EquipID: job.WorkcenterEventDataRow.EquipmentIdOrPartNumber,
+                    DelayCode: job.DeferCode,
+                    LastUpdate: Utilities.flatten(job, 'WorkcenterEventDataRow.WorkcenterEventNarrativeRow.WorkcenterEventNarrative'),
+                }));
 
                 this._sharePointService.getMDC().subscribe(jobs => jobs
-                    .filter(job => workcenter === job.WorkCenter)
-                    .forEach((job, index) => {
-                        if (!find(EventDataRow, { EventId: job.JCN })) {
-                            Utilities.imdsTick(() => this.fetchDDR(job.JCN));
+                    .filter(job => !job.Closed && job.WorkCenter === workcenter)
+                    .forEach(({ JCN }) => {
+                        if (!find(EventDataRow, { EventId: JCN })) {
+                            Utilities.imdsTick(() => this.fetchDDR(JCN));
                         }
-                    }));
-
+                    }),
+                );
             }
 
             if (result.EventDataRow) {
-
-                console.log(result.EventDataRow);
+                console.log('DDR', result.EventDataRow);
 
                 let { EventDataRow } = result;
                 const { WorkcenterEventDataRow } = EventDataRow;
@@ -126,7 +121,6 @@ export class IMDSService {
                     WUC: WorkcenterEventDataRow.WorkUnitCode,
                     WhenDiscovered: String(get(lastUpdate, 'WhenDiscoveredCode') || ''),
                 });
-
             }
 
         });

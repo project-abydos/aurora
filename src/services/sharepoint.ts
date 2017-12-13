@@ -62,6 +62,7 @@ export class SharepointService {
     const SELECT: string[] = [
       'ApprovalStatus',
       'CC',
+      'Closed',
       'CFPComments',
       'Created',
       'DDR',

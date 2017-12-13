@@ -5,7 +5,7 @@ import { Subject, BehaviorSubject } from 'rxjs';
 const IMDS_SYNC_HTML: string = `
     <html>
         <head>
-            <title>MDRP <> IMDS Connection</title>
+            <title>MDT <> IMDS Connection</title>
         </head>
         <body>
             <style>
@@ -40,7 +40,7 @@ const IMDS_SYNC_HTML: string = `
                 }
             </style>
             <div class="card">
-                <h1>Connected to MDRP - <em>Please do not close this window</em></h1>
+                <h1>Connected to MDT - <em>Please do not close this window</em></h1>
             </div>
             <div class="card sync-progress" id="sync-log">
             </div>

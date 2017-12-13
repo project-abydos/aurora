@@ -61,7 +61,7 @@ td-chips {
         margin: 0;
         padding: 0;
     }
-    mdrp-job-row.over30:before {
+    mdt-job-row.over30:before {
         content: "⬇ Jobs Without an Update for 30+ Days";
         display: block;
         padding: 20px 0 10px 15px;
@@ -111,13 +111,6 @@ td-chips {
         }
         &.ApprovalStatus {
             width: 150px;
-        }
-        .tag.mat-chip.mat-yellow {
-            background: #FFC60C;
-        }
-        .tag.mat-chip.mat-red {
-            color: white;
-            background: rgb(255, 69, 12);
         }
     }
     .dashboard-header,
@@ -202,6 +195,16 @@ td-chips {
             }
         }
     }
+}
+
+.tag.mat-chip.mat-yellow {
+    background: #FFC60C;
+}
+.tag.mat-chip.mat-dark {
+    color: white;
+    background: #444;
+    // padding-left: 1.5em;
+    // padding-right: 1.5em;
 }
 
 md-basic-chip {

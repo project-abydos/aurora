@@ -89,7 +89,10 @@ export class DashboardComponent implements OnInit {
       if (job.Timestamp) {
         imdsCache[job.JCN] = job;
       } else {
-        imdsCache[job.JCN] = imdsCache[job.JCN] || cloneDeep(find(this.mdc, { JCN: job.JCN }));
+        if (!imdsCache[job.JCN]) {
+          job.Timestamp = moment().local().format('YYDDDD HH:mm:ss');
+          imdsCache[job.JCN] = cloneDeep(find(this.mdc, { JCN: job.JCN }));
+        }
         assignIn(imdsCache[job.JCN], job);
       }
       this.addOrUpdateJob(imdsCache[job.JCN], true);
@@ -152,7 +155,7 @@ export class DashboardComponent implements OnInit {
     const csvData: Blob = new Blob([csvTextData], {
       type: 'text/csv;charset=charset=utf-8',
     });
-    saveAs(csvData, 'MDRP Export' + (this.searchTerms.length ? ' ' + this.searchTerms.join('-') : '') + '.csv');
+    saveAs(csvData, 'MDT Export' + (this.searchTerms.length ? ' ' + this.searchTerms.join('-') : '') + '.csv');
   }
 
   openJob(): void {
@@ -194,6 +197,7 @@ export class DashboardComponent implements OnInit {
       if (timestampChange || etagChange) {
         // Job has been updated since last pull
         if (updateSharePoint) {
+          job.ApprovalStatus = 'Pending';
           // Also write the changes to SharePoint
           assignIn(match, job);
           job.__metadata = match.__metadata;
@@ -277,24 +281,36 @@ export class DashboardComponent implements OnInit {
       G: 'Green Job',
     }[_transform.CC];
 
-    if (row.ETIC) {
-      _transform.eticDate = moment(row.ETIC).toDate();
-    }
+    if (row.Closed) {
 
-    if (now.diff(timestampMoment.startOf('day'), 'days') > 30) {
-      _transform.over30Days = true;
-      searchTerms.push('Needs Update');
-    }
+      _transform.tags.push({ title: 'Closed', style: 'dark' });
 
-    if (juliantDateDiff > 89) {
-      _transform.tags.push({ title: '90+ Open', style: 'accent' });
-    }
-
-    if (juliantDateDiff < 0) {
-      _transform.tags.push({ title: 'Scheduled', style: 'primary' });
-      searchTerms.push('scheduled job');
     } else {
-      searchTerms.push('active job');
+
+      if (row.ETIC) {
+        _transform.eticDate = moment(row.ETIC).toDate();
+      }
+
+      if (now.diff(timestampMoment.startOf('day'), 'days') > 30) {
+        _transform.over30Days = true;
+        searchTerms.push('Needs Update');
+      }
+
+      if (juliantDateDiff > 89) {
+        _transform.tags.push({ title: '90+ Open', style: 'accent' });
+      }
+
+      if (juliantDateDiff < 0) {
+        _transform.tags.push({ title: 'Scheduled', style: 'primary' });
+        searchTerms.push('scheduled job');
+      } else {
+        searchTerms.push('active job');
+      }
+
+      if (newJob) {
+        searchTerms.push('new job');
+      }
+
     }
 
     if (discrepancyText.includes('DEPLOYMENT INSPECTION')) {
@@ -303,14 +319,6 @@ export class DashboardComponent implements OnInit {
 
     if (!newJob && _transform.JCN.match(/\d+[A-Z]\d+/)) {
       _transform.tags.push({ title: 'PMI' });
-    }
-
-    if (newJob) {
-      searchTerms.push('new job');
-    }
-
-    if (row.Closed) {
-      _transform.tags.push({ title: 'Closed', style: 'red' });
     }
 
     _transform.search = searchTerms.concat([

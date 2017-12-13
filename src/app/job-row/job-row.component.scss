@@ -89,12 +89,16 @@
 }
 
 .job-details {
+    flex-direction: column;
     .job-info {
         width: 30%;
     }
     .job-history {
         width: 95%;
-        margin: 50px auto;
+        margin: 25px auto;
+        &:last-child {
+            margin-bottom: 50px;
+        }
         mat-card-header mat-card-title {
             font-size: 18px;
             font-weight: 600;

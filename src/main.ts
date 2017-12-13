@@ -9,7 +9,7 @@ if (environment.production) {
   enableProdMode();
 }
 
-SharepointService.CONFIG.BASE_URL = 'https://cs2.eis.af.mil/sites/10383/mdrp/_vti_bin/ListData.svc';
+SharepointService.CONFIG.BASE_URL = 'https://cs2.eis.af.mil/sites/10383/mdt/_vti_bin/ListData.svc';
 SharepointService.CONFIG.JOB_FIELDS = [
   'Closed',
   'EquipID',

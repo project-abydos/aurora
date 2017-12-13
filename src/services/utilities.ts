@@ -23,7 +23,7 @@ export class Utilities {
 
     static flatten(row: any, path: string): string {
         const item: string[] | string = get(row, path);
-        return item instanceof Array ? item.join('') : String(item);
+        return item instanceof Array ? item.join(' ') : String(item);
     }
 
     static convertJobTimestamp(timestamp: string): Moment {

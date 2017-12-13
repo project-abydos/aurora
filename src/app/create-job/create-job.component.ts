@@ -20,7 +20,7 @@ const TIME_INPUT: RegExp = /^\d+$/i;
 const NOW: Moment = moment();
 
 @Component({
-  selector: 'mdrp-create-job',
+  selector: 'mdt-create-job',
   templateUrl: './create-job.component.html',
   styleUrls: ['./create-job.component.scss'],
 })

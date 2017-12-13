@@ -7,7 +7,7 @@ export interface ICodes {
     [key: string]: string;
 }
 
-const APP_TITLE: string = 'Maintenance Documentation Reporting Platform';
+const APP_TITLE: string = 'Maintenance Documentation Tool';
 
 const DELAY_CODES: ICodes = {
     '-': 'None',
