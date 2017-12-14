@@ -373,7 +373,9 @@ export class DashboardComponent implements OnInit {
       };
 
       if (this.searchTerms.length) {
-        mdc = mdc.filter(row => every(this.searchTerms, term => (row.search.indexOf(term) > -1)));
+        // Always ensure all terms are uppercase first
+        this.searchTerms = this.searchTerms.map(term => term.toUpperCase());
+        mdc = mdc.filter(row => !(row.ApprovalStatus === 'Done' && row.Closed) && every(this.searchTerms, term => (row.search.indexOf(term) > -1)));
       }
 
       mdc.forEach(job => {
@@ -400,7 +402,7 @@ export class DashboardComponent implements OnInit {
         metrics,
       };
     },
-    cacheTest => this.mdc.map(row => row.Id + row.__metadata.etag).join('\n') + this.searchTerms.join(','),
+    cacheTest => this.mdc.length + this.mdc.map(row => row.Id + row.__metadata.etag).join('\n') + this.searchTerms.join(','),
   );
 
   trackJobStateChange(index: number, job: ICustomMDCData): string {
