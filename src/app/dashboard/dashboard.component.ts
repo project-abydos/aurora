@@ -28,7 +28,7 @@ interface IDashboardMetrics {
 }
 
 interface IFilterResults {
-  mdc: ISharePointMDC[];
+  mdc: ICustomMDCData[];
   metrics: IDashboardMetrics;
 }
 
@@ -45,8 +45,7 @@ export class DashboardComponent implements OnInit {
   orignalSearchTermPresets: string[] = [
     'ACTIVE JOB',
     'AMBER JOB',
-    'CFP PENDING',
-    'CFP IN WORK',
+    'CFP ACTION',
     'CFP DONE',
     'NEEDS UPDATE',
     'NEW JOB',
@@ -57,11 +56,12 @@ export class DashboardComponent implements OnInit {
   ];
   searchTermPresets: string[] = [];
   julianDate: string = moment().format('YYDDD');
-  mdc: ISharePointMDC[] = [];
-  filteredData: ISharePointMDC[] = [];
+  mdc: ICustomMDCData[] = [];
+  filteredData: ICustomMDCData[] = [];
   appTitle: string = APP_TITLE;
   debouncedFilter: Function = debounce(this.filterWrapper, 200);
   metrics: IDashboardMetrics;
+  historical: boolean;
 
   constructor(
     private _titleService: Title,
@@ -122,8 +122,8 @@ export class DashboardComponent implements OnInit {
       .filter(term => (term.toUpperCase().indexOf(test.toUpperCase()) > -1));
   }
 
-  changeJobStatus(update: { status: string, jcn: string }, row: ISharePointMDC): void {
-    const job: ISharePointMDC = {
+  changeJobStatus(update: { status: string, jcn: string }, row: ICustomMDCData): void {
+    const job: ICustomMDCData = {
       __metadata: row.__metadata,
     };
 
@@ -182,7 +182,7 @@ export class DashboardComponent implements OnInit {
 
   addOrUpdateJob(job: ISharePointMDC, updateSharePoint: boolean): void {
 
-    const match: ISharePointMDC = find(this.mdc, { JCN: job.JCN });
+    const match: ICustomMDCData = find(this.mdc, { JCN: job.JCN });
 
     if (job.CC === 'G' || job.CC === '-') {
       return;
@@ -235,7 +235,12 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  transformMDCRow(row: ISharePointMDC): void {
+  filterHistory(): void {
+    this.historical = !this.historical;
+    this.filterWrapper();
+  }
+
+  transformMDCRow(row: ICustomMDCData): void {
 
     console.log('transform');
 
@@ -264,7 +269,7 @@ export class DashboardComponent implements OnInit {
     const matchId: number = row && findIndex(this.mdc, { Id: row.Id }) || findIndex(this.mdc, { JCN: row.JCN });
 
     const now: Moment = moment();
-    const _transform: ICustomMDCData = <ICustomMDCData>cloneDeep(row);
+    const _transform: ICustomMDCData = cloneDeep(row);
     const newJob: boolean = !_transform.JCN;
     const startDate: Moment = newJob ? moment.utc(Utilities.convertDate(_transform.StartDate)) : undefined;
     const discrepancyText: string = _transform.Discrepancy.toUpperCase();
@@ -280,6 +285,7 @@ export class DashboardComponent implements OnInit {
     _transform.DelayCodeText = row.DelayCode ? `${row.DelayCode} - ${DELAY_CODES[row.DelayCode]}` : '';
     _transform.prettyJCN = Utilities.prettyTimeDiff(julianDate, { sameDay: '[Today]' });
     _transform.tags = [];
+    _transform.historical = (row.ApprovalStatus === 'Done' && row.Closed);
 
     _transform.CCText = {
       A: 'Amber Job',
@@ -337,7 +343,7 @@ export class DashboardComponent implements OnInit {
       _transform.WorkCenter,
       _transform.EquipID,
       _transform.NameUserID,
-      `CFP ${_transform.ApprovalStatus}`,
+      `CFP ${_transform.ApprovalStatus === 'Done' ? 'Done' : 'Action'}`,
       _transform.WhenDiscText,
       _transform.DownTimeCodeText,
       _transform.DelayCodeText,
@@ -363,8 +369,11 @@ export class DashboardComponent implements OnInit {
     filterAction => {
       console.log('filter');
 
-      let mdc: ICustomMDCData[] = <ICustomMDCData[]>cloneDeep(this.mdc).sort((a, b) => -(a.Timestamp || '').localeCompare(b.Timestamp));
       let once: boolean = false;
+      let mdc: ICustomMDCData[] = <ICustomMDCData[]>cloneDeep(this.mdc)
+        .sort((a, b) => -(a.Timestamp || '').localeCompare(b.Timestamp))
+        .filter(row => this.historical ? row.historical : !row.historical);
+
       const metrics: IDashboardMetrics = {
         amber: 0,
         red: 0,
@@ -375,7 +384,7 @@ export class DashboardComponent implements OnInit {
       if (this.searchTerms.length) {
         // Always ensure all terms are uppercase first
         this.searchTerms = this.searchTerms.map(term => term.toUpperCase());
-        mdc = mdc.filter(row => !(row.ApprovalStatus === 'Done' && row.Closed) && every(this.searchTerms, term => (row.search.indexOf(term) > -1)));
+        mdc = mdc.filter(row => every(this.searchTerms, term => (row.search.indexOf(term) > -1)));
       }
 
       mdc.forEach(job => {
@@ -402,7 +411,7 @@ export class DashboardComponent implements OnInit {
         metrics,
       };
     },
-    cacheTest => this.mdc.length + this.mdc.map(row => row.Id + row.__metadata.etag).join('\n') + this.searchTerms.join(','),
+    cacheTest => this.historical + this.mdc.map(row => row.Id + row.__metadata.etag).join('\n') + this.searchTerms.join(','),
   );
 
   trackJobStateChange(index: number, job: ICustomMDCData): string {

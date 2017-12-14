@@ -56,6 +56,14 @@ export class JobRowComponent implements OnChanges {
 
   }
 
+  selectJCN($event: MouseEvent): void {
+    $event.stopImmediatePropagation();
+    window.getSelection().selectAllChildren($event.srcElement);
+    document.execCommand('copy');
+    window.getSelection().removeAllRanges();
+
+  }
+
   convertDDR(ddr: IParsedDDRInformationRow | IParsedDDRInformationRow[]): ICustomDDR[] {
     return (ddr ? (ddr instanceof Array ? ddr : [ddr]) : [])
       .map(({ DDRDataRow }) => ({

@@ -4,13 +4,13 @@
     <span class="animated fadeIn">{{appTitle}}</span>
     <span flex></span>
     <span></span>
-    <a class="export-button animated fadeInRightBig" mat-icon-button href="mdt-infographic.pdf" target="_blank">
-      <mat-icon matTooltipPosition="left" matTooltip="View the app overview">help</mat-icon>
-    </a>
     <button class="export-button animated fadeInRightBig" mat-icon-button (click)="exportData()">
       <mat-icon matTooltipPosition="left" matTooltip="Download a copy of the visible job data">cloud_download</mat-icon>
     </button>
     <span></span>
+    <a class="export-button animated fadeInRightBig" mat-icon-button href="mdt-infographic.pdf" target="_blank">
+      <mat-icon matTooltipPosition="left" matTooltip="View the app overview">help</mat-icon>
+    </a>
     <button class="create-job-button animated fadeInRightBig" mat-mini-fab (click)="openJob()" matTooltipPosition="left" matTooltip="Open a new job">
       <mat-icon aria-label="Open a new job">add</mat-icon>
     </button>
@@ -26,6 +26,10 @@
             <span class="start-imds-sync animated fadeInRightBig">
               <ng-template tdLoading="imds-380" tdLoadingColor="accent"> </ng-template>
             </span>
+            <button mat-button (click)="filterHistory()" color="primary">
+              <span *ngIf="historical">Only History</span>
+              <span *ngIf="!historical">No History</span>
+            </button>
           </div>
 
           <div class="dashboard mat-table">

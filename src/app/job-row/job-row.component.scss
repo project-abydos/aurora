@@ -27,6 +27,12 @@
 
 .JCN {
     position: relative;
+    .selectable {
+        cursor: copy;
+    }
+    &:hover .selectable{
+        color: #1976d2;
+    }
     span {
         display: block;
         &.small {

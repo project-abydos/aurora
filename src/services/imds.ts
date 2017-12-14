@@ -96,7 +96,7 @@ export class IMDSService {
                 this._sharePointService.getMDC().subscribe(jobs => jobs
                     .filter(job => !job.Closed && job.WorkCenter === workcenter)
                     .forEach(({ JCN }) => {
-                        if (!find(EventDataRow, { EventId: JCN })) {
+                        if (JCN && !find(EventDataRow, { EventId: JCN })) {
                             Utilities.imdsTick(() => this.fetchDDR(JCN));
                         }
                     }),

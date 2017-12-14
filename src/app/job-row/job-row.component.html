@@ -1,7 +1,7 @@
 <div class="mat-row" [ngClass]="[row.CC, isExpanded ? 'expanded' : 'collapsed']" (click)="toggleExpanded(row)" *ngIf="row.JCN">
 
   <div class="mat-cell JCN">
-    <span>{{row.JCN}}</span>
+    <span (click)="selectJCN($event)" class="selectable" matTooltip="Click to copy this JCN">{{row.JCN}}</span>
     <span class="small">{{row.prettyJCN}}</span>
   </div>
 

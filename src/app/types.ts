@@ -53,20 +53,21 @@ export interface ISharePointMDC {
 }
 
 export interface ICustomMDCData extends ISharePointMDC {
-    dateRange: string;
-    timeStampPretty: string;
+    dateRange?: string;
+    timeStampPretty?: string;
     WhenDiscText?: string;
     DownTimeCodeText?: string;
     DelayCodeText?: string;
     eticDate?: Date;
     isExpanded?: boolean;
     updated?: boolean;
-    CCText: any;
-    search: string;
+    CCText?: any;
+    search?: string;
     over30Days?: boolean;
     firstOver30?: boolean;
     prettyJCN?: string;
-    tags: {
+    historical?: boolean;
+    tags?: {
         title?: string;
         search?: string;
         style?: string;
