@@ -43,6 +43,7 @@ import { JobRowComponent } from './job-row/job-row.component';
 import { HttpCacheService } from 'services/http-cache';
 import { CreateJobComponent } from './create-job/create-job.component';
 import { UpdateJobComponent } from './update-job/update-job.component';
+import { JobDataService } from 'services/job-data.service';
 
 // tslint:disable-next-line:typedef
 export function httpCacheService(backend: ConnectionBackend, defaultOptions: RequestOptions) {
@@ -95,6 +96,7 @@ export function httpCacheService(backend: ConnectionBackend, defaultOptions: Req
     CrossDomainService,
     IMDSService,
     SharepointService,
+    JobDataService,
     Title,
     {
       provide: Http,

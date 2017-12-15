@@ -27,12 +27,6 @@
 
 .JCN {
     position: relative;
-    .selectable {
-        cursor: copy;
-    }
-    &:hover .selectable{
-        color: #1976d2;
-    }
     span {
         display: block;
         &.small {
@@ -179,4 +173,17 @@
             }
         }
     }
+}
+
+.selectable {
+    cursor: copy;
+}
+.selectable:hover{
+    color: #1976d2;
+}
+
+.newJob {
+    .selectable:hover{
+        color: #FFC60C;
+    }    
 }

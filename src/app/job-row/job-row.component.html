@@ -1,7 +1,7 @@
 <div class="mat-row" [ngClass]="[row.CC, isExpanded ? 'expanded' : 'collapsed']" (click)="toggleExpanded(row)" *ngIf="row.JCN">
 
   <div class="mat-cell JCN">
-    <span (click)="selectJCN($event)" class="selectable" matTooltip="Click to copy this JCN">{{row.JCN}}</span>
+    <span (click)="copyText($event)" class="selectable" matTooltip="Click to copy this JCN">{{row.JCN}}</span>
     <span class="small">{{row.prettyJCN}}</span>
   </div>
 
@@ -22,7 +22,7 @@
   <div class="mat-cell LastUpdate ellipses">
     <span>
       <strong>{{row.timeStampPretty}}</strong> |
-      <em>{{row.LastUpdate}}</em>
+      <em (click)="copyText($event)" class="selectable" matTooltip="Click to copy this data">{{row.LastUpdate}}</em>
     </span>
   </div>
 
@@ -77,17 +77,18 @@
   </div>
 
   <div class="mat-cell WorkCenter">
-    <span>{{row.WorkCenter}}</span>
+    <span (click)="copyText($event)" class="selectable" matTooltip="Click to copy this data">{{row.WorkCenter}}</span>    
   </div>
 
   <div class="mat-cell EquipID">
-    <span>{{row.EquipID}}</span>
+    <span (click)="copyText($event)" class="selectable" matTooltip="Click to copy this data">{{row.EquipID}}</span>    
   </div>
 
   <div class="mat-cell Discrepancy">
     <span>
-      <mat-chip *ngFor="let tag of row.tags" class="tag" [selected]="!!tag.style" [color]="tag.style">{{tag.title}}</mat-chip>
-      {{row.Discrepancy}}</span>
+      <mat-chip *ngFor="let tag of row.tags" class="tag" [selected]="!!tag.style" [color]="tag.style">{{tag.title}}</mat-chip>     
+      <span (click)="copyText($event)" class="selectable" matTooltip="Click to copy this data">{{row.Discrepancy}}</span>   
+    </span>
   </div>
 
   <div class="mat-cell LastUpdate">
@@ -101,7 +102,7 @@
     </p>
     <p>
       <span>WUC</span>
-      <span>{{row.WUC}}</span>
+      <span (click)="copyText($event)" class="selectable" matTooltip="Click to copy this data">{{row.WUC}}</span>   
     </p>
     <p>
       <span>WD</span>

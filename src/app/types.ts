@@ -224,3 +224,20 @@ export interface IStatusChange {
     status?: string;
     jcn?: string;
 }
+
+export interface IDashboardMetrics {
+    red: number;
+    amber: number;
+    days90: number;
+    days30: number;
+}
+
+export interface IFilterResults {
+    mdc: ICustomMDCData[];
+    metrics: IDashboardMetrics;
+}
+
+export interface IFilterProperties {
+    historical: boolean;
+    searchTerms: string[];
+}
