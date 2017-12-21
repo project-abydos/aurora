@@ -90,7 +90,6 @@ export class IMDSService {
                     Timestamp: job.EventDateTimeStamp,
                     EquipID: job.WorkcenterEventDataRow.EquipmentIdOrPartNumber,
                     DelayCode: job.DeferCode,
-                    LastUpdate: Utilities.flatten(job, 'WorkcenterEventDataRow.WorkcenterEventNarrativeRow.WorkcenterEventNarrative'),
                 }));
 
                 this._sharePointService.getMDC().subscribe(jobs => jobs
@@ -116,7 +115,8 @@ export class IMDSService {
                     Closed: lastUpdate ? parseInt(lastUpdate.UnitsProduced, 10) > 0 : false,
                     JCN: EventDataRow.EventId,
                     DelayCode: WorkcenterEventDataRow.DeferCode,
-                    LastUpdate: Utilities.flatten(lastUpdate, 'CorrectiveActionNarrativeRow.CorrectiveActionNarrative') || WorkcenterEventDataRow.WorkcenterEventNarrative,
+                    LastUpdate: Utilities.flatten(lastUpdate, 'CorrectiveActionNarrativeRow.CorrectiveActionNarrative'),
+                    NewJob: !lastUpdate,
                     DDR: JSON.stringify(WorkcenterEventDataRow instanceof Array ? WorkcenterEventDataRow : [WorkcenterEventDataRow]),
                     WUC: WorkcenterEventDataRow.WorkUnitCode,
                     WhenDiscovered: String(get(lastUpdate, 'WhenDiscoveredCode') || ''),

@@ -60,6 +60,10 @@ export class JobDataService {
       return;
     }
 
+    if (updateSharePoint) {
+      job.ApprovalStatus = job.JCN && job.NewJob ? 'Done' : 'Pending';
+    }
+
     if (match) {
 
       // Matching job found
@@ -75,7 +79,6 @@ export class JobDataService {
       if (timestampChange || etagChange) {
         // Job has been updated since last pull
         if (updateSharePoint) {
-          job.ApprovalStatus = 'Pending';
           // Also write the changes to SharePoint
           assignIn(match, job);
           job.__metadata = match.__metadata;
@@ -88,8 +91,11 @@ export class JobDataService {
     } else {
       // New job
       if (updateSharePoint) {
-        this._sharePointService.createJob(job).subscribe(update => this.transformMDCRow(update) && this._loadingService.resolve('mdc'));
-        Utilities.imdsTick(() => this._imdsService.fetchDDR(job.JCN));
+        if (job.DDR) {
+          this._sharePointService.createJob(job).subscribe(update => this.transformMDCRow(update) && this._loadingService.resolve('mdc'));
+        } else {
+          Utilities.imdsTick(() => this._imdsService.fetchDDR(job.JCN));
+        }
       } else {
         this.transformMDCRow(job);
       }
@@ -153,7 +159,7 @@ export class JobDataService {
     const juliantDateDiff: number = now.diff(julianDate, 'days');
     const timestampMoment: Moment = Utilities.convertJobTimestamp(row.Timestamp);
 
-    _transform.LastUpdate = row.LastUpdate === 'undefined' ? 'First IMDS Sync' : row.LastUpdate;
+    _transform.LastUpdate = row.LastUpdate || 'First IMDS Sync';
     _transform.ApprovalStatus = row.ApprovalStatus || 'Pending';
     _transform.timeStampPretty = newJob ? startDate.format('YYDDDD [at] HH:mm') : Utilities.prettyTimeDiff(timestampMoment);
     _transform.WhenDiscText = row.WhenDiscovered ? `${row.WhenDiscovered} - ${WHEN_DISCOVERED_CODES[row.WhenDiscovered]}` : '';
@@ -188,7 +194,7 @@ export class JobDataService {
         _transform.tags.push({ title: '90+ Open', style: 'accent' });
       }
 
-      if (juliantDateDiff < 0) {
+      if (juliantDateDiff <= 0) {
         _transform.tags.push({ title: 'Scheduled', style: 'primary' });
         searchTerms.push('scheduled job');
       } else {
@@ -199,15 +205,13 @@ export class JobDataService {
         searchTerms.push('new job');
       }
 
+      if (!newJob && _transform.JCN.match(/\d+[A-Z]\d+/)) {
+        _transform.tags.push({ title: 'PMI' });
+      }
     }
 
-    if (discrepancyText.includes('DEPLOYMENT INSPECTION')) {
-      _transform.tags.push({ title: 'PDI' });
-    }
-
-    if (!newJob && _transform.JCN.match(/\d+[A-Z]\d+/)) {
-      _transform.tags.push({ title: 'PMI' });
-    }
+    discrepancyText.includes('FCO') && _transform.tags.push({ title: 'FCO' });
+    discrepancyText.includes('DEPLOYMENT INSPECTION') && _transform.tags.push({ title: 'PDI' });
 
     _transform.search = searchTerms.concat([
       _transform.JCN,

@@ -35,6 +35,7 @@ export interface ISharePointMDC {
     CC?: string;
     WhenDiscovered?: string;
     NameUserID?: string;
+    NewJob?: boolean;
     DelayCode?: string;
     WorkCenter?: string;
     Discrepancy?: string;

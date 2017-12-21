@@ -21,6 +21,7 @@ SharepointService.CONFIG.JOB_FIELDS = [
   'WhenDiscovered',
   'NameUserID',
   'DelayCode',
+  'NewJob',
   'WorkCenter',
   'Discrepancy',
   'LastUpdate',

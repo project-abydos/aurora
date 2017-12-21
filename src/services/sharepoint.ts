@@ -74,6 +74,7 @@ export class SharepointService {
       'JCN',
       'LastUpdate',
       'Modified',
+      'NewJob',
       'StartDate',
       'Timestamp',
       'WUC',

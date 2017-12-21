@@ -53,7 +53,7 @@
             </div>
             <div class="dashboard-body">
               <ng-template ngFor let-row [ngForOf]="filteredData" [ngForTrackBy]="trackJobStateChange">
-                <mdt-job-row [row]="row" [ngClass]="row.firstOver30 ? 'over30': ''" (onStatusChange)="changeJobStatus($event, row)"></mdt-job-row>
+                <mdt-job-row  class="animated pulse" [row]="row" [ngClass]="row.firstOver30 ? 'over30': ''" (onStatusChange)="changeJobStatus($event, row)"></mdt-job-row>
               </ng-template>
             </div>
 
