@@ -210,7 +210,7 @@ td-chips {
     // padding-right: 1.5em;
 }
 
-md-basic-chip {
+mat-basic-chip {
     text-transform: uppercase;
 }
 
@@ -228,4 +228,12 @@ md-basic-chip {
 
 .mat-card-header-text {
     flex: 1;
+}
+
+mat-sidenav, 
+mat-sidenav.mat-locked-open, 
+mat-sidenav.mat-closed.mat-locked-open-add-active {
+    min-width: 0px !important;
+    width: auto !important;
+    max-width: none !important;
 }

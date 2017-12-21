@@ -18,55 +18,66 @@
   <div layout-gt-sm="row" tdMediaToggle="gt-xs" [mediaClasses]="['push-sm']">
     <div flex-gt-sm="100">
       <ng-template tdLoading="mdc">
-        <ngx-charts-heat-map [view]="view" [scheme]="colorScheme" [results]="multi" [legend]="true" [xAxis]="true"
-          [yAxis]="true" [showXAxisLabel]="true" [showYAxisLabel]="true" xAxisLabel="Country"
-          yAxisLabel="Population" (select)="onSelect($event)">
-        </ngx-charts-heat-map>
-        <mat-card class="animated zoomIn" style="background: #eee">
-          <div layout="row" layout-align="start center" class="pad-left-sm pad-right-sm">
-            <td-chips flex=1 placeholder="Add search terms and press enter" [items]="searchTermPresets" [(ngModel)]="searchTerms" (add)="navigateSearch()"
-              (remove)="navigateSearch()" (inputChange)="refreshSearchItems($event)">
-            </td-chips>
-            <span class="start-imds-sync animated fadeInRightBig">
-              <ng-template tdLoading="imds-380" tdLoadingColor="accent"> </ng-template>
-            </span>
-            <button mat-button (click)="filterHistory()" color="primary">
-              <span *ngIf="historical">Only History</span>
-              <span *ngIf="!historical">No History</span>
+        <mat-sidenav-container>
+          <mat-sidenav-content>
+
+            <button class="toggle-graph" mat-raised-button color="primary" (click)="graphs.toggle()">
+              Toggle Graphs
             </button>
-          </div>
 
-          <div class="dashboard mat-table">
-            <div class="dashboard-header mat-header-row mat-elevation-z4">
-              <div class="mat-header-cell JCN">JCN</div>
-              <div class="mat-header-cell WorkCenter">Shop</div>
-              <div class="mat-header-cell EquipID">EquipID</div>
-              <div class="mat-header-cell Discrepancy">Discrepancy</div>
-              <div class="mat-header-cell LastUpdate">Last Update</div>
-              <div class="mat-header-cell ApprovalStatus">CFP Action</div>
-            </div>
-            <div class="dashboard-footer mat-header-row mat-elevation-z1">
-              <div class="mat-header-cell">
-                <span *ngIf="metrics && filteredData.length > 0" layout="row">
-                  <span flex>{{metrics.red}} Red Jobs</span>
-                  <span flex>{{metrics.amber}} Amber Jobs</span>
-                  <span flex>{{metrics.days90}} Jobs Opened 90+ Days Ago</span>
-                  <span flex>{{metrics.days30}} Jobs 30+ Days Without Updates</span>
+            <mat-card class="animated zoomIn" style="background: #eee">
+              <div layout="row" layout-align="start center" class="pad-left-sm pad-right-sm">
+                <td-chips flex=1 placeholder="Add search terms and press enter" [items]="searchTermPresets" [(ngModel)]="searchTerms" (add)="navigateSearch()"
+                  (remove)="navigateSearch()" (inputChange)="refreshSearchItems($event)">
+                </td-chips>
+                <span class="start-imds-sync animated fadeInRightBig">
+                  <ng-template tdLoading="imds-380" tdLoadingColor="accent"> </ng-template>
                 </span>
+                <button mat-button (click)="filterHistory()" color="primary">
+                  <span *ngIf="historical">Only History</span>
+                  <span *ngIf="!historical">No History</span>
+                </button>
               </div>
-            </div>
-            <div class="dashboard-body">
-              <ng-template ngFor let-row [ngForOf]="filteredData" [ngForTrackBy]="trackJobStateChange">
-                <mdt-job-row class="animated pulse" [row]="row" [ngClass]="row.firstOver30 ? 'over30': ''" (onStatusChange)="changeJobStatus($event, row)"></mdt-job-row>
-              </ng-template>
-            </div>
 
-            <div class="mat-padding" *ngIf="filteredData.length < 1" layout="row" layout-align="center center">
-              <h3>Sorry, no jobs found for this search.</h3>
-            </div>
-          </div>
+              <div class="dashboard mat-table">
+                <div class="dashboard-header mat-header-row mat-elevation-z4">
+                  <div class="mat-header-cell JCN">JCN</div>
+                  <div class="mat-header-cell WorkCenter">Shop</div>
+                  <div class="mat-header-cell EquipID">EquipID</div>
+                  <div class="mat-header-cell Discrepancy">Discrepancy</div>
+                  <div class="mat-header-cell LastUpdate">Last Update</div>
+                  <div class="mat-header-cell ApprovalStatus">CFP Action</div>
+                </div>
+                <div class="dashboard-footer mat-header-row mat-elevation-z1">
+                  <div class="mat-header-cell">
+                    <span *ngIf="metrics && filteredData.length > 0" layout="row">
+                      <span flex>{{metrics.red}} Red Jobs</span>
+                      <span flex>{{metrics.amber}} Amber Jobs</span>
+                      <span flex>{{metrics.days90}} Jobs Opened 90+ Days Ago</span>
+                      <span flex>{{metrics.days30}} Jobs 30+ Days Without Updates</span>
+                    </span>
+                  </div>
+                </div>
+                <div class="dashboard-body">
+                  <ng-template ngFor let-row [ngForOf]="filteredData" [ngForTrackBy]="trackJobStateChange">
+                    <mdt-job-row class="animated pulse" [row]="row" [ngClass]="row.firstOver30 ? 'over30': ''" (onStatusChange)="changeJobStatus($event, row)"></mdt-job-row>
+                  </ng-template>
+                </div>
 
-        </mat-card>
+                <div class="mat-padding" *ngIf="filteredData.length < 1" layout="row" layout-align="center center">
+                  <h3>Sorry, no jobs found for this search.</h3>
+                </div>
+              </div>
+            </mat-card>
+          </mat-sidenav-content>
+
+          <mat-sidenav position="end" #graphs mode="side">
+            <ngx-charts-heat-map [view]="view" [scheme]="colorScheme" [results]="multi" [legend]="true" [xAxis]="true" [yAxis]="true"
+              [showXAxisLabel]="true" [showYAxisLabel]="true" xAxisLabel="Country" yAxisLabel="Population" (select)="onSelect($event)">
+            </ngx-charts-heat-map>
+          </mat-sidenav>
+
+        </mat-sidenav-container>
       </ng-template>
     </div>
 

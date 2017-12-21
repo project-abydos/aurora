@@ -61,3 +61,15 @@
     background-size: contain;
     background-repeat: no-repeat;
 }
+
+.toggle-graph {
+    position: absolute;
+    z-index: 999;
+    top: 20%;
+    right: 0;
+    transform: rotate(-90deg);
+    margin: 0;
+    margin-right: -3em;
+    line-height: 0;
+    height: 2em;
+}
