@@ -18,6 +18,10 @@
   <div layout-gt-sm="row" tdMediaToggle="gt-xs" [mediaClasses]="['push-sm']">
     <div flex-gt-sm="100">
       <ng-template tdLoading="mdc">
+        <ngx-charts-heat-map [view]="view" [scheme]="colorScheme" [results]="multi" [legend]="true" [xAxis]="true"
+          [yAxis]="true" [showXAxisLabel]="true" [showYAxisLabel]="true" xAxisLabel="Country"
+          yAxisLabel="Population" (select)="onSelect($event)">
+        </ngx-charts-heat-map>
         <mat-card class="animated zoomIn" style="background: #eee">
           <div layout="row" layout-align="start center" class="pad-left-sm pad-right-sm">
             <td-chips flex=1 placeholder="Add search terms and press enter" [items]="searchTermPresets" [(ngModel)]="searchTerms" (add)="navigateSearch()"
@@ -53,7 +57,7 @@
             </div>
             <div class="dashboard-body">
               <ng-template ngFor let-row [ngForOf]="filteredData" [ngForTrackBy]="trackJobStateChange">
-                <mdt-job-row  class="animated pulse" [row]="row" [ngClass]="row.firstOver30 ? 'over30': ''" (onStatusChange)="changeJobStatus($event, row)"></mdt-job-row>
+                <mdt-job-row class="animated pulse" [row]="row" [ngClass]="row.firstOver30 ? 'over30': ''" (onStatusChange)="changeJobStatus($event, row)"></mdt-job-row>
               </ng-template>
             </div>
 

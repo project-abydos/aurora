@@ -3,6 +3,7 @@ import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpModule, Http, XHRBackend, RequestOptions, ConnectionBackend } from '@angular/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 import {
   MatAutocompleteModule,
@@ -44,6 +45,7 @@ import { HttpCacheService } from 'services/http-cache';
 import { CreateJobComponent } from './create-job/create-job.component';
 import { UpdateJobComponent } from './update-job/update-job.component';
 import { JobDataService } from 'services/job-data.service';
+import { APP_BASE_HREF } from '@angular/common';
 
 // tslint:disable-next-line:typedef
 export function httpCacheService(backend: ConnectionBackend, defaultOptions: RequestOptions) {
@@ -91,6 +93,7 @@ export function httpCacheService(backend: ConnectionBackend, defaultOptions: Req
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
+    NgxChartsModule,
   ], // modules needed to run this module
   providers: [
     CrossDomainService,
@@ -102,6 +105,10 @@ export function httpCacheService(backend: ConnectionBackend, defaultOptions: Req
       provide: Http,
       deps: [XHRBackend, RequestOptions],
       useFactory: httpCacheService,
+    },
+    {
+      provide: APP_BASE_HREF,
+      useValue: '#',
     },
   ], // additional providers needed for this module
   entryComponents: [

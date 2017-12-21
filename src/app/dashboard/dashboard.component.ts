@@ -29,6 +29,55 @@ const MINUTE: number = 60 * SECOND;
 })
 export class DashboardComponent implements OnInit {
 
+  multi: any = [
+    {
+      "name": "Germany",
+      'series': [
+        {
+          "name": "2010",
+          "value": 7300000
+        },
+        {
+          "name": "2011",
+          "value": 8940000
+        }
+      ]
+    },
+
+    {
+      "name": "USA",
+      "series": [
+        {
+          "name": "2010",
+          "value": 7870000
+        },
+        {
+          'name': '2011',
+          'value': 8270000
+        }
+      ]
+    },
+
+    {
+      'name': 'France',
+      'series': [
+        {
+          'name': '2010',
+          'value': 5000002
+        },
+        {
+          'name': '2011',
+          'value': 5800000
+        }
+      ]
+    }
+  ];
+
+  view: any[] = [700, 400];
+  colorScheme: any = {
+    domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA'],
+  };
+
   lastIMDSSync: string;
   searchTerms: string[] = [];
   orignalSearchTermPresets: string[] = [
