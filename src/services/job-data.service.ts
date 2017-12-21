@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { ISharePointMDC, ICustomMDCData, IDashboardMetrics, IFilterProperties } from 'app/types';
-import { find, assignIn, findIndex, cloneDeep, debounce, memoize, every } from 'lodash';
+import { ISharePointMDC, ICustomMDCData, IDashboardMetrics, IFilterProperties, ISharePointAppMetadata, IOrgMetrics, IFilterResults } from 'app/types';
+import { find, assignIn, findIndex, cloneDeep, debounce, memoize, every, map } from 'lodash';
 import { TdLoadingService } from '@covalent/core';
 import { SharepointService, IMDSService } from 'services';
 import { Utilities } from 'services/utilities';
@@ -14,6 +14,7 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class JobDataService {
 
+  private workcenters: string[] = [];
   private mdc: ICustomMDCData[] = [];
 
   constructor(
@@ -21,7 +22,7 @@ export class JobDataService {
     private _sharePointService: SharepointService,
     private _loadingService: TdLoadingService,
   ) {
-
+    _imdsService.workcenters.subscribe(list => this.workcenters = list);
   }
 
   findJob(args: any): ICustomMDCData {
@@ -238,7 +239,7 @@ export class JobDataService {
     }
   }
 
-  filterData(historical: boolean, searchTerms: string[]): { mdc: ICustomMDCData[], metrics: IDashboardMetrics } {
+  filterData(historical: boolean, searchTerms: string[]): IFilterResults {
     console.log('filter');
 
     let once: boolean = false;
@@ -249,6 +250,10 @@ export class JobDataService {
       red: 0,
       days90: 0,
       days30: 0,
+      fco: 0,
+      pdi: 0,
+      pmi: 0,
+      org: {},
     };
 
     if (searchTerms.length) {
@@ -259,15 +264,26 @@ export class JobDataService {
 
     mdc.forEach(job => {
 
-      job.CC === 'R' && metrics.red++;
-      job.CC === 'A' && metrics.amber++;
+      const orgMetrics: IOrgMetrics = setupWorkcenter(job.WorkCenter);
+
+      if (job.CC === 'R') {
+        metrics.red++;
+        orgMetrics.red++;
+      }
+
+      if (job.CC === 'A') {
+        metrics.amber++;
+        orgMetrics.amber++;
+      }
 
       if (job.search.includes('90+ OPEN')) {
         metrics.days90++;
+        orgMetrics.days90++;
       }
 
       if (job.over30Days) {
         metrics.days30++;
+        orgMetrics.days30++;
         if (!once) {
           once = true;
           job.firstOver30 = true;
@@ -278,9 +294,42 @@ export class JobDataService {
 
     mdc = cloneDeep(mdc.sort((a, b) => -(a.Timestamp || '').localeCompare(b.Timestamp)));
 
+    function setupWorkcenter(workCenter: string): IOrgMetrics {
+      metrics.org[workCenter] = metrics.org[workCenter] || {
+        amber: 0,
+        red: 0,
+        days90: 0,
+        days30: 0,
+      };
+      return metrics.org[workCenter];
+    }
+
+    const graph: any = map(metrics.org, (orgMetric: IOrgMetrics, name: string) => ({
+      name,
+      series: [
+        {
+          name: 'Red Jobs',
+          value: orgMetric.red,
+        },
+        {
+          name: 'Amber Jobs',
+          value: orgMetric.amber,
+        },
+        {
+          name: 'Opened 90+ Days Ago',
+          value: orgMetric.days90,
+        },
+        {
+          name: '30+ Days Without Update',
+          value: orgMetric.days30,
+        },
+      ],
+    }));
+
     return {
       mdc,
       metrics,
+      graph,
     };
   }
 

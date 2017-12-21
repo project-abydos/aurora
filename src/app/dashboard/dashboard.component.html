@@ -4,6 +4,10 @@
     <span class="animated fadeIn">Maintenance Documentation Tool</span>
     <span flex></span>
     <span></span>
+    <button class="toggle-graph animated fadeInRightBig" mat-icon-button [ngClass]="graphIsVisible ? 'show-graph' : ''" (click)="toggleGraph()">
+      <mat-icon matTooltipPosition="left" matTooltip="Click to toggle the graph visibilty">multiline_chart</mat-icon>
+    </button>
+    <span></span>
     <button class="export-button animated fadeInRightBig" mat-icon-button (click)="exportData()">
       <mat-icon matTooltipPosition="left" matTooltip="Download a copy of the visible job data">cloud_download</mat-icon>
     </button>
@@ -20,10 +24,6 @@
       <ng-template tdLoading="mdc">
         <mat-sidenav-container>
           <mat-sidenav-content>
-
-            <button class="toggle-graph" mat-raised-button color="primary" (click)="graphs.toggle()">
-              Toggle Graphs
-            </button>
 
             <mat-card class="animated zoomIn" style="background: #eee">
               <div layout="row" layout-align="start center" class="pad-left-sm pad-right-sm">
@@ -64,17 +64,24 @@
                   </ng-template>
                 </div>
 
-                <div class="mat-padding" *ngIf="filteredData.length < 1" layout="row" layout-align="center center">
-                  <h3>Sorry, no jobs found for this search.</h3>
+                <div class="mat-padding" *ngIf="filteredData.length < 1" layout="column" layout-align="center center">
+                  <blockquote class="quote-card" *ngIf="inspire">
+                    <p> {{inspire.quote}} </p>
+                    <cite> {{inspire.author}} </cite>
+                  </blockquote>
+                  <div class="text-center">
+                    <h3 *ngIf="searchTerms[0] !=='CFP ACTION'">Sorry, no jobs found for this search.</h3>
+                    <h3 *ngIf="searchTerms[0] ==='CFP ACTION'">YAY! All the updates are done for now.</h3>
+                  </div>
                 </div>
               </div>
             </mat-card>
           </mat-sidenav-content>
 
-          <mat-sidenav position="end" #graphs mode="side">
-            <ngx-charts-heat-map [view]="view" [scheme]="colorScheme" [results]="multi" [legend]="true" [xAxis]="true" [yAxis]="true"
-              [showXAxisLabel]="true" [showYAxisLabel]="true" xAxisLabel="Country" yAxisLabel="Population" (select)="onSelect($event)">
-            </ngx-charts-heat-map>
+          <mat-sidenav position="end" [opened]="graphIsVisible" mode="side">
+            <ngx-charts-bar-horizontal-stacked [results]="multi" [scheme]="colorScheme" [gradient]="true" [animations]="false"  [xAxis]="true" [yAxis]="true" legend="true"
+              showYAxisLabel [xAxisLabel]="'Jobs'">
+            </ngx-charts-bar-horizontal-stacked>
           </mat-sidenav>
 
         </mat-sidenav-container>

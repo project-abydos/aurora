@@ -2,7 +2,7 @@ import { IMDSService } from '../../services/imds';
 import { SharepointService } from '../../services/sharepoint';
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { JsonPipe } from '@angular/common';
-import { cloneDeep, concat, defaults, find, every, debounce, without, sumBy, memoize, MemoizedFunction, noop, get, findIndex, assignIn } from 'lodash';
+import { cloneDeep, concat, defaults, find, every, debounce, without, sumBy, memoize, MemoizedFunction, noop, get, findIndex, assignIn, map } from 'lodash';
 import * as moment from 'moment';
 import { TdLoadingService } from '@covalent/core';
 import { Observable } from 'rxjs/Observable';
@@ -12,11 +12,12 @@ import { Moment, CalendarSpec } from 'moment';
 import { MatDialog, MatDialogRef } from '@angular/material';
 
 import { ISelectOption, DELAY_CODES, WHEN_DISCOVERED_CODES, DOWN_TIME_CODES } from '../contanstants';
-import { ISharePointMDC, ICustomMDCData, IDashboardMetrics, IFilterResults } from 'app/types';
+import { ISharePointMDC, ICustomMDCData, IDashboardMetrics, IFilterResults, IOrgMetrics } from 'app/types';
 import { CreateJobComponent } from 'app/create-job/create-job.component';
 import { Utilities } from 'services/utilities';
 import { setTimeout } from 'timers';
 import { JobDataService } from 'services/job-data.service';
+import { InspireService, IQuote } from 'services/inspire.service';
 
 const SECOND: number = 1000;
 const MINUTE: number = 60 * SECOND;
@@ -29,55 +30,13 @@ const MINUTE: number = 60 * SECOND;
 })
 export class DashboardComponent implements OnInit {
 
-  multi: any = [
-    {
-      "name": "Germany",
-      'series': [
-        {
-          "name": "2010",
-          "value": 7300000
-        },
-        {
-          "name": "2011",
-          "value": 8940000
-        }
-      ]
-    },
+  multi: any = [];
 
-    {
-      "name": "USA",
-      "series": [
-        {
-          "name": "2010",
-          "value": 7870000
-        },
-        {
-          'name': '2011',
-          'value': 8270000
-        }
-      ]
-    },
-
-    {
-      'name': 'France',
-      'series': [
-        {
-          'name': '2010',
-          'value': 5000002
-        },
-        {
-          'name': '2011',
-          'value': 5800000
-        }
-      ]
-    }
-  ];
-
-  view: any[] = [700, 400];
   colorScheme: any = {
-    domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA'],
+    domain: ['#c60000', '#ff9339', '#ef6c00', '#1976d2'],
   };
 
+  graphIsVisible: boolean = false;
   lastIMDSSync: string;
   searchTerms: string[] = [];
   orignalSearchTermPresets: string[] = [
@@ -98,6 +57,7 @@ export class DashboardComponent implements OnInit {
   debouncedFilter: Function = debounce(this.filterWrapper, 200);
   metrics: IDashboardMetrics;
   historical: boolean;
+  inspire: IQuote;
 
   constructor(
     private _imdsService: IMDSService,
@@ -108,6 +68,7 @@ export class DashboardComponent implements OnInit {
     private _router: Router,
     private _cd: ChangeDetectorRef,
     private _dialog: MatDialog,
+    private _quote: InspireService,
   ) {
     this.watchForSearchTagChanges();
     this.watchForIMDSSyncMessages();
@@ -174,6 +135,11 @@ export class DashboardComponent implements OnInit {
     this._jobDataService.exportData(this.filteredData, this.searchTerms);
   }
 
+  // Show or hide the data visualizations
+  toggleGraph(): void {
+    this.graphIsVisible = !this.graphIsVisible;
+  }
+
   // Launches create job modal dialog
   openJob(): void {
     this._dialog
@@ -191,9 +157,11 @@ export class DashboardComponent implements OnInit {
   }
 
   reSyncJobs(): void {
+    this.inspire = this._quote.fetch();
     this._sharePointService.getMDC().subscribe(mdc => {
       mdc.forEach(row => this._jobDataService.addOrUpdateJob(row, false));
       this.filterWrapper();
+      this.inspire = this._quote.fetch();
       this._loadingService.resolve('mdc');
       setTimeout(() => this._imdsService.fetch380(), 5 * 1000);
     });
@@ -208,6 +176,7 @@ export class DashboardComponent implements OnInit {
     const results: IFilterResults = this._jobDataService.filterData(this.historical, this.searchTerms);
     this.filteredData = results.mdc;
     this.metrics = results.metrics;
+    this.multi = results.graph;
   }
 
   trackJobStateChange(index: number, job: ICustomMDCData): string {

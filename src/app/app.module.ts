@@ -45,7 +45,8 @@ import { HttpCacheService } from 'services/http-cache';
 import { CreateJobComponent } from './create-job/create-job.component';
 import { UpdateJobComponent } from './update-job/update-job.component';
 import { JobDataService } from 'services/job-data.service';
-import { APP_BASE_HREF } from '@angular/common';
+import { APP_BASE_HREF, HashLocationStrategy, LocationStrategy } from '@angular/common';
+import { InspireService } from 'services/inspire.service';
 
 // tslint:disable-next-line:typedef
 export function httpCacheService(backend: ConnectionBackend, defaultOptions: RequestOptions) {
@@ -100,16 +101,15 @@ export function httpCacheService(backend: ConnectionBackend, defaultOptions: Req
     IMDSService,
     SharepointService,
     JobDataService,
+    InspireService,
     Title,
     {
       provide: Http,
       deps: [XHRBackend, RequestOptions],
       useFactory: httpCacheService,
     },
-    {
-      provide: APP_BASE_HREF,
-      useValue: '#',
-    },
+    { provide: LocationStrategy, useClass: HashLocationStrategy },
+
   ], // additional providers needed for this module
   entryComponents: [
     CreateJobComponent,

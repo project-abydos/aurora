@@ -226,16 +226,24 @@ export interface IStatusChange {
     jcn?: string;
 }
 
-export interface IDashboardMetrics {
-    red: number;
+export interface IOrgMetrics {
     amber: number;
+    red: number;
     days90: number;
     days30: number;
+}
+
+export interface IDashboardMetrics extends IOrgMetrics {
+    fco: number;
+    pdi: number;
+    pmi: number;
+    org: any;
 }
 
 export interface IFilterResults {
     mdc: ICustomMDCData[];
     metrics: IDashboardMetrics;
+    graph: any;
 }
 
 export interface IFilterProperties {
