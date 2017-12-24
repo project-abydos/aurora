@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ISharePointMDC, ICustomMDCData, IDashboardMetrics, IFilterProperties, ISharePointAppMetadata, IOrgMetrics, IFilterResults } from 'app/types';
-import { find, assignIn, findIndex, cloneDeep, debounce, memoize, every, map } from 'lodash';
+import { find, assignIn, findIndex, cloneDeep, debounce, memoize, every, map, sortBy } from 'lodash';
 import { TdLoadingService } from '@covalent/core';
 import { SharepointService, IMDSService } from 'services';
 import { Utilities } from 'services/utilities';
@@ -304,7 +304,8 @@ export class JobDataService {
       return metrics.org[workCenter];
     }
 
-    const graph: any = map(metrics.org, (orgMetric: IOrgMetrics, name: string) => ({
+    // Organize data for visualization, sort by workcenter
+    const graph: any = sortBy(map(metrics.org, (orgMetric: IOrgMetrics, name: string) => ({
       name,
       series: [
         {
@@ -324,7 +325,7 @@ export class JobDataService {
           value: orgMetric.days30,
         },
       ],
-    }));
+    })), 'name');
 
     return {
       mdc,

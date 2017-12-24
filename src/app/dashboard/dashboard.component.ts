@@ -36,7 +36,7 @@ export class DashboardComponent implements OnInit {
     domain: ['#c60000', '#ff9339', '#ef6c00', '#1976d2'],
   };
 
-  graphIsVisible: boolean = false;
+  graphIsVisible: boolean = !!localStorage.MDT_GRAPH_VISIBLE;
   lastIMDSSync: string;
   searchTerms: string[] = [];
   orignalSearchTermPresets: string[] = [
@@ -138,6 +138,8 @@ export class DashboardComponent implements OnInit {
   // Show or hide the data visualizations
   toggleGraph(): void {
     this.graphIsVisible = !this.graphIsVisible;
+    // Remeber the graph display state
+    localStorage.MDT_GRAPH_VISIBLE = this.graphIsVisible || '';
   }
 
   // Launches create job modal dialog
