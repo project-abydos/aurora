@@ -52,7 +52,7 @@ export class DashboardComponent implements OnInit {
     'SCHEDULED JOB',
   ];
   searchTermPresets: string[] = [];
-  julianDate: string = moment().format('YYDDD');
+  julianDate: string = moment().format('YYDDDD');
   filteredData: ICustomMDCData[] = [];
   debouncedFilter: Function = debounce(this.filterWrapper, 200);
   metrics: IDashboardMetrics;
