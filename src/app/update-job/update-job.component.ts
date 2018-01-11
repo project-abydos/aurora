@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { ICustomMDCData, ICustomDDRWCE, IStatusChange } from 'app/types';
+import { get } from 'lodash';
 
 @Component({
   selector: 'mdt-update-job',
@@ -33,7 +34,7 @@ export class UpdateJobComponent {
 
   checkJCN($event: KeyboardEvent): void {
     if ($event.key === 'Enter') {
-      this.onStatusChange.next({ status: 'Done', jcn: 'test' });
+      this.onStatusChange.next({ status: 'Done', jcn: get($event, 'target.value') });
     }
   }
 
