@@ -28,9 +28,8 @@ export class JobRowComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (get(changes, 'row.currentValue.__metadata.etag') !== get(changes, 'row.previousValue.__metadata.etag')) {
       this.jobData = undefined;
-      if (!this.row.JCN) {
-        this.etic = moment(this.row.eticDate).format('YYDDDD');
-      }
+      console.log(this.row.eticDate);
+      this.etic = this.row.eticDate ? moment(this.row.eticDate).format('YYDDDD') : 'None';
     }
   }
 

@@ -18,7 +18,7 @@ export class HttpCacheService extends Http {
         super(backend, defaultOptions);
         localForage.config({
             name: 'mdt_cache_db',
-            storeName: `sp_cache_data_2017_12_19`,
+            storeName: `sp_cache_data_2018_01_11`,
         });
     }
 

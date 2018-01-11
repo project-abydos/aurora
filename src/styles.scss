@@ -110,10 +110,13 @@ td-chips {
             width: calc((100% - 525px) / 2);
         }
         &.LastUpdate {
-            width: calc((100% - 525px) / 2 + 100px);
+            width: calc((100% - 525px) / 2);
+        }
+        &.ETIC {
+            width: 125px;
         }
         &.ApprovalStatus {
-            width: 150px;
+            width: 125px;
         }
     }
     .dashboard-header,
