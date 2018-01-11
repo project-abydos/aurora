@@ -92,7 +92,7 @@ export class JobDataService {
     } else {
       // New job
       if (updateSharePoint) {
-        if (job.DDR) {
+        if (!job.JCN || job.DDR) {
           this._sharePointService.createJob(job).subscribe(update => this.transformMDCRow(update) && this._loadingService.resolve('mdc'));
         } else {
           Utilities.imdsTick(() => this._imdsService.fetchDDR(job.JCN));
