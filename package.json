@@ -1,11 +1,10 @@
 {
-  "name": "maintenance-data-reporting-platform",
+  "name": "maintenance-documentation-tool",
   "version": "1.0.0",
   "private": true,
   "description": "",
   "scripts": {
     "start": "ng serve --proxy-config proxy.conf.json",
-    "hmr": "ng serve --hmr -e=hmr --proxy-config proxy.conf.json",
     "lint": "ng lint",
     "build": "ng build --prod"
   },
@@ -14,7 +13,7 @@
     "npm": ">=3"
   },
   "license": "MIT",
-  "author": "Jeff McCoy: megamind@diux.mil",
+  "author": "Jeff McCoy: jeff@clevrtec.com",
   "dependencies": {
     "@angular/animations": "^4.4.6",
     "@angular/cdk": "github:angular/cdk-builds",

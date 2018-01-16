@@ -1,5 +1,5 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { ICustomMDCData, ICustomDDRWCE, IStatusChange } from 'app/types';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ICustomMDCData, IStatusChange } from 'app/types';
 import { get } from 'lodash';
 
 @Component({
@@ -15,7 +15,7 @@ export class UpdateJobComponent {
 
   changeJobStatus($event: MouseEvent): void {
     $event.stopImmediatePropagation();
-    let { ApprovalStatus } = this.job;
+    let {ApprovalStatus} = this.job;
     this.loadingStatus = true;
     switch (ApprovalStatus) {
       case 'In Work':
@@ -29,12 +29,12 @@ export class UpdateJobComponent {
       default:
         ApprovalStatus = 'In Work';
     }
-    this.onStatusChange.next({ status: ApprovalStatus });
+    this.onStatusChange.next({status: ApprovalStatus});
   }
 
   checkJCN($event: KeyboardEvent): void {
     if ($event.key === 'Enter') {
-      this.onStatusChange.next({ status: 'Done', jcn: get($event, 'target.value') });
+      this.onStatusChange.next({status: 'Done', jcn: get($event, 'target.value')});
     }
   }
 

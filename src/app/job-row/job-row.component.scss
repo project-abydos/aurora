@@ -1,189 +1,190 @@
 .mat-icon-ux {
-    width: 100px;
+  width: 100px;
 }
 
 .icon {
-    font-size: 48px;
+  font-size: 48px;
 }
 
 .ETIC {
-    mat-datepicker-toggle {
-        margin-left: -4em;
-    }
+  mat-datepicker-toggle {
+    margin-left: -4em;
+  }
 }
 
 .JCN,
 .ApprovalStatus {
-    font-weight: 600!important;
+  font-weight: 600 !important;
 }
 
 .Discrepancy {
-    font-weight: 500!important;
+  font-weight: 500 !important;
 }
 
 .CFPComments {
-    font-style: italic;
+  font-style: italic;
 }
 
 .JCN {
-    position: relative;
-    span {
-        display: block;
-        &.small {
-            position: absolute;
-            bottom: .25em;
-            font-size: .75em;
-            font-weight: 100;
-            font-style: italic;
-            color: #aaa;
-        }
+  position: relative;
+  span {
+    display: block;
+    &.small {
+      position: absolute;
+      bottom: .25em;
+      font-size: .75em;
+      font-weight: 100;
+      font-style: italic;
+      color: #aaa;
     }
+  }
 }
 
 .expanded-row {
+  display: flex;
+  padding: 1em;
+  padding-top: 2em;
+  td {
     display: flex;
-    padding: 1em;
-    padding-top: 2em;
-    td {
-        display: flex;
-        mat-card {
-            background: #eee;
-            &.job-info {
-                flex: 1;
-            }
-            &.job-history {
-                flex: 3;
-            }
-        }
+    mat-card {
+      background: #eee;
+      &.job-info {
+        flex: 1;
+      }
+      &.job-history {
+        flex: 3;
+      }
     }
+  }
 }
 
 .tag {
-    padding: 2px 10px;
-    border-radius: 16px;
-    margin-right: 5px;
+  padding: 2px 10px;
+  border-radius: 16px;
+  margin-right: 5px;
 }
 
 .newJob {
-    .LastUpdate {
-        display: inline-block!important;
-        p {
-            span {
-                display: inline-block;
-                vertical-align: top;
-                &:first-child {
-                    width: 5em;
-                    padding-right: 1%;
-                    text-align: right
-                }
-                &:last-child {
-                    width: calc(96% - 5em);
-                    padding-left: 1%;
-                    text-align: left;
-                    border-left: 1px solid white;
-                    font-weight: 600;
-                }
-            }
+  .LastUpdate {
+    display: inline-block !important;
+    p {
+      span {
+        display: inline-block;
+        vertical-align: top;
+        &:first-child {
+          width: 5em;
+          padding-right: 1%;
+          text-align: right
         }
+        &:last-child {
+          width: calc(96% - 5em);
+          padding-left: 1%;
+          text-align: left;
+          border-left: 1px solid white;
+          font-weight: 600;
+        }
+      }
     }
+  }
 }
 
 .job-details {
-    flex-direction: column;
-    .job-info {
-        width: 30%;
+  flex-direction: column;
+  .job-info {
+    width: 30%;
+  }
+  .job-history {
+    width: 95%;
+    margin: 25px auto;
+    &:last-child {
+      margin-bottom: 50px;
     }
-    .job-history {
-        width: 95%;
-        margin: 25px auto;
-        &:last-child {
-            margin-bottom: 50px;
+    mat-card-header mat-card-title {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: .05em;
+      color: #555;
+      justify-content: space-between;
+      display: flex;
+    }
+    mat-card-content {
+      display: flex;
+      flex-direction: column;
+      .ddr-row {
+        flex-direction: row;
+        display: flex;
+        .ddr {
+          width: 2em;
+          text-align: center;
+          font-size: 4em;
+          color: #ccc;
+          align-self: center;
+          font-variant: small-caps;
+          margin-top: -.85em;
         }
-        mat-card-header mat-card-title {
-            font-size: 18px;
-            font-weight: 600;
-            letter-spacing: .05em;
-            color: #555;
+        &.R h3:before {
+          color: #c60000;
+        }
+        &.A h3:before {
+          color: #ff9339;
+        }
+        &.G h3:before {
+          color: #0EC50E;
+        }
+        .data {
+          flex-direction: column;
+          padding-bottom: 2em;
+          margin-bottom: 2em;
+          border-bottom: 3px solid #ddd;
+          margin-right: 2em;
+          flex: 1;
+          h3 {
+            margin: .5em 0;
+            flex-direction: row;
             justify-content: space-between;
             display: flex;
-        }
-        mat-card-content {
+          }
+          h3:before {
+            content: "\2022";
+            position: absolute;
+            padding: 0;
+            font-size: 3.5em;
+            line-height: .35em;
+            margin-left: -.4em;
+          }
+          p {
+            font-style: italic;
+            letter-spacing: .05em;
+            line-height: 1.25em;
+          }
+          small {
+            font-weight: 600;
+            flex-direction: row;
+            justify-content: space-between;
             display: flex;
-            flex-direction: column;
-            .ddr-row {
-                flex-direction: row;
-                display: flex;
-                .ddr {
-                    width: 2em;
-                    text-align: center;
-                    font-size: 4em;
-                    color: #ccc;
-                    align-self: center;
-                    font-variant: small-caps;
-                    margin-top: -.85em;
-                }
-                &.R h3:before {
-                    color: #c60000;
-                }
-                &.A h3:before {
-                    color: #ff9339;
-                }
-                &.G h3:before {
-                    color: #0EC50E;
-                }
-                .data {
-                    flex-direction: column;
-                    padding-bottom: 2em;
-                    margin-bottom: 2em;
-                    border-bottom: 3px solid #ddd;
-                    margin-right: 2em;
-                    flex: 1;
-                    h3 {
-                        margin: .5em 0;
-                        flex-direction: row;
-                        justify-content: space-between;
-                        display: flex;
-                    }
-                    h3:before {
-                        content: "\2022";
-                        position: absolute;
-                        padding: 0;
-                        font-size: 3.5em;
-                        line-height: .35em;
-                        margin-left: -.4em;
-                    }
-                    p {
-                        font-style: italic;
-                        letter-spacing: .05em;
-                        line-height: 1.25em;
-                    }
-                    small {
-                        font-weight: 600;
-                        flex-direction: row;
-                        justify-content: space-between;
-                        display: flex;
-                        .left {
-                            float: left;
-                        }
-                        .right {
-                            float: right;
-                        }
-                    }
-                }
+            .left {
+              float: left;
             }
+            .right {
+              float: right;
+            }
+          }
         }
+      }
     }
+  }
 }
 
 .selectable {
-    cursor: copy;
+  cursor: copy;
 }
-.selectable:hover{
-    color: #1976d2;
+
+.selectable:hover {
+  color: #1976d2;
 }
 
 .newJob {
-    .selectable:hover{
-        color: #FFC60C;
-    }    
+  .selectable:hover {
+    color: #FFC60C;
+  }
 }

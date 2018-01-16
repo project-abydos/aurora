@@ -6,7 +6,7 @@
     ],
     "array-type": [
       true,
-      "array" 
+      "array"
     ],
     "arrow-parens": false,
     "ban": [
@@ -31,14 +31,17 @@
     ],
     "jsdoc-format": true,
     "label-position": true,
-    "max-line-length": [false, 150],
+    "max-line-length": [
+      false,
+      150
+    ],
     "member-access": [
       false
     ],
     "member-ordering": [
       true,
       {
-        "order" : [
+        "order": [
           "private-static-field",
           "protected-static-field",
           "public-static-field",
@@ -61,15 +64,17 @@
     "no-arg": true,
     "no-bitwise": true,
     "no-conditional-assignment": true,
-    "no-consecutive-blank-lines": [true],
+    "no-consecutive-blank-lines": [
+      true
+    ],
     "no-console": [
-      true, 
-      "assert", 
-      "count", 
-      "debug", 
-      "dir", 
-      "dirxml", 
-      "error", 
+      true,
+      "assert",
+      "count",
+      "debug",
+      "dir",
+      "dirxml",
+      "error",
       "group",
       "groupCollapsed",
       "groupEnd",
@@ -97,7 +102,8 @@
     ],
     "no-internal-module": true,
     "no-invalid-this": true,
-    "no-magic-numbers": false, //TODO_LINT (we should lint for this)
+    "no-magic-numbers": false,
+    //TODO_LINT (we should lint for this)
     "no-namespace": true,
     "no-null-keyword": true,
     "no-reference": true,
@@ -182,17 +188,29 @@
       "check-type"
     ],
     // ANGULAR 2 Rules
-    "directive-selector": [true, "attribute", "qs", "camelCase"],
-    "component-selector": [true, "element", "qs", "kebab-case"],
+    "directive-selector": [
+      true,
+      "attribute",
+      "qs",
+      "camelCase"
+    ],
+    "component-selector": [
+      true,
+      "element",
+      "qs",
+      "kebab-case"
+    ],
     "component-class-suffix": true,
     "directive-class-suffix": true,
     "use-input-property-decorator": true,
     "use-output-property-decorator": true,
     "use-host-property-decorator": true,
     "no-attribute-parameter-decorator": true,
-    "no-input-rename": false, // so we can rename @Input so we can change API easier -> @Input('rename') name
-    "no-output-rename": false, // same but for @Output
-    "no-forward-ref" : false,
+    "no-input-rename": false,
+    // so we can rename @Input so we can change API easier -> @Input('rename') name
+    "no-output-rename": false,
+    // same but for @Output
+    "no-forward-ref": false,
     "use-life-cycle-interface": true,
     "use-pipe-transform-interface": true,
     "pipe-naming": [

@@ -1,8 +1,10 @@
 <button mat-button *ngIf="loadingStatus">Updating...</button>
 <div *ngIf="!loadingStatus">
-    <button mat-button (click)="changeJobStatus($event)" *ngIf="job.JCN || job.ApprovalStatus !== 'In Work'">{{job.ApprovalStatus}}</button>
-    <span *ngIf="!job.JCN && job.ApprovalStatus === 'In Work'">
+  <button mat-button (click)="changeJobStatus($event)" *ngIf="job.JCN || job.ApprovalStatus !== 'In Work'">
+    {{job.ApprovalStatus}}
+  </button>
+  <span *ngIf="!job.JCN && job.ApprovalStatus === 'In Work'">
         <span>In Work</span>
-        <input class="jcn-entry" placeholder="New JCN" (keypress)="checkJCN($event)" />
+        <input class="jcn-entry" placeholder="New JCN" (keypress)="checkJCN($event)"/>
     </span>
 </div>

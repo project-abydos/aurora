@@ -1,20 +1,15 @@
-import { IMDSService } from '../../services/imds';
-import { SharepointService } from '../../services/sharepoint';
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { JsonPipe } from '@angular/common';
-import { cloneDeep, concat, defaults, find, every, debounce, without, sumBy, memoize, MemoizedFunction, noop, get, findIndex, assignIn, map } from 'lodash';
+import { IMDSService } from 'services/imds';
+import { SharepointService } from 'services/sharepoint';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { assignIn, debounce, without } from 'lodash';
 import * as moment from 'moment';
+import { Moment } from 'moment';
 import { TdLoadingService } from '@covalent/core';
-import { Observable } from 'rxjs/Observable';
 import { timer } from 'rxjs/observable/timer';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Moment, CalendarSpec } from 'moment';
-import { MatDialog, MatDialogRef } from '@angular/material';
-
-import { ISelectOption, DELAY_CODES, WHEN_DISCOVERED_CODES, DOWN_TIME_CODES } from '../contanstants';
-import { ISharePointMDC, ICustomMDCData, IDashboardMetrics, IFilterResults, IOrgMetrics } from 'app/types';
+import { MatDialog } from '@angular/material';
+import { ICustomMDCData, IDashboardMetrics, IFilterResults, ISharePointMDC } from 'app/types';
 import { CreateJobComponent } from 'app/create-job/create-job.component';
-import { Utilities } from 'services/utilities';
 import { setTimeout } from 'timers';
 import { JobDataService } from 'services/job-data.service';
 import { InspireService, IQuote } from 'services/inspire.service';
@@ -26,7 +21,6 @@ const MINUTE: number = 60 * SECOND;
   selector: 'qs-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
-  viewProviders: [],
 })
 export class DashboardComponent implements OnInit {
 
@@ -59,25 +53,23 @@ export class DashboardComponent implements OnInit {
   historical: boolean;
   inspire: IQuote;
 
-  constructor(
-    private _imdsService: IMDSService,
-    private _sharePointService: SharepointService,
-    private _jobDataService: JobDataService,
-    private _loadingService: TdLoadingService,
-    private _route: ActivatedRoute,
-    private _router: Router,
-    private _cd: ChangeDetectorRef,
-    private _dialog: MatDialog,
-    private _quote: InspireService,
-  ) {
+  constructor(private _imdsService: IMDSService,
+              private _sharePointService: SharepointService,
+              private _jobDataService: JobDataService,
+              private _loadingService: TdLoadingService,
+              private _route: ActivatedRoute,
+              private _router: Router,
+              private _cd: ChangeDetectorRef,
+              private _dialog: MatDialog,
+              private _quote: InspireService,) {
     this.watchForSearchTagChanges();
     this.watchForIMDSSyncMessages();
     this.setupLastIMDSSyncIntervalCheck();
   }
 
-  // Peform updates on route parameter changes
+  // Perform updates on route parameter changes
   watchForSearchTagChanges(): void {
-    this._route.params.subscribe(({ tokens }) => {
+    this._route.params.subscribe(({tokens}) => {
       this.searchTerms = tokens ? tokens.toUpperCase().replace(/\-/g, ' ').split(',') : [];
       this.searchTermPresets = without(this.orignalSearchTermPresets, ...this.searchTerms);
       this.filterWrapper();
@@ -93,7 +85,7 @@ export class DashboardComponent implements OnInit {
       } else {
         if (!imdsCache[job.JCN]) {
           job.Timestamp = moment().local().format('YYDDDD HH:mm:ss');
-          imdsCache[job.JCN] = this._jobDataService.findJob({ JCN: job.JCN });
+          imdsCache[job.JCN] = this._jobDataService.findJob({JCN: job.JCN});
         }
         assignIn(imdsCache[job.JCN], job);
       }
@@ -145,7 +137,7 @@ export class DashboardComponent implements OnInit {
   // Launches create job modal dialog
   openJob(): void {
     this._dialog
-      .open(CreateJobComponent, { width: '65vw' })
+      .open(CreateJobComponent, {width: '65vw'})
       .beforeClose()
       .subscribe(job => {
         if (job && job.Discrepancy) {

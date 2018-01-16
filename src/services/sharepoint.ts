@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { Http, Headers, RequestOptionsArgs, RequestOptions, RequestMethod } from '@angular/http';
+import { Headers, Http, RequestMethod, RequestOptions, RequestOptionsArgs } from '@angular/http';
 import 'rxjs/add/operator/map';
-import { get, pick, includes, find } from 'lodash';
+import { get, includes, pick } from 'lodash';
 
-import { ISharePointConfig, ISharePointMDC, ISharePointAppMetadata, ISharePointMetadata } from 'app/types';
+import { ISharePointAppMetadata, ISharePointConfig, ISharePointMDC, ISharePointMetadata } from 'app/types';
 
 @Injectable()
 export class SharepointService {
@@ -25,7 +24,7 @@ export class SharepointService {
     const isPut: boolean = (options.method === RequestMethod.Put) && !!options.body.__metadata;
     const isPost: boolean = (options.method === RequestMethod.Post);
     const metadata: ISharePointMetadata = get(options, 'body.__metadata');
-    const { body } = options;
+    const {body} = options;
 
     const url: string = `${SharepointService.CONFIG.BASE_URL}/${_url}`;
 

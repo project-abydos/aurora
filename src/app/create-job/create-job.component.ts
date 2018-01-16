@@ -1,19 +1,14 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { FormControl, Validators, FormBuilder } from '@angular/forms';
-import { WHEN_DISCOVERED_CODES, ICodes, DOWN_TIME_CODES } from 'app/contanstants';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { DOWN_TIME_CODES, WHEN_DISCOVERED_CODES } from 'app/constants';
 import { keys } from 'lodash';
 import { IMDSService } from 'services';
-import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import * as moment from 'moment';
-import { ISharePointMDC } from 'app/types';
 import { Moment } from 'moment';
 import { FormGroup } from '@angular/forms/src/model';
-
-interface IJobForm {
-  [key: string]: FormControl;
-}
+import { ICodes } from '../types';
 
 const TEXT_ONLY: RegExp = /^\w+$/i;
 const TIME_INPUT: RegExp = /^\d+$/i;
@@ -64,12 +59,10 @@ export class CreateJobComponent {
     Discrepancy: new FormControl(''),
   });
 
-  constructor(
-    public dialogRef: MatDialogRef<CreateJobComponent>,
-    private _imds: IMDSService,
-    private _fb: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-  ) {
+  constructor(public dialogRef: MatDialogRef<CreateJobComponent>,
+              private _imds: IMDSService,
+              private _fb: FormBuilder,
+              @Inject(MAT_DIALOG_DATA) public data: any,) {
     this.hours.map(hour => this.minutes.map(mins => this.timePicker.push(`${hour}:${mins}`)));
   }
 
@@ -78,10 +71,10 @@ export class CreateJobComponent {
   }
 
   createJob(): void {
-    const { value } = this.job;
+    const {value} = this.job;
     value.StartDate.setHours(parseInt(value.StartTime.slice(0, 2), 10));
     value.StartDate.setMinutes(parseInt(value.StartTime.slice(3, 5), 10));
-    value.Timestamp = NOW.add(1, 'years').format('YYDDDD HH:mm:ss'); //Added a D
+    value.Timestamp = NOW.add(1, 'years').format('YYDDDD HH:mm:ss');
     this.dialogRef.close(value);
   }
 

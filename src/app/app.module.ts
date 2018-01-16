@@ -1,43 +1,21 @@
-import { NgModule, Type } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpModule, Http, XHRBackend, RequestOptions, ConnectionBackend } from '@angular/http';
+import { ConnectionBackend, Http, HttpModule, RequestOptions, XHRBackend } from '@angular/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 import {
-  MatAutocompleteModule,
-  MatButtonModule,
-  MatButtonToggleModule,
-  MatCardModule,
-  MatCheckboxModule,
-  MatChipsModule,
-  MatDatepickerModule,
-  MatFormFieldModule,
-  MatDialogModule,
-  MatGridListModule,
-  MatIconModule,
-  MatListModule,
-  MatMenuModule,
-  MatNativeDateModule,
-  MatProgressBarModule,
-  MatProgressSpinnerModule,
-  MatRadioModule,
-  MatRippleModule,
-  MatSelectModule,
-  MatSidenavModule,
-  MatSliderModule,
-  MatSlideToggleModule,
-  MatSnackBarModule,
-  MatTabsModule,
-  MatToolbarModule,
-  MatTooltipModule,
+  MatAutocompleteModule, MatButtonModule, MatButtonToggleModule, MatCardModule, MatCheckboxModule, MatChipsModule, MatDatepickerModule,
+  MatDialogModule, MatGridListModule, MatIconModule, MatListModule, MatMenuModule, MatNativeDateModule, MatProgressBarModule,
+  MatProgressSpinnerModule, MatRadioModule, MatRippleModule, MatSelectModule, MatSidenavModule, MatSliderModule, MatSlideToggleModule,
+  MatSnackBarModule, MatTabsModule, MatToolbarModule, MatTooltipModule,
 } from '@angular/material';
 
 import { AppComponent } from './app.component';
 
 import { CrossDomainService, IMDSService, SharepointService } from 'services';
-import { routedComponents, AppRoutingModule } from './app-routing.module';
+import { AppRoutingModule, routedComponents } from './app-routing.module';
 
 import { SharedModule } from './shared/shared.module';
 import { JobRowComponent } from './job-row/job-row.component';
@@ -45,7 +23,7 @@ import { HttpCacheService } from 'services/http-cache';
 import { CreateJobComponent } from './create-job/create-job.component';
 import { UpdateJobComponent } from './update-job/update-job.component';
 import { JobDataService } from 'services/job-data.service';
-import { APP_BASE_HREF, HashLocationStrategy, LocationStrategy } from '@angular/common';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { InspireService } from 'services/inspire.service';
 
 // tslint:disable-next-line:typedef
@@ -108,7 +86,7 @@ export function httpCacheService(backend: ConnectionBackend, defaultOptions: Req
       deps: [XHRBackend, RequestOptions],
       useFactory: httpCacheService,
     },
-    { provide: LocationStrategy, useClass: HashLocationStrategy },
+    {provide: LocationStrategy, useClass: HashLocationStrategy},
 
   ], // additional providers needed for this module
   entryComponents: [
@@ -117,4 +95,5 @@ export function httpCacheService(backend: ConnectionBackend, defaultOptions: Req
   bootstrap: [AppComponent],
 })
 
-export class AppModule { }
+export class AppModule {
+}

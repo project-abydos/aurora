@@ -1,10 +1,10 @@
 // src:  https://github.com/davguij/angular-http-cache/blob/master/src/http-cache.service.ts
 
 import { Injectable } from '@angular/core';
-import { Http, ConnectionBackend, Headers, Request, RequestOptions, Response, RequestOptionsArgs, RequestMethod } from '@angular/http';
+import { ConnectionBackend, Http, Request, RequestMethod, RequestOptions, RequestOptionsArgs, Response } from '@angular/http';
 import { Observable, Subscriber } from 'rxjs';
 
-import { orderBy, isEqual, findIndex, cloneDeep } from 'lodash';
+import { cloneDeep, findIndex, orderBy } from 'lodash';
 import * as localForage from 'localforage';
 import { ISharePointMDC } from 'app/types';
 import { Utilities } from 'services/utilities';
@@ -14,84 +14,84 @@ const CACHE_TIME: Date = new Date();
 @Injectable()
 export class HttpCacheService extends Http {
 
-    constructor(backend: ConnectionBackend, defaultOptions: RequestOptions) {
-        super(backend, defaultOptions);
-        localForage.config({
-            name: 'mdt_cache_db',
-            storeName: `sp_cache_data_2018_01_11`,
-        });
+  constructor(backend: ConnectionBackend, defaultOptions: RequestOptions) {
+    super(backend, defaultOptions);
+    localForage.config({
+      name: 'mdt_cache_db',
+      storeName: `sp_cache_data_2018_01_11`,
+    });
+  }
+
+  request(req: string | Request, options?: RequestOptionsArgs): Observable<Response> {
+
+    const url: string = typeof req === 'string' ? req : req.url;
+    const isSharePointMDC: boolean = url.includes('/_vti_bin/ListData.svc/');
+    const shouldCache: boolean = isSharePointMDC && (options.method === RequestMethod.Get) && !/ListData\.svc\/\w+\(\d+\)/.test(url);
+
+    if (!shouldCache) {
+      return super
+        .request(req, options)
+        .map(resp => (typeof resp === 'object') ? resp.json() : resp);
     }
 
-    request(req: string | Request, options?: RequestOptionsArgs): Observable<Response> {
+    function addQMark(test: string): string {
+      return test.includes('?') ? '&' : '?';
+    }
 
-        const url: string = typeof req === 'string' ? req : req.url;
-        const isSharePointMDC: boolean = url.includes('/_vti_bin/ListData.svc/');
-        const shouldCache: boolean = isSharePointMDC && (options.method === RequestMethod.Get) && !/ListData\.svc\/\w+\(\d+\)/.test(url);
+    return new Observable((subscriber: Subscriber<any>) => {
 
-        if (!shouldCache) {
-            return super
-                .request(req, options)
-                .map(resp => (typeof resp === 'object') ? resp.json() : resp);
-        }
+      Observable
+        .fromPromise(localForage.getItem(url))
+        .subscribe((localData: any) => {
 
-        function addQMark(test: string): string {
-            return test.includes('?') ? '&' : '?';
-        }
+          let request: string | Request = cloneDeep(req);
+          localData = localData || [];
 
-        return new Observable((subscriber: Subscriber<any>) => {
+          if (localData.length) {
+            subscriber.next({d: {results: localData}});
 
-            Observable
-                .fromPromise(localForage.getItem(url))
-                .subscribe((localData: any) => {
+            const latest: ISharePointMDC = orderBy(localData, ['Modified'], ['desc'])[0];
+            const lastModified: Date = Utilities.convertDate(latest.Modified);
+            const urlAppend: string = `$filter=Modified gt datetime'${lastModified.toISOString()}'`;
 
-                    let request: string | Request = cloneDeep(req);
-                    localData = localData || [];
+            if (typeof request === 'string') {
+              request += addQMark(request) + urlAppend;
+            } else {
+              request.url += addQMark(request.url) + urlAppend;
+            }
 
-                    if (localData.length) {
-                        subscriber.next({ d: { results: localData } });
+          }
 
-                        const latest: ISharePointMDC = orderBy(localData, ['Modified'], ['desc'])[0];
-                        const lastModified: Date = Utilities.convertDate(latest.Modified);
-                        const urlAppend: string = `$filter=Modified gt datetime'${lastModified.toISOString()}'`;
+          super
+            .request(request, options)
+            .map(resp => (typeof resp === 'object') ? resp.json() : resp)
+            .subscribe((remoteData: any) => {
 
-                        if (typeof request === 'string') {
-                            request += addQMark(request) + urlAppend;
-                        } else {
-                            request.url += addQMark(request.url) + urlAppend;
-                        }
+              const data: any = remoteData.d.results || remoteData.d || [];
 
-                    }
-
-                    super
-                        .request(request, options)
-                        .map(resp => (typeof resp === 'object') ? resp.json() : resp)
-                        .subscribe((remoteData: any) => {
-
-                            const data: any = remoteData.d.results || remoteData.d || [];
-
-                            if (data instanceof Array) {
-                                data.forEach(row => {
-                                    const match: number = findIndex(localData, { Id: row.Id });
-                                    if (match > -1) {
-                                        localData[match] = row;
-                                    } else {
-                                        localData.push(row);
-                                    }
-                                });
-                                Observable.fromPromise(localForage.setItem(url, localData)).subscribe((saved) => {
-                                    subscriber.next({ d: { results: localData } });
-                                    subscriber.complete();
-                                });
-                            } else {
-                                subscriber.next({ d: { results: localData } });
-                                subscriber.complete();
-                            }
-
-                        });
-
+              if (data instanceof Array) {
+                data.forEach(row => {
+                  const match: number = findIndex(localData, {Id: row.Id});
+                  if (match > -1) {
+                    localData[match] = row;
+                  } else {
+                    localData.push(row);
+                  }
                 });
-        });
+                Observable.fromPromise(localForage.setItem(url, localData)).subscribe((saved) => {
+                  subscriber.next({d: {results: localData}});
+                  subscriber.complete();
+                });
+              } else {
+                subscriber.next({d: {results: localData}});
+                subscriber.complete();
+              }
 
-    }
+            });
+
+        });
+    });
+
+  }
 
 }

@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { ISharePointMDC, ICustomMDCData, IDashboardMetrics, IFilterProperties, ISharePointAppMetadata, IOrgMetrics, IFilterResults } from 'app/types';
-import { find, assignIn, findIndex, cloneDeep, debounce, memoize, every, map, sortBy } from 'lodash';
+import { ICustomMDCData, IDashboardMetrics, IFilterResults, IOrgMetrics, ISharePointMDC } from 'app/types';
+import { assignIn, cloneDeep, every, find, findIndex, map, sortBy } from 'lodash';
 import { TdLoadingService } from '@covalent/core';
-import { SharepointService, IMDSService } from 'services';
+import { IMDSService, SharepointService } from 'services';
 import { Utilities } from 'services/utilities';
-import { Moment } from 'moment';
 import * as moment from 'moment';
+import { Moment } from 'moment';
 import * as json2csv from 'json2csv';
 import { saveAs } from 'file-saver';
-import { WHEN_DISCOVERED_CODES, DOWN_TIME_CODES, DELAY_CODES } from 'app/contanstants';
+import { DELAY_CODES, DOWN_TIME_CODES, WHEN_DISCOVERED_CODES } from 'app/constants';
 import { Observable } from 'rxjs';
 
 @Injectable()
@@ -17,11 +17,9 @@ export class JobDataService {
   private workcenters: string[] = [];
   private mdc: ICustomMDCData[] = [];
 
-  constructor(
-    private _imdsService: IMDSService,
-    private _sharePointService: SharepointService,
-    private _loadingService: TdLoadingService,
-  ) {
+  constructor(private _imdsService: IMDSService,
+              private _sharePointService: SharepointService,
+              private _loadingService: TdLoadingService,) {
     _imdsService.workcenters.subscribe(list => this.workcenters = list);
   }
 
@@ -47,15 +45,15 @@ export class JobDataService {
     ];
 
     const csvData: Blob = new Blob(
-      [json2csv({ data: filteredData, fields })],
-      { type: 'text/csv;charset=charset=utf-8' },
+      [json2csv({data: filteredData, fields})],
+      {type: 'text/csv;charset=charset=utf-8'},
     );
     saveAs(csvData, `MDT Export${searchTerms.join('-')}.csv`);
   }
 
   addOrUpdateJob(job: ISharePointMDC, updateSharePoint: boolean): void {
 
-    const match: ICustomMDCData = find(this.mdc, { JCN: job.JCN });
+    const match: ICustomMDCData = find(this.mdc, {JCN: job.JCN});
 
     if (job.CC === 'G' || job.CC === '-') {
       return;
@@ -149,7 +147,7 @@ export class JobDataService {
     }
 
     let searchTerms: string[] = [];
-    const matchId: number = row && findIndex(this.mdc, { Id: row.Id }) || findIndex(this.mdc, { JCN: row.JCN });
+    const matchId: number = row && findIndex(this.mdc, {Id: row.Id}) || findIndex(this.mdc, {JCN: row.JCN});
 
     const now: Moment = moment();
     const _transform: ICustomMDCData = cloneDeep(row);
@@ -166,7 +164,7 @@ export class JobDataService {
     _transform.WhenDiscText = row.WhenDiscovered ? `${row.WhenDiscovered} - ${WHEN_DISCOVERED_CODES[row.WhenDiscovered]}` : '';
     _transform.DownTimeCodeText = row.DownTimeCode ? `${row.DownTimeCode} - ${DOWN_TIME_CODES[row.DownTimeCode]}` : '';
     _transform.DelayCodeText = row.DelayCode ? `${row.DelayCode} - ${DELAY_CODES[row.DelayCode]}` : '';
-    _transform.prettyJCN = Utilities.prettyTimeDiff(julianDate, { sameDay: '[Today]' });
+    _transform.prettyJCN = Utilities.prettyTimeDiff(julianDate, {sameDay: '[Today]'});
     _transform.tags = [];
     _transform.historical = (row.ApprovalStatus === 'Done' && row.Closed);
 
@@ -178,7 +176,7 @@ export class JobDataService {
 
     if (row.Closed) {
 
-      _transform.tags.push({ title: 'Closed', style: 'dark' });
+      _transform.tags.push({title: 'Closed', style: 'dark'});
 
     } else {
 
@@ -192,11 +190,11 @@ export class JobDataService {
       }
 
       if (juliantDateDiff > 89) {
-        _transform.tags.push({ title: '90+ Open', style: 'accent' });
+        _transform.tags.push({title: '90+ Open', style: 'accent'});
       }
 
       if (juliantDateDiff <= 0) {
-        _transform.tags.push({ title: 'Scheduled', style: 'primary' });
+        _transform.tags.push({title: 'Scheduled', style: 'primary'});
         searchTerms.push('scheduled job');
       } else {
         searchTerms.push('active job');
@@ -207,12 +205,12 @@ export class JobDataService {
       }
 
       if (!newJob && _transform.JCN.match(/\d+[A-Z]\d+/)) {
-        _transform.tags.push({ title: 'PMI' });
+        _transform.tags.push({title: 'PMI'});
       }
     }
 
-    discrepancyText.includes('FCO') && _transform.tags.push({ title: 'FCO' });
-    discrepancyText.includes('DEPLOYMENT INSPECTION') && _transform.tags.push({ title: 'PDI' });
+    discrepancyText.includes('FCO') && _transform.tags.push({title: 'FCO'});
+    discrepancyText.includes('DEPLOYMENT INSPECTION') && _transform.tags.push({title: 'PDI'});
 
     _transform.search = searchTerms.concat([
       _transform.JCN,

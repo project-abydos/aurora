@@ -4,18 +4,13 @@ import { FormsModule, ReactiveFormsModule, } from '@angular/forms';
 import { FlexLayoutModule, } from '@angular/flex-layout';
 
 import {
-  CovalentDataTableModule, CovalentMediaModule, CovalentLoadingModule,
-  CovalentNotificationsModule, CovalentLayoutModule, CovalentMenuModule,
-  CovalentChipsModule, CovalentCommonModule, CovalentDialogsModule,
+  CovalentChipsModule, CovalentCommonModule, CovalentDataTableModule, CovalentDialogsModule, CovalentLayoutModule, CovalentLoadingModule,
+  CovalentMediaModule, CovalentMenuModule, CovalentNotificationsModule,
 } from '@covalent/core';
 
 import {
-  MatButtonModule, MatCardModule, MatIconModule,
-  MatListModule, MatMenuModule, MatTooltipModule,
-  MatSlideToggleModule, MatInputModule, MatCheckboxModule,
-  MatToolbarModule, MatSidenavModule,
-  MatTabsModule, MatSelectModule,
-
+  MatButtonModule, MatCardModule, MatCheckboxModule, MatIconModule, MatInputModule, MatListModule, MatMenuModule, MatSelectModule,
+  MatSidenavModule, MatSlideToggleModule, MatTabsModule, MatToolbarModule, MatTooltipModule,
 } from '@angular/material';
 
 const FLEX_LAYOUT_MODULES: any[] = [
@@ -48,9 +43,7 @@ const COVALENT_MODULES: any[] = [
     COVALENT_MODULES,
     FLEX_LAYOUT_MODULES,
   ],
-  declarations: [
-
-  ],
+  declarations: [],
   exports: [
     ANGULAR_MODULES,
     MATERIAL_MODULES,
@@ -59,4 +52,5 @@ const COVALENT_MODULES: any[] = [
   ],
 })
 
-export class SharedModule { }
+export class SharedModule {
+}

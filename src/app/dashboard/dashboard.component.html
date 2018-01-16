@@ -4,7 +4,8 @@
     <span class="animated fadeIn">Maintenance Documentation Tool</span>
     <span flex></span>
     <span></span>
-    <button class="toggle-graph animated fadeInRightBig" mat-icon-button [ngClass]="graphIsVisible ? 'show-graph' : ''" (click)="toggleGraph()">
+    <button class="toggle-graph animated fadeInRightBig" mat-icon-button [ngClass]="graphIsVisible ? 'show-graph' : ''"
+            (click)="toggleGraph()">
       <mat-icon matTooltipPosition="left" matTooltip="Click to toggle the graph visibilty">multiline_chart</mat-icon>
     </button>
     <span></span>
@@ -15,7 +16,8 @@
     <a class="export-button animated fadeInRightBig" mat-icon-button href="mdt-infographic.pdf" target="_blank">
       <mat-icon matTooltipPosition="left" matTooltip="View the app overview">help</mat-icon>
     </a>
-    <button class="create-job-button animated fadeInRightBig" mat-mini-fab (click)="openJob()" matTooltipPosition="left" matTooltip="Open a new job">
+    <button class="create-job-button animated fadeInRightBig" mat-mini-fab (click)="openJob()" matTooltipPosition="left"
+            matTooltip="Open a new job">
       <mat-icon aria-label="Open a new job">add</mat-icon>
     </button>
   </div>
@@ -27,8 +29,9 @@
 
             <mat-card class="animated zoomIn" style="background: #eee">
               <div layout="row" layout-align="start center" class="pad-left-sm pad-right-sm">
-                <td-chips flex=1 placeholder="Add search terms and press enter" [items]="searchTermPresets" [(ngModel)]="searchTerms" (add)="navigateSearch()"
-                  (remove)="navigateSearch()" (inputChange)="refreshSearchItems($event)">
+                <td-chips flex=1 placeholder="Add search terms and press enter" [items]="searchTermPresets"
+                          [(ngModel)]="searchTerms" (add)="navigateSearch()"
+                          (remove)="navigateSearch()" (inputChange)="refreshSearchItems($event)">
                 </td-chips>
                 <span class="start-imds-sync animated fadeInRightBig">
                   <ng-template tdLoading="imds-380" tdLoadingColor="accent"> </ng-template>
@@ -61,7 +64,8 @@
                 </div>
                 <div class="dashboard-body">
                   <ng-template ngFor let-row [ngForOf]="filteredData" [ngForTrackBy]="trackJobStateChange">
-                    <mdt-job-row class="animated pulse" [row]="row" [ngClass]="row.firstOver30 ? 'over30': ''" (onStatusChange)="changeJobStatus($event, row)"></mdt-job-row>
+                    <mdt-job-row class="animated pulse" [row]="row" [ngClass]="row.firstOver30 ? 'over30': ''"
+                                 (onStatusChange)="changeJobStatus($event, row)"></mdt-job-row>
                   </ng-template>
                 </div>
 
@@ -80,8 +84,9 @@
           </mat-sidenav-content>
 
           <mat-sidenav position="end" [opened]="graphIsVisible" mode="side">
-            <ngx-charts-bar-horizontal-stacked [results]="multi" [scheme]="colorScheme" [gradient]="true" [animations]="false"  [xAxis]="true" [yAxis]="true" legend="true"
-              showYAxisLabel [xAxisLabel]="'Jobs'">
+            <ngx-charts-bar-horizontal-stacked [results]="multi" [scheme]="colorScheme" [gradient]="true"
+                                               [animations]="false" [xAxis]="true" [yAxis]="true" legend="true"
+                                               showYAxisLabel [xAxisLabel]="'Jobs'">
             </ngx-charts-bar-horizontal-stacked>
           </mat-sidenav>
 

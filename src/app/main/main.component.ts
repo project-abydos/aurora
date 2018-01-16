@@ -1,10 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-interface IRouteItem {
-  title: string;
-  route: string;
-  icon: string;
-}
+import { IRouteItem } from '../types';
 
 @Component({
   selector: 'qs-main',
@@ -20,7 +15,5 @@ export class MainComponent {
       icon: 'dashboard',
     },
   ];
-
-  constructor(private _router: Router) { }
 
 }

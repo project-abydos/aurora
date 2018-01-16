@@ -1,131 +1,130 @@
 .last-imds-sync {
-    font-size: .75em;
-    font-style: italic;
-    text-align: center;
-    color: #eee;
+  font-size: .75em;
+  font-style: italic;
+  text-align: center;
+  color: #eee;
 }
 
 .export-button {
-    // color: #555;
+  // color: #555;
 }
 
 .create-job-button {
-    background-color: #FFC60C;
-    margin-left: 1em;
-    mat-icon {
-        margin-top: -2px;
-        font-size: 2em;
-    }
+  background-color: #FFC60C;
+  margin-left: 1em;
+  mat-icon {
+    margin-top: -2px;
+    font-size: 2em;
+  }
 }
 
 .mat-icon-ux {
-    width: 100px;
+  width: 100px;
 }
 
 .icon {
-    font-size: 48px;
+  font-size: 48px;
 }
 
 .JCN,
 .ApprovalStatus {
-    font-weight: 600!important;
+  font-weight: 600 !important;
 }
 
 .Discrepancy {
-    font-weight: 500!important;
+  font-weight: 500 !important;
 }
 
 .CFPComments {
-    font-style: italic;
+  font-style: italic;
 }
 
 .JCN button {
-    padding: 0;
-    margin-left: -10px;
+  padding: 0;
+  margin-left: -10px;
 }
 
 .gator-logo {
-    display: inline-block;
-    background-image: url("../../assets/gator-sm.png");
-    width: 3em;
-    height: 2em;
-    background-size: contain;
-    background-repeat: no-repeat;
+  display: inline-block;
+  background-image: url("../../assets/gator-sm.png");
+  width: 3em;
+  height: 2em;
+  background-size: contain;
+  background-repeat: no-repeat;
 }
 
 .af-logo {
-    display: inline-block;
-    background-image: url("../../assets/af-white.png");
-    width: 3em;
-    height: 2em;
-    background-size: contain;
-    background-repeat: no-repeat;
+  display: inline-block;
+  background-image: url("../../assets/af-white.png");
+  width: 3em;
+  height: 2em;
+  background-size: contain;
+  background-repeat: no-repeat;
 }
 
 mat-sidenav-container {
-    height: 100%;
-    margin: 0;
+  height: 100%;
+  margin: 0;
 }
 
 mat-sidenav-content.mat-drawer-content {
-    overflow: hidden!important;
-    background: white;
+  overflow: hidden !important;
+  background: white;
 }
 
 .show-graph mat-icon {
-    border-bottom: 3px solid white;
-    padding-bottom: 3px;
-    margin-top: 3px;
+  border-bottom: 3px solid white;
+  padding-bottom: 3px;
+  margin-top: 3px;
 }
 
-
 .quote-card {
-    background: #eee;
-    
-    padding: 20px;
-    padding-left: 50px;
-    box-sizing: border-box;
-    box-shadow: 0 2px 4px rgba(#000, 0.12);
-    
-    position: relative;
-    overflow: hidden;
-    min-height: 120px;
-    
-    p {
-      font-size: 22px;
-      line-height: 1.5;
-      margin: 0;
-      max-width: 80%;
-    }
-    
-    cite {
-      font-size: 16px;
-      margin-top: 10px;
-      display: block;
-      font-weight: 200;
-      opacity: 0.8;
-    }
-     
-    &:before {
-        font-family: Georgia, serif;
-        content: "“";
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        font-size: 5em;
-        color: rgba(#ccc, 0.8);
-        font-weight: normal;
-      }
-      
-    &:after {
-        font-family: Georgia, serif;
-        content: "”";
-        position: absolute;
-        bottom: -110px;
-        line-height: 100px;
-        right: -32px;
-        font-size: 25em;
-        color: rgba(#ccc, 0.8);
-        font-weight: normal;
-      }
-    }
+  background: #eee;
+
+  padding: 20px;
+  padding-left: 50px;
+  box-sizing: border-box;
+  box-shadow: 0 2px 4px rgba(#000, 0.12);
+
+  position: relative;
+  overflow: hidden;
+  min-height: 120px;
+
+  p {
+    font-size: 22px;
+    line-height: 1.5;
+    margin: 0;
+    max-width: 80%;
+  }
+
+  cite {
+    font-size: 16px;
+    margin-top: 10px;
+    display: block;
+    font-weight: 200;
+    opacity: 0.8;
+  }
+
+  &:before {
+    font-family: Georgia, serif;
+    content: "“";
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 5em;
+    color: rgba(#ccc, 0.8);
+    font-weight: normal;
+  }
+
+  &:after {
+    font-family: Georgia, serif;
+    content: "”";
+    position: absolute;
+    bottom: -110px;
+    line-height: 100px;
+    right: -32px;
+    font-size: 25em;
+    color: rgba(#ccc, 0.8);
+    font-weight: normal;
+  }
+}

@@ -1,77 +1,77 @@
 mat-form-field {
-    min-width: 3%!important;
+  min-width: 3% !important;
+  width: 30%;
+
+  &.uppercase input {
+    text-transform: uppercase;
+  }
+
+  &.w20 {
+    width: 20%;
+  }
+
+  &.w25 {
+    width: 25%;
+  }
+
+  &.w30 {
     width: 30%;
-    
-    &.uppercase input {
-        text-transform: uppercase;
-    }
+  }
 
-    &.w20 {
-        width: 20%;
-    }
+  &.w50 {
+    width: 50%;
+  }
 
-    &.w25 {
-        width: 25%;
-    }
-
-    &.w30 {
-        width: 30%;
-    }
-
-    &.w50 {
-        width: 50%;
-    }
-
-    &.w100 {
-        width: 100%;
-    }
+  &.w100 {
+    width: 100%;
+  }
 }
 
 .flex-group {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 
 mat-dialog-actions {
-    justify-content: flex-end;
+  justify-content: flex-end;
 }
 
 .start-time-field {
-    width: 115px;
+  width: 115px;
 }
 
 .mat-dialog-title {
-    font-variant: small-caps;
-    &.A {
-        border-bottom: 7px solid #ff9339;
-    }
-    &.R {
-        border-bottom: 7px solid #c60000;
-    }
+  font-variant: small-caps;
+  &.A {
+    border-bottom: 7px solid #ff9339;
+  }
+  &.R {
+    border-bottom: 7px solid #c60000;
+  }
 }
 
 .mat-button-toggle-group {
-    box-shadow: none!important;
+  box-shadow: none !important;
 }
 
 mat-button-toggle {
-    background: none;
-    border: 1px solid transparent;
-    border-radius: 5px;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  &.amber {
+    color: #ff9339 !important;
+  }
+  &.red {
+    color: #c60000 !important;
+  }
+  &.mat-button-toggle-checked {
     &.amber {
-        color:#ff9339!important;
-    }   
-    &.red {
-        color: #c60000!important;
+      background-color: #ff933910;
+      border-color: #ff9339;
     }
-    &.mat-button-toggle-checked {
-        &.amber {
-            background-color: #ff933910;
-            border-color: #ff9339;
-        }   
-        &.red {
-            background-color: #c6000010;
-            border-color: #c60000;
-        }
-   }
+    &.red {
+      background-color: #c6000010;
+      border-color: #c60000;
+    }
+  }
 }

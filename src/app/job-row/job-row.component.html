@@ -1,4 +1,5 @@
-<div class="mat-row" [ngClass]="[row.CC, isExpanded ? 'expanded' : 'collapsed']" (click)="toggleExpanded(row)" *ngIf="row.JCN">
+<div class="mat-row" [ngClass]="[row.CC, isExpanded ? 'expanded' : 'collapsed']" (click)="toggleExpanded(row)"
+     *ngIf="row.JCN">
 
   <div class="mat-cell JCN">
     <span (click)="copyText($event)" class="selectable" matTooltip="Click to copy this JCN">{{row.JCN}}</span>
@@ -15,7 +16,8 @@
 
   <div class="mat-cell Discrepancy ellipses">
     <span>
-      <mat-chip *ngFor="let tag of row.tags" class="tag" [selected]="!!tag.style" [color]="tag.style">{{tag.title}}</mat-chip>
+      <mat-chip *ngFor="let tag of row.tags" class="tag" [selected]="!!tag.style"
+                [color]="tag.style">{{tag.title}}</mat-chip>
       {{row.Discrepancy}}</span>
   </div>
 
@@ -53,7 +55,8 @@
       </mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <h4 *ngIf="!wce" class="mat-progress-bar-secondary mat-progress-bar-fill mat-progress-bar-element">Loading data...</h4>
+      <h4 *ngIf="!wce" class="mat-progress-bar-secondary mat-progress-bar-fill mat-progress-bar-element">Loading
+        data...</h4>
       <div class="ddr-row {{ddr.Symbol}}" *ngFor="let ddr of wce.DDR">
         <div class="ddr">
           {{ddr.ddr}}
@@ -96,8 +99,10 @@
 
   <div class="mat-cell Discrepancy">
     <span>
-      <mat-chip *ngFor="let tag of row.tags" class="tag" [selected]="!!tag.style" [color]="tag.style">{{tag.title}}</mat-chip>
-      <span (click)="copyText($event)" class="selectable" matTooltip="Click to copy this data">{{row.Discrepancy}}</span>
+      <mat-chip *ngFor="let tag of row.tags" class="tag" [selected]="!!tag.style"
+                [color]="tag.style">{{tag.title}}</mat-chip>
+      <span (click)="copyText($event)" class="selectable"
+            matTooltip="Click to copy this data">{{row.Discrepancy}}</span>
     </span>
   </div>
 

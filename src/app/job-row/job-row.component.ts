@@ -1,9 +1,8 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
-import { cloneDeep, defaults, find, get } from 'lodash';
+import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
+import { get } from 'lodash';
 import * as moment from 'moment';
 
-import { ISharePointMDC, ICustomMDCData, IParsedDDRInformationRow, ICustomDDR, IParseDDREventDataRow, ICustomDDRWCE, IStatusChange } from 'app/types';
-import { WHEN_DISCOVERED_CODES, DOWN_TIME_CODES, DELAY_CODES, ISelectOption } from 'app/contanstants';
+import { ICustomDDR, ICustomDDRWCE, ICustomMDCData, IParsedDDRInformationRow, IParseDDREventDataRow, IStatusChange } from 'app/types';
 import { Utilities } from 'services/utilities';
 import { SharepointService } from 'services';
 import { OnChanges } from '@angular/core/src/metadata/lifecycle_hooks';
@@ -60,12 +59,11 @@ export class JobRowComponent implements OnChanges {
     window.getSelection().selectAllChildren($event.srcElement);
     document.execCommand('copy');
     window.getSelection().removeAllRanges();
-
   }
 
   convertDDR(ddr: IParsedDDRInformationRow | IParsedDDRInformationRow[]): ICustomDDR[] {
     return (ddr ? (ddr instanceof Array ? ddr : [ddr]) : [])
-      .map(({ DDRDataRow }) => ({
+      .map(({DDRDataRow}) => ({
         ...DDRDataRow,
         ddr: parseInt(DDRDataRow.DDR, 10),
         StartDate: DDRDataRow.StatusDateTimeRow.Date,
