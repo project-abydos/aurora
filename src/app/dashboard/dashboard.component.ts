@@ -44,6 +44,7 @@ export class DashboardComponent implements OnInit {
     'PMI',
     'RED JOB',
     'SCHEDULED JOB',
+    'UNSCHEDULED JOB',
   ];
   searchTermPresets: string[] = [];
   julianDate: string = moment().format('YYDDDD');

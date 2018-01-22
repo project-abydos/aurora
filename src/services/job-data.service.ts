@@ -218,6 +218,8 @@ export class JobDataService {
 
       if (isPMI) {
         _transform.tags.push(TAGS.PMI);
+      } else {
+        searchTerms.push('unscheduled job');      
       }
     }
 

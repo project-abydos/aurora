@@ -16,6 +16,7 @@ export class HttpCacheService extends Http {
 
   constructor(backend: ConnectionBackend, defaultOptions: RequestOptions) {
     super(backend, defaultOptions);
+    // localForage.clear()
     localForage.config({
       name: 'mdt_cache_db',
       storeName: `sp_cache_data_2018_01_11`,
