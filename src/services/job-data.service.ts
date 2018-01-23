@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ICustomMDCData, IDashboardMetrics, IFilterResults, IOrgMetrics, ISharePointMDC, ICustomMDCDataTag } from 'app/types';
+import { ICustomMDCData, ICustomMDCDataTag, IDashboardMetrics, IFilterResults, IOrgMetrics, ISharePointMDC } from 'app/types';
 import { assignIn, cloneDeep, every, find, findIndex, map, sortBy, uniq } from 'lodash';
 import { TdLoadingService } from '@covalent/core';
 import { IMDSService, SharepointService } from 'services';
@@ -18,8 +18,8 @@ export class JobDataService {
   private mdc: ICustomMDCData[] = [];
 
   constructor(private _imdsService: IMDSService,
-    private _sharePointService: SharepointService,
-    private _loadingService: TdLoadingService, ) {
+              private _sharePointService: SharepointService,
+              private _loadingService: TdLoadingService,) {
     _imdsService.workcenters.subscribe(list => this.workcenters = list);
   }
 
@@ -45,15 +45,15 @@ export class JobDataService {
     ];
 
     const csvData: Blob = new Blob(
-      [json2csv({ data: filteredData, fields })],
-      { type: 'text/csv;charset=charset=utf-8' },
+      [json2csv({data: filteredData, fields})],
+      {type: 'text/csv;charset=charset=utf-8'},
     );
     saveAs(csvData, `MDT Export${searchTerms.join('-')}.csv`);
   }
 
   addOrUpdateJob(job: ISharePointMDC, updateSharePoint: boolean): void {
 
-    const match: ICustomMDCData = find(this.mdc, { JCN: job.JCN });
+    const match: ICustomMDCData = find(this.mdc, {JCN: job.JCN});
 
     if (job.CC === 'G' || job.CC === '-') {
       return;
@@ -147,7 +147,7 @@ export class JobDataService {
     }
 
     let searchTerms: string[] = [];
-    const matchId: number = row && findIndex(this.mdc, { Id: row.Id }) || findIndex(this.mdc, { JCN: row.JCN });
+    const matchId: number = row && findIndex(this.mdc, {Id: row.Id}) || findIndex(this.mdc, {JCN: row.JCN});
 
     const now: Moment = moment();
     const _transform: ICustomMDCData = cloneDeep(row);
@@ -157,7 +157,11 @@ export class JobDataService {
     const julianDate: Moment = newJob ? startDate : Utilities.parseJCN(_transform.JCN);
     const juliantDateDiff: number = now.diff(julianDate, 'days');
     const timestampMoment: Moment = Utilities.convertJobTimestamp(row.Timestamp);
+
     const isPMI: boolean = !newJob && !!_transform.JCN.match(/\d+[A-Z]\d+/);
+    const isFCO: boolean = discrepancyText.includes('FCO');
+    const isPDI: boolean = discrepancyText.includes('DEPLOYMENT INSPECTION');
+
 
     _transform.LastUpdate = row.LastUpdate || 'First IMDS Sync';
     _transform.ApprovalStatus = row.ApprovalStatus || 'Pending';
@@ -165,7 +169,7 @@ export class JobDataService {
     _transform.WhenDiscText = row.WhenDiscovered ? `${row.WhenDiscovered} - ${WHEN_DISCOVERED_CODES[row.WhenDiscovered]}` : '';
     _transform.DownTimeCodeText = row.DownTimeCode ? `${row.DownTimeCode} - ${DOWN_TIME_CODES[row.DownTimeCode]}` : '';
     _transform.DelayCodeText = row.DelayCode ? `${row.DelayCode} - ${DELAY_CODES[row.DelayCode]}` : '';
-    _transform.prettyJCN = Utilities.prettyTimeDiff(julianDate, { sameDay: '[Today]' });
+    _transform.prettyJCN = Utilities.prettyTimeDiff(julianDate, {sameDay: '[Today]'});
     _transform.tags = [];
     _transform.historical = (row.ApprovalStatus === 'Done' && row.Closed);
 
@@ -176,11 +180,13 @@ export class JobDataService {
     }[_transform.CC];
 
     const TAGS: { [key: string]: ICustomMDCDataTag } = {
-      CLOSED: { title: 'Closed', style: 'dark' },
-      NEEDS_UPDATE: { title: 'Needs Update', style: 'primary' },
-      OPEN_90: { title: '90+ Open', style: 'accent' },
-      SCHEDULED: { title: 'Scheduled' },
-      PMI: { title: 'PMI' },
+      CLOSED: {title: 'Closed', style: 'dark'},
+      NEEDS_UPDATE: {title: 'Needs Update', style: 'primary'},
+      OPEN_90: {title: '90+ Open', style: 'accent'},
+      PROJECTED: {title: 'Projected', style: 'semi-dark'},
+      PMI: {title: 'PMI'},
+      PDI: {title: 'PDI'},
+      FCO: {title: 'FCO'},
     };
 
     if (row.Closed) {
@@ -202,9 +208,9 @@ export class JobDataService {
         _transform.tags.push(TAGS.OPEN_90);
       }
 
-      if (juliantDateDiff <= 0) {
-        _transform.tags.push(TAGS.SCHEDULED);
-        searchTerms.push('scheduled job');
+      if (juliantDateDiff < 0) {
+        _transform.tags.push(TAGS.PROJECTED);
+        searchTerms.push('projected job');
       } else {
         if (isPMI && row.LastUpdate === 'First IMDS Sync') {
           _transform.tags.push(TAGS.NEEDS_UPDATE);
@@ -216,17 +222,16 @@ export class JobDataService {
         searchTerms.push('new job');
       }
 
-      if (isPMI) {
-        _transform.tags.push(TAGS.PMI);
-      } else {
-        searchTerms.push('unscheduled job');      
+      if (!isPMI && !isPDI && !isFCO) {
+        searchTerms.push('unscheduled job');
       }
     }
 
-    _transform.tags = uniq(_transform.tags);
+    isPMI && _transform.tags.push(TAGS.PMI);
+    isPDI && discrepancyText.includes('DEPLOYMENT INSPECTION') && _transform.tags.push(TAGS.PDI);
+    isFCO && discrepancyText.includes('FCO') && _transform.tags.push(TAGS.FCO);
 
-    discrepancyText.includes('FCO') && _transform.tags.push({ title: 'FCO' });
-    discrepancyText.includes('DEPLOYMENT INSPECTION') && _transform.tags.push({ title: 'PDI' });
+    _transform.tags = uniq(_transform.tags);
 
     _transform.search = searchTerms.concat([
       _transform.JCN,

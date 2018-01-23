@@ -42,8 +42,8 @@ export class DashboardComponent implements OnInit {
     'NEW JOB',
     'PDI',
     'PMI',
+    'PROJECTED JOB',
     'RED JOB',
-    'SCHEDULED JOB',
     'UNSCHEDULED JOB',
   ];
   searchTermPresets: string[] = [];
