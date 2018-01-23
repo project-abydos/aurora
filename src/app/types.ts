@@ -49,7 +49,7 @@ export interface ISharePointMDC {
     WorkCenter?: string;
     Discrepancy?: string;
     LastUpdate?: string;
-    ETIC?: string;
+  ETIC?: Date | string;
     Location?: string;
     ApprovalStatus?: string;
     CFPComments?: string;
@@ -74,7 +74,7 @@ export interface ICustomMDCData extends ISharePointMDC {
     WhenDiscText?: string;
     DownTimeCodeText?: string;
     DelayCodeText?: string;
-    eticDate?: Date;
+  eticDate?: Date | string;
     isExpanded?: boolean;
     updated?: boolean;
     CCText?: any;

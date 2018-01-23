@@ -28,12 +28,13 @@
     </span>
   </div>
 
-  <div class="mat-cell ETIC" *ngIf="!isExpanded">
+  <div class="mat-cell ETIC" *ngIf="!isExpanded || etic === 'Updating...'">
     <span>{{etic}}</span>
   </div>
 
-  <div class="mat-cell ETIC" *ngIf="isExpanded">
-    <input matInput [matDatepicker]="picker" placeholder="Choose a date" [(ngModel)]="row.eticDate">
+  <div class="mat-cell ETIC" *ngIf="isExpanded && etic !== 'Updating...'">
+    <input matInput [matDatepicker]="picker" placeholder="Choose a date" [(ngModel)]="row.eticDate"
+           (ngModelChange)="updateETIC(row.eticDate)">
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker></mat-datepicker>
   </div>

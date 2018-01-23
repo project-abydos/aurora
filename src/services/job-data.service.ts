@@ -121,6 +121,17 @@ export class JobDataService {
     });
   }
 
+  changeJobETIC(ETIC: Date, row: ICustomMDCData): Observable<void> {
+    const job: ICustomMDCData = {
+      __metadata: row.__metadata,
+      ETIC,
+    };
+    return this._sharePointService.updateJob(job).map(response => {
+      row.ETIC = job.ETIC;
+      this.transformMDCRow(row);
+    });
+  }
+
   transformMDCRow(row: ICustomMDCData): void {
 
     console.log('transform');

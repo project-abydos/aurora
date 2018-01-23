@@ -27,7 +27,7 @@ export class DashboardComponent implements OnInit {
   multi: any = [];
 
   colorScheme: any = {
-    domain: ['#c60000', '#ff9339', '#ef6c00', '#1976d2'],
+    domain: ['#c60000', '#ff9339', '#070300', '#1976d2'],
   };
 
   graphIsVisible: boolean = !!localStorage.MDT_GRAPH_VISIBLE;
@@ -149,6 +149,10 @@ export class DashboardComponent implements OnInit {
 
   changeJobStatus(update: { status: string, jcn: string }, row: ICustomMDCData): void {
     this._jobDataService.changeJobStatus(update, row).subscribe(done => this.filterWrapper());
+  }
+
+  changeJobETIC(ETIC: Date, row: ICustomMDCData): void {
+    this._jobDataService.changeJobETIC(ETIC, row).subscribe(done => this.filterWrapper());
   }
 
   reSyncJobs(): void {

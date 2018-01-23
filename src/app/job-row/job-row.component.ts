@@ -16,6 +16,7 @@ export class JobRowComponent implements OnChanges {
 
   @Input() row: ICustomMDCData;
   @Output() onStatusChange: EventEmitter<IStatusChange> = new EventEmitter<IStatusChange>();
+  @Output() onETICChange: EventEmitter<Date> = new EventEmitter<Date>();
   isExpanded: boolean;
   etic: string;
   jobData: ICustomDDRWCE[];
@@ -27,8 +28,7 @@ export class JobRowComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (get(changes, 'row.currentValue.__metadata.etag') !== get(changes, 'row.previousValue.__metadata.etag')) {
       this.jobData = undefined;
-      console.log(this.row.eticDate);
-      this.etic = this.row.eticDate ? moment(this.row.eticDate).format('YYDDDD') : 'None';
+      this.etic = this.row.eticDate ? moment.utc(this.row.eticDate).format('YYDDDD') : 'None';
     }
   }
 
@@ -76,4 +76,8 @@ export class JobRowComponent implements OnChanges {
       .sort((a, b) => b.ddr - a.ddr);
   }
 
+  updateETIC(ETIC: Date): void {
+    this.etic = 'Updating...';
+    this.onETICChange.next(moment.utc(ETIC).toDate());
+  }
 }
