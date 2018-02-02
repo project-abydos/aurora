@@ -74,7 +74,7 @@ export class CreateJobComponent {
     const {value} = this.job;
     value.StartDate.setHours(parseInt(value.StartTime.slice(0, 2), 10));
     value.StartDate.setMinutes(parseInt(value.StartTime.slice(3, 5), 10));
-    value.Timestamp = NOW.add(1, 'years').format('YYDDDD HH:mm:ss');
+    value.Timestamp = NOW.clone().add(1, 'years').format('YYDDDD HH:mm:ss');
     this.dialogRef.close(value);
   }
 
