@@ -223,7 +223,7 @@ export class JobDataService {
         _transform.tags.push(TAGS.PROJECTED);
         searchTerms.push('projected job');
       } else {
-        if (isPMI && row.LastUpdate === 'First IMDS Sync') {
+        if (!row.LastUpdate) {
           _transform.tags.push(TAGS.NEEDS_UPDATE);
         }
         searchTerms.push('active job');
