@@ -1,6 +1,6 @@
 {
-    "/sites/10383/mdrp": {
-        "target": "https://cs2.eis.af.mil/sites/10383/mdrp",
+    "/sites/10383/mdt": {
+        "target": "https://cs2.eis.af.mil/sites/10383/mdt",
         "secure": true
     }
 }

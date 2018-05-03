@@ -1,5 +1,3 @@
-import { IMDSService } from 'services/imds';
-import { SharepointService } from 'services/sharepoint';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { assignIn, debounce, without } from 'lodash';
 import * as moment from 'moment';
@@ -11,8 +9,7 @@ import { MatDialog } from '@angular/material';
 import { ICustomMDCData, IDashboardMetrics, IFilterResults, ISharePointMDC } from 'app/types';
 import { CreateJobComponent } from 'app/create-job/create-job.component';
 import { setTimeout } from 'timers';
-import { JobDataService } from 'services/job-data.service';
-import { InspireService, IQuote } from 'services/inspire.service';
+import { InspireService, IQuote, JobDataService, cya, SharepointService, IMDSService } from 'services';
 
 const SECOND: number = 1000;
 const MINUTE: number = 60 * SECOND;
@@ -30,7 +27,7 @@ export class DashboardComponent implements OnInit {
     domain: ['#c60000', '#ff9339', '#070300', '#1976d2'],
   };
 
-  graphIsVisible: boolean = !!localStorage.MDT_GRAPH_VISIBLE;
+  graphIsVisible: boolean = !!localStorage.MAT_GRAPH_VISIBLE;
   lastIMDSSync: string;
   searchTerms: string[] = [];
   orignalSearchTermPresets: string[] = [
@@ -55,14 +52,14 @@ export class DashboardComponent implements OnInit {
   inspire: IQuote;
 
   constructor(private _imdsService: IMDSService,
-              private _sharePointService: SharepointService,
-              private _jobDataService: JobDataService,
-              private _loadingService: TdLoadingService,
-              private _route: ActivatedRoute,
-              private _router: Router,
-              private _cd: ChangeDetectorRef,
-              private _dialog: MatDialog,
-              private _quote: InspireService,) {
+    private _sharePointService: SharepointService,
+    private _jobDataService: JobDataService,
+    private _loadingService: TdLoadingService,
+    private _route: ActivatedRoute,
+    private _router: Router,
+    private _cd: ChangeDetectorRef,
+    private _dialog: MatDialog,
+    private _quote: InspireService, ) {
     this.watchForSearchTagChanges();
     this.watchForIMDSSyncMessages();
     this.setupLastIMDSSyncIntervalCheck();
@@ -70,7 +67,7 @@ export class DashboardComponent implements OnInit {
 
   // Perform updates on route parameter changes
   watchForSearchTagChanges(): void {
-    this._route.params.subscribe(({tokens}) => {
+    this._route.params.subscribe(({ tokens }) => {
       this.searchTerms = tokens ? tokens.toUpperCase().replace(/\-/g, ' ').split(',') : [];
       this.searchTermPresets = without(this.orignalSearchTermPresets, ...this.searchTerms);
       this.filterWrapper();
@@ -86,7 +83,7 @@ export class DashboardComponent implements OnInit {
       } else {
         if (!imdsCache[job.JCN]) {
           job.Timestamp = moment().local().format('YYDDDD HH:mm:ss');
-          imdsCache[job.JCN] = this._jobDataService.findJob({JCN: job.JCN});
+          imdsCache[job.JCN] = this._jobDataService.findJob({ JCN: job.JCN });
         }
         assignIn(imdsCache[job.JCN], job);
       }
@@ -132,13 +129,13 @@ export class DashboardComponent implements OnInit {
   toggleGraph(): void {
     this.graphIsVisible = !this.graphIsVisible;
     // Remeber the graph display state
-    localStorage.MDT_GRAPH_VISIBLE = this.graphIsVisible || '';
+    localStorage.MAT_GRAPH_VISIBLE = this.graphIsVisible || '';
   }
 
   // Launches create job modal dialog
   openJob(): void {
     this._dialog
-      .open(CreateJobComponent, {width: '65vw'})
+      .open(CreateJobComponent, { width: '65vw' })
       .beforeClose()
       .subscribe(job => {
         if (job && job.Discrepancy) {
@@ -158,7 +155,7 @@ export class DashboardComponent implements OnInit {
   reSyncJobs(): void {
     this.inspire = this._quote.fetch();
     this._sharePointService.getMDC().subscribe(mdc => {
-      mdc.forEach(row => this._jobDataService.addOrUpdateJob(row, false));
+      cya(mdc).forEach(row => this._jobDataService.addOrUpdateJob(row, false));
       this.filterWrapper();
       this.inspire = this._quote.fetch();
       this._loadingService.resolve('mdc');

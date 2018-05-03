@@ -8,6 +8,7 @@ import { cloneDeep, findIndex, orderBy } from 'lodash';
 import * as localForage from 'localforage';
 import { ISharePointMDC } from 'app/types';
 import { Utilities } from 'services/utilities';
+import { cya } from './cya';
 
 const CACHE_TIME: Date = new Date();
 
@@ -19,7 +20,7 @@ export class HttpCacheService extends Http {
     // Flush the cache on app load to prevent cache consistency issues
     localForage.clear().then(done =>
       localForage.config({
-        name: 'mdt_cache_db',
+        name: 'mat_cache_db',
         storeName: `sp_cache_data_2018_01_11`,
       }),
     );
@@ -51,7 +52,7 @@ export class HttpCacheService extends Http {
           localData = localData || [];
 
           if (localData.length) {
-            subscriber.next({d: {results: localData}});
+            subscriber.next({ d: { results: localData } });
 
             const latest: ISharePointMDC = orderBy(localData, ['Modified'], ['desc'])[0];
             const lastModified: Date = Utilities.convertDate(latest.Modified);
@@ -74,7 +75,7 @@ export class HttpCacheService extends Http {
 
               if (data instanceof Array) {
                 data.forEach(row => {
-                  const match: number = findIndex(localData, {Id: row.Id});
+                  const match: number = findIndex(localData, { Id: row.Id });
                   if (match > -1) {
                     localData[match] = row;
                   } else {
@@ -82,11 +83,11 @@ export class HttpCacheService extends Http {
                   }
                 });
                 Observable.fromPromise(localForage.setItem(url, localData)).subscribe((saved) => {
-                  subscriber.next({d: {results: localData}});
+                  subscriber.next({ d: { results: localData } });
                   subscriber.complete();
                 });
               } else {
-                subscriber.next({d: {results: localData}});
+                subscriber.next({ d: { results: localData } });
                 subscriber.complete();
               }
 

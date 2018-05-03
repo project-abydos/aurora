@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { DOWN_TIME_CODES, WHEN_DISCOVERED_CODES } from 'app/constants';
 import { keys } from 'lodash';
-import { IMDSService } from 'services';
+import { IMDSService, cya } from 'services';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import * as moment from 'moment';
 import { Moment } from 'moment';
@@ -15,7 +15,7 @@ const TIME_INPUT: RegExp = /^\d+$/i;
 const NOW: Moment = moment();
 
 @Component({
-  selector: 'mdt-create-job',
+  selector: 'mat-create-job',
   templateUrl: './create-job.component.html',
   styleUrls: ['./create-job.component.scss'],
 })
@@ -63,7 +63,7 @@ export class CreateJobComponent {
               private _imds: IMDSService,
               private _fb: FormBuilder,
               @Inject(MAT_DIALOG_DATA) public data: any,) {
-    this.hours.map(hour => this.minutes.map(mins => this.timePicker.push(`${hour}:${mins}`)));
+    cya(this.hours).map(hour => this.minutes.map(mins => this.timePicker.push(`${hour}:${mins}`)));
   }
 
   onNoClick(): void {

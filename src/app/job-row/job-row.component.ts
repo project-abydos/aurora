@@ -4,11 +4,11 @@ import * as moment from 'moment';
 
 import { ICustomDDR, ICustomDDRWCE, ICustomMDCData, IParsedDDRInformationRow, IParseDDREventDataRow, IStatusChange } from 'app/types';
 import { Utilities } from 'services/utilities';
-import { SharepointService } from 'services';
+import { SharepointService, cya } from 'services';
 import { OnChanges } from '@angular/core/src/metadata/lifecycle_hooks';
 
 @Component({
-  selector: 'mdt-job-row',
+  selector: 'mat-job-row',
   templateUrl: './job-row.component.html',
   styleUrls: ['./job-row.component.scss'],
 })
@@ -41,7 +41,7 @@ export class JobRowComponent implements OnChanges {
 
         const parsedData: IParseDDREventDataRow[] = JSON.parse(response.DDR || '[]');
 
-        this.jobData = parsedData.map(wce => ({
+        this.jobData = cya(parsedData).map(wce => ({
           DeferCode: wce.DeferCode,
           DeferText: wce.DeferMessage,
           Narrative: Utilities.flatten(wce, 'WorkcenterEventNarrativeRow.WorkcenterEventNarrative'),

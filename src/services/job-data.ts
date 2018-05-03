@@ -2,14 +2,16 @@ import { Injectable } from '@angular/core';
 import { ICustomMDCData, ICustomMDCDataTag, IDashboardMetrics, IFilterResults, IOrgMetrics, ISharePointMDC } from 'app/types';
 import { assignIn, cloneDeep, every, find, findIndex, map, sortBy, uniq } from 'lodash';
 import { TdLoadingService } from '@covalent/core';
-import { IMDSService, SharepointService } from 'services';
-import { Utilities } from 'services/utilities';
+import { IMDSService } from './imds';
+import { SharepointService} from './sharepoint';
+import { Utilities } from './utilities';
 import * as moment from 'moment';
 import { Moment } from 'moment';
 import * as json2csv from 'json2csv';
 import { saveAs } from 'file-saver';
 import { DELAY_CODES, DOWN_TIME_CODES, WHEN_DISCOVERED_CODES } from 'app/constants';
 import { Observable } from 'rxjs';
+import { cya } from './cya';
 
 @Injectable()
 export class JobDataService {
@@ -18,8 +20,8 @@ export class JobDataService {
   private mdc: ICustomMDCData[] = [];
 
   constructor(private _imdsService: IMDSService,
-              private _sharePointService: SharepointService,
-              private _loadingService: TdLoadingService,) {
+    private _sharePointService: SharepointService,
+    private _loadingService: TdLoadingService, ) {
     _imdsService.workcenters.subscribe(list => this.workcenters = list);
   }
 
@@ -45,15 +47,15 @@ export class JobDataService {
     ];
 
     const csvData: Blob = new Blob(
-      [json2csv({data: filteredData, fields})],
-      {type: 'text/csv;charset=charset=utf-8'},
+      [json2csv({ data: filteredData, fields })],
+      { type: 'text/csv;charset=charset=utf-8' },
     );
-    saveAs(csvData, `MDT Export${searchTerms.join('-')}.csv`);
+    saveAs(csvData, `MAT Export${searchTerms.join('-')}.csv`);
   }
 
   addOrUpdateJob(job: ISharePointMDC, updateSharePoint: boolean): void {
 
-    const match: ICustomMDCData = find(this.mdc, {JCN: job.JCN});
+    const match: ICustomMDCData = find(this.mdc, { JCN: job.JCN });
 
     if (job.CC === 'G' || job.CC === '-') {
       return;
@@ -158,13 +160,13 @@ export class JobDataService {
     }
 
     let searchTerms: string[] = [];
-    const matchId: number = row && findIndex(this.mdc, {Id: row.Id}) || findIndex(this.mdc, {JCN: row.JCN});
+    const matchId: number = row && findIndex(this.mdc, { Id: row.Id }) || findIndex(this.mdc, { JCN: row.JCN });
 
     const now: Moment = moment();
     const _transform: ICustomMDCData = cloneDeep(row);
     const newJob: boolean = !_transform.JCN;
     const startDate: Moment = newJob ? moment.utc(Utilities.convertDate(_transform.StartDate)) : undefined;
-    const discrepancyText: string = _transform.Discrepancy.toUpperCase();
+    const discrepancyText: string = (_transform.Discrepancy || '').toUpperCase();
     const julianDate: Moment = newJob ? startDate : Utilities.parseJCN(_transform.JCN);
     const juliantDateDiff: number = now.diff(julianDate, 'days');
     const timestampMoment: Moment = Utilities.convertJobTimestamp(row.Timestamp);
@@ -180,7 +182,7 @@ export class JobDataService {
     _transform.WhenDiscText = row.WhenDiscovered ? `${row.WhenDiscovered} - ${WHEN_DISCOVERED_CODES[row.WhenDiscovered]}` : '';
     _transform.DownTimeCodeText = row.DownTimeCode ? `${row.DownTimeCode} - ${DOWN_TIME_CODES[row.DownTimeCode]}` : '';
     _transform.DelayCodeText = row.DelayCode ? `${row.DelayCode} - ${DELAY_CODES[row.DelayCode]}` : '';
-    _transform.prettyJCN = Utilities.prettyTimeDiff(julianDate, {sameDay: '[Today]'});
+    _transform.prettyJCN = Utilities.prettyTimeDiff(julianDate, { sameDay: '[Today]' });
     _transform.tags = [];
     _transform.historical = (row.ApprovalStatus === 'Done' && row.Closed);
 
@@ -191,13 +193,13 @@ export class JobDataService {
     }[_transform.CC];
 
     const TAGS: { [key: string]: ICustomMDCDataTag } = {
-      CLOSED: {title: 'Closed', style: 'dark'},
-      NEEDS_UPDATE: {title: 'Needs Update', style: 'primary'},
-      OPEN_90: {title: '90+ Open', style: 'accent'},
-      PROJECTED: {title: 'Projected', style: 'semi-dark'},
-      PMI: {title: 'PMI'},
-      PDI: {title: 'PDI'},
-      FCO: {title: 'FCO'},
+      CLOSED: { title: 'Closed', style: 'dark' },
+      NEEDS_UPDATE: { title: 'Needs Update', style: 'primary' },
+      OPEN_90: { title: '90+ Open', style: 'accent' },
+      PROJECTED: { title: 'Projected', style: 'semi-dark' },
+      PMI: { title: 'PMI' },
+      PDI: { title: 'PDI' },
+      FCO: { title: 'FCO' },
     };
 
     if (row.Closed) {
@@ -258,7 +260,7 @@ export class JobDataService {
       _transform.WhenDiscText,
       _transform.DownTimeCodeText,
       _transform.DelayCodeText,
-      _transform.tags.map(tag => tag.search || tag.title).join(' '),
+      cya(_transform.tags).map(tag => tag.search || tag.title).join(' '),
       _transform.eticDate || '',
     ]).join(' ').toUpperCase();
 
@@ -272,7 +274,7 @@ export class JobDataService {
   filterData(historical: boolean, searchTerms: string[]): IFilterResults {
     console.log('filter');
 
-    let mdc: ICustomMDCData[] = this.mdc.filter(row => historical ? row.historical : !row.historical);
+    let mdc: ICustomMDCData[] = cya(this.mdc).filter(row => historical ? row.historical : !row.historical);
 
     const metrics: IDashboardMetrics = {
       amber: 0,
@@ -287,11 +289,11 @@ export class JobDataService {
 
     if (searchTerms.length) {
       // Always ensure all terms are uppercase first
-      searchTerms = searchTerms.map(term => term.toUpperCase());
-      mdc = mdc.filter(row => every(searchTerms, term => (row.search.indexOf(term) > -1)));
+      searchTerms = cya(searchTerms).map(term => term.toUpperCase());
+      mdc = cya(mdc).filter(row => every(searchTerms, term => (row.search.indexOf(term) > -1)));
     }
 
-    mdc.forEach(job => {
+    cya(mdc).forEach(job => {
 
       const orgMetrics: IOrgMetrics = setupWorkcenter(job.WorkCenter);
 

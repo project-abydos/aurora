@@ -10,6 +10,7 @@ import { IParsedDDRDataRow, IParsedDDRInformationRow, IParsedIMDSXML, ISharePoin
 import { timer } from 'rxjs/observable/timer';
 import { SharepointService } from './sharepoint';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { cya } from './cya';
 
 @Injectable()
 export class IMDSService {
@@ -41,14 +42,14 @@ export class IMDSService {
       this.syncTimestamp.subscribe(response => this._syncTimestampValue = response);
       this.workcenters.subscribe(workcenters =>
         timer(0, 10 * MINUTE).subscribe(() =>
-          workcenters.forEach((workcenter, index) =>
+          cya(workcenters).forEach((workcenter, index) =>
             Utilities.imdsTick(() => this._crossDomainService.perform380SyncOperation(workcenter)),
           )));
     }
   });
 
   constructor(private _crossDomainService: CrossDomainService,
-              private _sharePointService: SharepointService,) {
+    private _sharePointService: SharepointService, ) {
     _crossDomainService.receiveSyncData.subscribe(xml => this._processXML(xml));
     _sharePointService
       .getAppMetadata('imds_workcenter_list')
@@ -69,7 +70,7 @@ export class IMDSService {
 
       if (result.EquipmentDataRow) {
         const workcenter: string = get(result, 'EquipmentDataRow.Workcenter');
-        let {EventDataRow} = result.EquipmentDataRow;
+        let { EventDataRow } = result.EquipmentDataRow;
 
         // handle nulls and single-job 380s
         EventDataRow = isArray(EventDataRow) ? EventDataRow :
@@ -77,7 +78,7 @@ export class IMDSService {
 
         console.log('380', EventDataRow);
 
-        EventDataRow.forEach(job => this._imds.next({
+        cya(EventDataRow).forEach(job => this._imds.next({
           JCN: job.EventId,
           CC: job.EventSymbol,
           Discrepancy: Utilities.flatten(job, 'DiscrepancyNarrativeRow.DiscrepancyNarrative'),
@@ -87,10 +88,10 @@ export class IMDSService {
           DelayCode: job.DeferCode,
         }));
 
-        this._sharePointService.getMDC().subscribe(jobs => jobs
+        this._sharePointService.getMDC().subscribe(jobs => cya(jobs)
           .filter(job => !job.Closed && job.WorkCenter === workcenter)
-          .forEach(({JCN}) => {
-            if (JCN && !find(EventDataRow, {EventId: JCN})) {
+          .forEach(({ JCN }) => {
+            if (JCN && !find(EventDataRow, { EventId: JCN })) {
               Utilities.imdsTick(() => this.fetchDDR(JCN));
             }
           }),
@@ -100,8 +101,8 @@ export class IMDSService {
       if (result.EventDataRow) {
         console.log('DDR', result.EventDataRow);
 
-        let {EventDataRow} = result;
-        const {WorkcenterEventDataRow} = EventDataRow;
+        let { EventDataRow } = result;
+        const { WorkcenterEventDataRow } = EventDataRow;
         const ddrInfoRow: IParsedDDRInformationRow | IParsedDDRInformationRow[] =
           get(EventDataRow, 'WorkcenterEventDataRow.DDRInformationDataRow') || [{}];
         const lastUpdate: IParsedDDRDataRow = ddrInfoRow instanceof Array ? last(ddrInfoRow).DDRDataRow : ddrInfoRow.DDRDataRow;

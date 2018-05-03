@@ -65,7 +65,7 @@ td-chips {
     margin: 0;
     padding: 0;
   }
-  mdt-job-row.over30:before {
+  mat-job-row.over30:before {
     content: "⬇ Jobs Without an Update for 30+ Days";
     display: block;
     padding: 20px 0 10px 15px;

@@ -3,7 +3,7 @@ import { ICustomMDCData, IStatusChange } from 'app/types';
 import { get } from 'lodash';
 
 @Component({
-  selector: 'mdt-update-job',
+  selector: 'mat-update-job',
   templateUrl: './update-job.component.html',
   styleUrls: ['./update-job.component.scss'],
 })

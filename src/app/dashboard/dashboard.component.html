@@ -1,7 +1,7 @@
 <td-layout-nav>
   <div td-toolbar-content layout="row" layout-align="center center" flex class="animated slideInDown">
     <span class="af-logo animated fadeInLeftBig"></span>
-    <span class="animated fadeIn">Maintenance Documentation Tool</span>
+    <span class="animated fadeIn">Maintenance Analysis Tool</span>
     <span flex></span>
     <span></span>
     <button class="toggle-graph animated fadeInRightBig" mat-icon-button [ngClass]="graphIsVisible ? 'show-graph' : ''"
@@ -13,7 +13,7 @@
       <mat-icon matTooltipPosition="left" matTooltip="Download a copy of the visible job data">cloud_download</mat-icon>
     </button>
     <span></span>
-    <a class="export-button animated fadeInRightBig" mat-icon-button href="mdt-infographic.pdf" target="_blank">
+    <a class="export-button animated fadeInRightBig" mat-icon-button href="mat-infographic.pdf" target="_blank">
       <mat-icon matTooltipPosition="left" matTooltip="View the app overview">help</mat-icon>
     </a>
     <button class="create-job-button animated fadeInRightBig" mat-mini-fab (click)="openJob()" matTooltipPosition="left"
@@ -64,9 +64,9 @@
                 </div>
                 <div class="dashboard-body">
                   <ng-template ngFor let-row [ngForOf]="filteredData" [ngForTrackBy]="trackJobStateChange">
-                    <mdt-job-row class="animated pulse" [row]="row" [ngClass]="row.firstOver30 ? 'over30': ''"
+                    <mat-job-row class="animated pulse" [row]="row" [ngClass]="row.firstOver30 ? 'over30': ''"
                                  (onETICChange)="changeJobETIC($event, row)"
-                                 (onStatusChange)="changeJobStatus($event, row)"></mdt-job-row>
+                                 (onStatusChange)="changeJobStatus($event, row)"></mat-job-row>
                   </ng-template>
                 </div>
 

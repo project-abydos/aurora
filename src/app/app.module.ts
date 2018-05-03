@@ -14,17 +14,14 @@ import {
 
 import { AppComponent } from './app.component';
 
-import { CrossDomainService, IMDSService, SharepointService } from 'services';
+import { CrossDomainService, IMDSService, SharepointService, HttpCacheService, JobDataService, InspireService } from 'services';
 import { AppRoutingModule, routedComponents } from './app-routing.module';
 
 import { SharedModule } from './shared/shared.module';
 import { JobRowComponent } from './job-row/job-row.component';
-import { HttpCacheService } from 'services/http-cache';
 import { CreateJobComponent } from './create-job/create-job.component';
 import { UpdateJobComponent } from './update-job/update-job.component';
-import { JobDataService } from 'services/job-data.service';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
-import { InspireService } from 'services/inspire.service';
 
 // tslint:disable-next-line:typedef
 export function httpCacheService(backend: ConnectionBackend, defaultOptions: RequestOptions) {
@@ -86,7 +83,7 @@ export function httpCacheService(backend: ConnectionBackend, defaultOptions: Req
       deps: [XHRBackend, RequestOptions],
       useFactory: httpCacheService,
     },
-    {provide: LocationStrategy, useClass: HashLocationStrategy},
+    { provide: LocationStrategy, useClass: HashLocationStrategy },
 
   ], // additional providers needed for this module
   entryComponents: [
